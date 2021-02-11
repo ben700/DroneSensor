@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map For Base64
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+DroneFlasher KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+on KEYWORD2
+off KEYWORD2
+update KEYWORD2
+flipFlop KEYWORD2
+blip KEYWORD2
+printState KEYWORD2
+flip KEYWORD2
+flop KEYWORD2
+stop KEYWORD2
+start KEYWORD2
+#######################################
+# Constants (LITERAL1)
+#######################################

@@ -1,0 +1,17 @@
+{
+  "name": "DroneFlasher",
+  "keywords": "Droneponics, Flasher, Huzzah",
+  "description": "Droneponics class for Huzzah LED flasher.",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/ben700/DroneFlasher"
+  },
+  "frameworks": "arduino",
+  "platforms":
+  [
+    "espressif8266",
+    "espressif32"
+  ],
+  "version": "1.0.1"
+}
