@@ -9,13 +9,6 @@
 
 #define NotConnected "Not Connected"
 
-#ifndef DroneSensorDebug
-   #define DroneSensor_debug   false
-#else
-   #define DroneSensor_debug   true    
-#endif
-
-
 
 #define DroneSensor_FallbackTemp 19.5
 #define DOC_SIZE 1000
@@ -115,6 +108,7 @@ class DroneSensor {
     String readDO();
     String readORP();
     String bootPayload(String _EpochTime);
+    void debug();
   private:
     String lookupLedStatus(String LED);
     String lookupRestartCodes(String restartCodes);
@@ -123,6 +117,7 @@ class DroneSensor {
     String _deviceMAC;
     String _deviceIP;
     String _deviceID;
+    bool DroneSensor_debug=false;
 };
 
 
