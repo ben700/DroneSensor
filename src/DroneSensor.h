@@ -8,7 +8,7 @@
 #endif
 
 #define NotConnected "Not Connected"
-#define DroneSensor_debug  false //true
+#define DroneSensor_debug   true //true //false
 #define DroneSensor_FallbackTemp 19.5
 #define DOC_SIZE 1000
 #include <stdint.h>
@@ -30,24 +30,25 @@ enum class EZOStatus: int {
 typedef struct
 {
   Ezo_board device;
-  EZOStatus _status = EZOStatus::Unconnected;
+  EZOStatus _status;
+  int _precision;
 }  EZODevice;
 
 
 class DroneSensor {
 
 
+    Ezo_board RTD = Ezo_board(102, "Temperature");    //create an RTD circuit object who's address is 102 and name is "RTD"
     Ezo_board PH = Ezo_board(99, "pH");       //create a PH circuit object, who's address is 99 and name is "PH"
     Ezo_board EC = Ezo_board(100, "Conductivity");      //create an EC circuit object who's address is 100 and name is "EC"
-    Ezo_board RTD = Ezo_board(102, "Temperature");    //create an RTD circuit object who's address is 102 and name is "RTD"
     Ezo_board DO = Ezo_board(97, "Dissolved Oxygen");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board ORP = Ezo_board(98, "Oxidation Reduction Potential");    //create a DO circuit object who's address is 97 and name is "DO"
 
-    EZODevice RTDItem = {RTD, EZOStatus::Unconnected};
-    EZODevice PHItem = {PH, EZOStatus::Unconnected};
-    EZODevice ECItem = {EC, EZOStatus::Unconnected};
-    EZODevice DOItem = {DO, EZOStatus::Unconnected};
-    EZODevice ORPItem = {ORP, EZOStatus::Unconnected};
+    EZODevice RTDItem = {RTD, EZOStatus::Unconnected, 1};
+    EZODevice ECItem = {EC, EZOStatus::Unconnected, 0};
+    EZODevice PHItem = {PH, EZOStatus::Unconnected, 2};
+    EZODevice DOItem = {DO, EZOStatus::Unconnected, 1};
+    EZODevice ORPItem = {ORP, EZOStatus::Unconnected, 0};
   
     //array of ezo boards, add any new boards in here for the commands to work with them
     EZODevice device_list[5] = {
@@ -59,14 +60,13 @@ class DroneSensor {
     };
 
 
-
     //enable pins for each circuit
     const int EN_PH = 14;
     const int EN_EC = 12;
     const int EN_RTD = 15;
     const int EN_AUX = 13;
 
-    Ezo_board* default_board = &device_list[0]->device; //used to store the board were talking to
+    Ezo_board* default_board = &device_list[0].device; //used to store the board were talking to
 
     //gets the length of the array automatically so we dont have to change the number every time we add new boards
     const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
@@ -81,7 +81,7 @@ class DroneSensor {
 
 
   public:
-    DroneSensor (String __deviceMAC, String __deviceIP);
+    DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID);
 
     void select_delay(String &str);
     void print_error_type(Ezo_board &Device, const char* success_string);
@@ -105,6 +105,8 @@ class DroneSensor {
     String readPH();
     String readEC();
     String readDO();
+    String readORP();
+    String bootPayload(String _EpochTime);
   private:
     String lookupLedStatus(String LED);
     String lookupRestartCodes(String restartCodes);
@@ -112,6 +114,7 @@ class DroneSensor {
     bool headerPayload(StaticJsonDocument<DOC_SIZE>& _doc);
     String _deviceMAC;
     String _deviceIP;
+    String _deviceID;
 };
 
 
