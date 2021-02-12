@@ -1,31 +1,28 @@
-#include <DroneFlasher.h>
+#include "DroneSensor.h"
+#include <ESP8266WiFi.h> 
 
+#define DroneSensor_debug false
 
-
-DroneFlasher *flasher;
-
-
+  
+DroneSensor *sensors;
 
 void setup() {
+  // put your setup code here, to run once:
   Serial.begin(115200);
-  flasher = new DroneFlasher(DroneState::SETUP);
+  
+  sensors = new DroneSensor(WiFi.macAddress(), WiFi.localIP().toString());
+
 }
 
 void loop() {
-delay(10000);
-Serial.println("OPS");
-flasher->update(DroneState::OPS);
-
-delay(30000);
-Serial.println("CONFIG");
-flasher->update(DroneState::CONFIG);
-delay(30000);
-Serial.println("ERR");
-flasher->update(DroneState::ERR);
-delay(30000);
-Serial.println("SETUP");
-flasher->update(DroneState::SETUP);
-
-
   
+  sensors->list_devices();
+
+ 
+
+sensors->deviceStatePayload();
+sensors->sensorPayload("Time");
+sensors->calibrationCommands();
+
+delay(10000);
 }
