@@ -46,7 +46,9 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
   EC.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
   DO.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
 }
-
+void DroneSensor::debug() {
+  DroneSensor_debug=true;
+}
 // determines how long we wait depending on the command
 void DroneSensor::select_delay(String &str) {
   if (str.indexOf("CAL") != -1 || str.indexOf("R") != -1) {
