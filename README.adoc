@@ -1,5 +1,5 @@
 Droneponics Code
 
-Use with Huzzah LED
+Use with Atlas EZO 
 
 Download the zip and add via IDE
