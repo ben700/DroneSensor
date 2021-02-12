@@ -27,12 +27,12 @@ enum class EZOStatus: int {
     Unconnected = 0
 };
 
-/*typedef struct
+typedef struct
 {
   Ezo_board device;
   EZOStatus _status = EZOStatus::Unconnected;
 }  EZODevice;
-*/
+
 
 class DroneSensor {
 
@@ -43,13 +43,19 @@ class DroneSensor {
     Ezo_board DO = Ezo_board(97, "Dissolved Oxygen");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board ORP = Ezo_board(98, "Oxidation Reduction Potential");    //create a DO circuit object who's address is 97 and name is "DO"
 
+    EZODevice RTDItem = {RTD, EZOStatus::Unconnected};
+    EZODevice PHItem = {PH, EZOStatus::Unconnected};
+    EZODevice ECItem = {EC, EZOStatus::Unconnected};
+    EZODevice DOItem = {DO, EZOStatus::Unconnected};
+    EZODevice ORPItem = {ORP, EZOStatus::Unconnected};
+  
     //array of ezo boards, add any new boards in here for the commands to work with them
-    Ezo_board device_list[5] = {
-      PH,
-      EC,
-      RTD,
-      DO,
-      ORP
+    EZODevice device_list[5] = {
+      RTDItem,
+      ECItem,
+      PHItem,
+      DOItem,
+      ORPItem
     };
 
 
@@ -60,7 +66,7 @@ class DroneSensor {
     const int EN_RTD = 15;
     const int EN_AUX = 13;
 
-    Ezo_board* default_board = &device_list[0]; //used to store the board were talking to
+    Ezo_board* default_board = &device_list[0]->device; //used to store the board were talking to
 
     //gets the length of the array automatically so we dont have to change the number every time we add new boards
     const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
