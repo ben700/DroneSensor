@@ -8,7 +8,15 @@
 #endif
 
 #define NotConnected "Not Connected"
-#define DroneSensor_debug   false //true //false
+
+#ifndef DroneSensorDebug
+   #define DroneSensor_debug   false
+#else
+   #define DroneSensor_debug   true    
+#endif
+
+
+
 #define DroneSensor_FallbackTemp 19.5
 #define DOC_SIZE 1000
 #include <stdint.h>
