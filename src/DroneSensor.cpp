@@ -15,6 +15,29 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP)
   digitalWrite(EN_AUX, LOW); 
   if (DroneSensor_debug) { Serial.println("DroneSensor::DroneSensor()");}
   delay(long_delay);
+  
+  for (int i = 0; i <= device_list_len; i++ )
+  {
+    address = device_list[i]->device.get_address();
+    Wire.beginTransmission(address);
+    if (!Wire.endTransmission())
+    {
+      device_list[i]->_status = EZOStatus::Connected;
+      if (DroneSensor_debug) {
+        Serial.print("I2C " + device_list[i]->device.get_name() + " found at address ");
+        Serial.print(address);
+        Serial.println("  !"); 
+      }
+    }
+    else
+    {
+      device_list[i]->_status = EZOStatus::Unconnected;
+      if (DroneSensor_debug) {
+        Serial.print("I2C " + device_list[i]->device.get_name() + " NOT found at address ");
+        Serial.print(address);
+        Serial.println("  !");       
+    }
+  }
 
   PH.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
   EC.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
@@ -92,12 +115,13 @@ String DroneSensor::return_error_type(Ezo_board &Device, const char* success_str
 }
 void DroneSensor::list_devices() {
   for (uint8_t i = 0; i < device_list_len; i++) {        //go thorugh the list of boards
-    if (default_board == &device_list[i]) {              //if its our default board
+    if (default_board == &device_list[i]->device) {              //if its our default board
       Serial.print("--> ");                             //print the pointer arrow
     } else {                                            //otherwise
       Serial.print(" - ");                              //print a normal dash
     }
-    print_device_info(device_list[i]);                   //then print the boards info
+    print_device_info(device_list[i]->device);                   //then print the boards info
+    Serial.print(device_list[i]->_status);
     Serial.println("");
   }
 }
