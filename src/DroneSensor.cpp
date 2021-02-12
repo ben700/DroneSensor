@@ -273,7 +273,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
     }
   }
   
-  DroneSensor_debug ? serializeJsonPretty(doc, Serial): Serial.println("");
+  if(DroneSensor_debug ){serializeJsonPretty(doc, Serial);}
   String output;
   serializeJson(doc, output);
   return output; 
