@@ -1,11 +1,11 @@
 {
-  "name": "DroneFlasher",
-  "keywords": "Droneponics, Flasher, Huzzah",
-  "description": "Droneponics class for Huzzah LED flasher.",
+  "name": "DroneSensor",
+  "keywords": "Droneponics, Sensor, Atlas EZO, Huzzah",
+  "description": "Droneponics class for Atlas EZO.",
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/ben700/DroneFlasher"
+    "url": "https://github.com/ben700/DroneSensor"
   },
   "frameworks": "arduino",
   "platforms":
