@@ -1,9 +1,10 @@
 #include "DroneSensor.h"
 
-DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP)
+DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID)
 {
   this->_deviceMAC = __deviceMAC;
   this->_deviceIP = __deviceIP;
+  this->_deviceID = __deviceID;
   Wire.begin(); 
   pinMode(EN_PH, OUTPUT);                                                         //set enable pins as outputs
   pinMode(EN_EC, OUTPUT);
@@ -16,29 +17,30 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP)
   if (DroneSensor_debug) { Serial.println("DroneSensor::DroneSensor()");}
   delay(long_delay);
   
-  for (int i = 0; i <= device_list_len; i++ )
+  for (int i = 0; i < device_list_len; i++ )
   {
-    address = device_list[i]->device.get_address();
+    byte address = device_list[i].device.get_address();
     Wire.beginTransmission(address);
     if (!Wire.endTransmission())
     {
-      device_list[i]->_status = EZOStatus::Connected;
+      device_list[i]._status = EZOStatus::Connected;
       if (DroneSensor_debug) {
-        Serial.print("I2C " + device_list[i]->device.get_name() + " found at address ");
+        Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
         Serial.print(address);
         Serial.println("  !"); 
       }
     }
     else
     {
-      device_list[i]->_status = EZOStatus::Unconnected;
+      device_list[i]._status = EZOStatus::Unconnected;
       if (DroneSensor_debug) {
-        Serial.print("I2C " + device_list[i]->device.get_name() + " NOT found at address ");
+        Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " NOT found at address ");
         Serial.print(address);
         Serial.println("  !");       
+      }
     }
   }
-
+  
   PH.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
   EC.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
   DO.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
@@ -113,18 +115,22 @@ String DroneSensor::return_error_type(Ezo_board &Device, const char* success_str
   }
   return ("No Device");
 }
+
 void DroneSensor::list_devices() {
-  for (uint8_t i = 0; i < device_list_len; i++) {        //go thorugh the list of boards
-    if (default_board == &device_list[i]->device) {              //if its our default board
-      Serial.print("--> ");                             //print the pointer arrow
-    } else {                                            //otherwise
-      Serial.print(" - ");                              //print a normal dash
+  for (int i = 0; i < device_list_len; i++) {        //go thorugh the list of boards
+    print_device_info(device_list[i].device);                   //then print the boards info
+    if(device_list[i]._status == EZOStatus::Unconnected)
+    {
+       Serial.print(" Unconnected");
+    }else{
+       Serial.print(" Connected");
+
+      
     }
-    print_device_info(device_list[i]->device);                   //then print the boards info
-    Serial.print(device_list[i]->_status);
     Serial.println("");
   }
 }
+
 void DroneSensor::get_ec_k_value(){                                    //function to query the value of the ec circuit
   char rx_buf[10];                                        //buffer to hold the string we receive from the circuit
   EC.send_cmd("k,?");                                     //query the k value
@@ -185,23 +191,28 @@ String DroneSensor::readTemp() {              // function to decode the reading 
 
 
 String DroneSensor::readEC() {              // function to decode the reading after the read command was issued
-  (RTD.get_error() == Ezo_board::SUCCESS) ? EC.send_read_with_temp_comp(RTD.get_last_received_reading()) : EC.send_read_with_temp_comp(19.5);
+  (RTD.get_error() == Ezo_board::SUCCESS) ? EC.send_read_with_temp_comp(RTD.get_last_received_reading()) : EC.send_read_with_temp_comp(DroneSensor_FallbackTemp);
   receive_reading(EC);
   return return_error_type(EC, String(EC.get_last_received_reading()).c_str());
 }
 
 String DroneSensor::readPH() {              // function to decode the reading after the read command was issued
-  (RTD.get_error() == Ezo_board::SUCCESS) ? PH.send_read_with_temp_comp(RTD.get_last_received_reading()) : PH.send_read_with_temp_comp(19.5);
+  (RTD.get_error() == Ezo_board::SUCCESS) ? PH.send_read_with_temp_comp(RTD.get_last_received_reading()) : PH.send_read_with_temp_comp(DroneSensor_FallbackTemp);
   receive_reading(PH);
   return return_error_type(PH, String(PH.get_last_received_reading()).c_str());
 }
 
 String DroneSensor::readDO() {              // function to decode the reading after the read command was issued
-  (RTD.get_error() == Ezo_board::SUCCESS) ? DO.send_read_with_temp_comp(RTD.get_last_received_reading()) : DO.send_read_with_temp_comp(19.5);
+  (RTD.get_error() == Ezo_board::SUCCESS) ? DO.send_read_with_temp_comp(RTD.get_last_received_reading()) : DO.send_read_with_temp_comp(DroneSensor_FallbackTemp);
   receive_reading(DO);
   return return_error_type(DO, String(DO.get_last_received_reading()).c_str());
 }
 
+String DroneSensor::readORP() {              // function to decode the reading after the read command was issued
+  (RTD.get_error() == Ezo_board::SUCCESS) ? ORP.send_read_with_temp_comp(RTD.get_last_received_reading()) : ORP.send_read_with_temp_comp(DroneSensor_FallbackTemp);
+  receive_reading(ORP);
+  return return_error_type(ORP, String(ORP.get_last_received_reading()).c_str());
+}
 void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand()");}
   float temp = DroneSensor_FallbackTemp;
@@ -218,9 +229,12 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   
   _doc[RTD.get_name()] = temp;
   _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
-  PH.send_read_with_temp_comp(temp);
-  EC.send_read_with_temp_comp(temp);
-  DO.send_read_with_temp_comp(temp);
+  for (int i = 1; i < device_list_len; i++ )
+  {
+    if(device_list[i]._status == EZOStatus::Connected){
+      device_list[i].device.send_read_with_temp_comp(temp);
+    }
+  }
 }
 
 String DroneSensor::sensorPayload(String _EpochTime)
@@ -238,13 +252,14 @@ String DroneSensor::sensorPayload(String _EpochTime)
  
   sendReadCommand(doc);
   delay(reading_delay);
-  receive_reading(PH);
-  doc[PH.get_name()] = return_error_type(PH, String(PH.get_last_received_reading(), 2));
- // (PH.get_error() == Ezo_board::SUCCESS) ? doc[PH.get_name()] = String(PH.get_last_received_reading(), 2) : doc[PH.get_name()] = NotConnected;
-  receive_reading(EC);
-  (EC.get_error() == Ezo_board::SUCCESS) ? doc[EC.get_name()] = String(EC.get_last_received_reading(), 2) : doc[EC.get_name()] = NotConnected;
-  receive_reading(DO);
-  (DO.get_error() == Ezo_board::SUCCESS) ? doc[DO.get_name()] = String(DO.get_last_received_reading(), 2) : doc[DO.get_name()] = NotConnected;
+
+  for (int i = 1; i < device_list_len; i++ )
+  {
+    if(device_list[i]._status == EZOStatus::Connected){
+      receive_reading(device_list[i].device);
+      doc[device_list[i].device.get_name()] = return_error_type(device_list[i].device, String(device_list[i].device.get_last_received_reading(), device_list[i]._precision));  
+    }
+  }
   
   DroneSensor_debug ? serializeJsonPretty(doc, Serial): Serial.println("");
   String output;
@@ -327,10 +342,13 @@ String DroneSensor::ecStatePayload (){
 }
 
 String DroneSensor::deviceStatePayload (){
-  String payload = payload + singleDeviceStatePayload(RTD);
-  payload = payload + singleDeviceStatePayload(PH);
-  payload = payload + singleDeviceStatePayload(EC);
-  payload = payload + singleDeviceStatePayload(DO);
+  String payload = "";
+  for (int i = 0; i < device_list_len; i++ )
+  {
+    if(device_list[i]._status == EZOStatus::Connected){
+      payload = payload + singleDeviceStatePayload(device_list[i].device);
+    }
+  }  
   return payload;
 }
 
@@ -338,42 +356,53 @@ String DroneSensor::calibrationCommands(String calibrationCommandError){
     StaticJsonDocument<DOC_SIZE> doc;
      
     if(calibrationCommandError.length() > 0)  doc["Error"] = calibrationCommandError;
-    String _deviceName = RTD.get_name();
-    doc["Calibration Commands"][_deviceName]["deviceID"] = 102;
-    doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-    doc["Calibration Commands"][_deviceName]["Set to t"] = "Cal,t";
+    String _deviceName; 
+    int i =0;
+    if(device_list[i]._status == EZOStatus::Connected){
+      _deviceName = device_list[i++].device.get_name();
+      doc["Calibration Commands"][_deviceName]["deviceID"] = 102;
+      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
+      doc["Calibration Commands"][_deviceName]["Set to t"] = "Cal,t";
+    }
     
-    _deviceName = DO.get_name();    
-    doc["Calibration Commands"][_deviceName]["deviceID"] = 97;
-    doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-    doc["Calibration Commands"][_deviceName]["Atmospheric"] = "Cal";
-    doc["Calibration Commands"][_deviceName]["Solution"] = "Cal,0";
+    if(device_list[i]._status == EZOStatus::Connected){
+      _deviceName = device_list[i++].device.get_name();    
+      doc["Calibration Commands"][_deviceName]["deviceID"] = 100;
+      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
+      doc["Calibration Commands"][_deviceName]["Atmospheric"] = "Cal,dry";
+      doc["Calibration Commands"][_deviceName]["Single Point"] = "Cal,n";
+      doc["Calibration Commands"][_deviceName]["Low"] = "Cal,low,n";
+      doc["Calibration Commands"][_deviceName]["High"] = "Cal,high,n";
+      doc["Calibration Commands"][_deviceName]["probe Type"] = "K,n";
+    }
+
+    if(device_list[i]._status == EZOStatus::Connected){
+      _deviceName = device_list[i++].device.get_name();    
+      doc["Calibration Commands"][_deviceName]["deviceID"] = 99;
+      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
+      doc["Calibration Commands"][_deviceName]["Mid"] = "Cal,mid,7";
+      doc["Calibration Commands"][_deviceName]["Low"] = "Cal,low,4";
+      doc["Calibration Commands"][_deviceName]["High"] = "Cal,high,10";
+    }
+    
+    if(device_list[i]._status == EZOStatus::Connected){
+      _deviceName = device_list[i++].device.get_name();    
+      doc["Calibration Commands"][_deviceName]["deviceID"] = 97;
+      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
+      doc["Calibration Commands"][_deviceName]["Atmospheric"] = "Cal";
+      doc["Calibration Commands"][_deviceName]["Solution"] = "Cal,0";
+    }
   
-    _deviceName = ORP.get_name();    
-    doc["Calibration Commands"][_deviceName]["deviceID"] = 98;
-    doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-    doc["Calibration Commands"][_deviceName]["Set to n"] = "Cal,n";
+    if(device_list[i]._status == EZOStatus::Connected){
+      _deviceName = device_list[i].device.get_name();
+      doc["Calibration Commands"][_deviceName]["deviceID"] = 98;
+      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
+      doc["Calibration Commands"][_deviceName]["Set to n"] = "Cal,n";
+    }
 
-
-    _deviceName = EC.get_name();    
-    doc["Calibration Commands"][_deviceName]["deviceID"] = 100;
-    doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-    doc["Calibration Commands"][_deviceName]["Atmospheric"] = "Cal,dry";
-    doc["Calibration Commands"][_deviceName]["Single Point"] = "Cal,n";
-    doc["Calibration Commands"][_deviceName]["Low"] = "Cal,low,n";
-    doc["Calibration Commands"][_deviceName]["High"] = "Cal,high,n";
-    doc["Calibration Commands"][_deviceName]["probe Type"] = "K,n";
-   
-
-    _deviceName = PH.get_name();    
-    doc["Calibration Commands"][_deviceName]["deviceID"] = 99;
-    doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-    doc["Calibration Commands"][_deviceName]["Mid"] = "Cal,mid,7";
-    doc["Calibration Commands"][_deviceName]["Low"] = "Cal,low,4";
-    doc["Calibration Commands"][_deviceName]["High"] = "Cal,high,10";
+     
+    if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
     
-    if(DroneSensor_debug){serializeJsonPretty(doc, Serial);}
-    Serial.println("");
   
     String payload;
     serializeJson(doc, payload);
@@ -383,4 +412,19 @@ String DroneSensor::calibrationCommands(String calibrationCommandError){
 bool DroneSensor::headerPayload(StaticJsonDocument<DOC_SIZE>& _doc){
   _doc["deviceMAC"] = this->_deviceMAC;
   return true;
+}
+String DroneSensor::bootPayload(String _EpochTime){
+  if (DroneSensor_debug) { Serial.println("DroneSensor::sensorPayload()"); Serial.println(""); }
+  StaticJsonDocument<DOC_SIZE> doc;
+     
+  doc["bootTime"] = _EpochTime;
+  headerPayload(doc);
+  doc["deviceName"] = String(this->_deviceID);
+  doc["deviceIP"] = String(this->_deviceIP);
+
+  if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
+    
+  String payload;
+  serializeJson(doc, payload);
+  return payload;
 }
