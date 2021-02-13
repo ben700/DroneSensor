@@ -109,6 +109,7 @@ class DroneSensor {
     String readDO();
     String readORP();
     String bootPayload(String _EpochTime);
+    enum reading_step buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc);
     void debug();
   private:
     String lookupLedStatus(String LED);
