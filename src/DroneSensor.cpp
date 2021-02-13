@@ -267,6 +267,7 @@ enum reading_step DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SI
       if (millis() >= this->next_step_time) { 
         receive_reading(device_list[0].device);
         if (DroneSensor_debug) { print_error_type(RTD, "Reading Temp Success");} 
+        float temp = DroneSensor_FallbackTemp; 
         if ((RTD.get_error() == Ezo_board::SUCCESS) && (RTD.get_last_received_reading() > -1000.0))
         {
           temp =RTD.get_last_received_reading();
