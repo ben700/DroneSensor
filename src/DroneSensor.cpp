@@ -252,6 +252,7 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   }
 }
 enum reading_step DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc){
+                
   headerPayload(_doc);
   switch(this->current_step)
   {
