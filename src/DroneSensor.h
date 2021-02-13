@@ -112,6 +112,7 @@ class DroneSensor {
     enum EZOReadingStep buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc);
     void debug();
   private:
+    String printEZOReadingStep(enum EZOReadingStep __currentStep);
     String lookupLedStatus(String LED);
     String lookupRestartCodes(String restartCodes);
     void sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc);
