@@ -251,19 +251,19 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
     }
   }
 }
-enum reading_step DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc){
+enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc){
                 
   headerPayload(_doc);
   switch(this->current_step)
   {
-    case reading_step::REQUEST_TEMP:
+    case EZOReadingStep::REQUEST_TEMP:
       if (millis() >= this->next_step_time) { 
         device_list[0].device.send_read_cmd();
         this->next_step_time = millis() + reading_delay;
-        this->current_step = READ_TEMP_AND_REQUEST_DEVICES;
+        this->current_step = EZOReadingStep::READ_TEMP_AND_REQUEST_DEVICES;
       }
       break;
-    case reading_step::READ_TEMP_AND_REQUEST_DEVICES:
+    case EZOReadingStep::READ_TEMP_AND_REQUEST_DEVICES:
       if (millis() >= this->next_step_time) { 
         receive_reading(device_list[0].device);
         if (DroneSensor_debug) { print_error_type(RTD, "Reading Temp Success");} 
@@ -285,10 +285,10 @@ enum reading_step DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SI
           }
         }
         this->next_step_time = millis() + reading_delay;
-        this->current_step = READ_RESPONSE;
+        this->current_step = EZOReadingStep::READ_RESPONSE;
       }
       break;
-    case Ezo_board::READ_RESPONSE:
+    case EZOReadingStep::READ_RESPONSE:
       if (millis() >= this->next_step_time) { 
         for (int i = 1; i < device_list_len; i++ )
         {
@@ -298,7 +298,7 @@ enum reading_step DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SI
           }
         }
         this->next_step_time = millis();
-        this->current_step = REQUEST_TEMP;
+        this->current_step = EZOReadingStep::REQUEST_TEMP;
       }
       break;
   }
