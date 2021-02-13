@@ -295,7 +295,7 @@ enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_
         }
         _doc[RTD.get_name()] = temp;
         _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
-        for (int i = 1; i < device_list_len; i++ )
+        for (int i = 0; i < device_list_len; i++ )
         {
           if(device_list[i]._status == EZOStatus::Connected){
             //device_list[i].device.send_read_with_temp_comp(temp);
