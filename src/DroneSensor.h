@@ -17,7 +17,7 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 
-enum reading_step {REQUEST_TEMP, READ_TEMP_AND_REQUEST_DEVICES, REQUEST_DEVICES };
+enum reading_step {REQUEST_TEMP, READ_TEMP_AND_REQUEST_DEVICES, READ_RESPONSE };
 
 enum class LedStatus: int {
     On = 0,
