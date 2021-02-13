@@ -285,7 +285,7 @@ enum reading_step DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SI
           }
         }
         this->next_step_time = millis() + reading_delay;
-        this->current_step = READ_TEMP_AND_REQUEST_DEVICES;
+        this->current_step = READ_RESPONSE;
       }
       break;
     case Ezo_board::READ_RESPONSE:
