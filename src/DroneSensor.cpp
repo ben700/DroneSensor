@@ -267,6 +267,7 @@ String DroneSensor::printEZOReadingStep(enum EZOReadingStep __currentStep){
 enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc){
   if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload current_step =  "); Serial.println(printEZOReadingStep(this->current_step));}
   if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload next_step_time =  "); Serial.println(String(next_step_time));}
+  if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload millis =  "); Serial.println(String(millis()));}
   headerPayload(_doc);
   switch(this->current_step)
   {
