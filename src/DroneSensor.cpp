@@ -251,7 +251,58 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
     }
   }
 }
-
+enum reading_step DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc){
+  headerPayload(_doc);
+  switch(this->current_step)
+  {
+    case reading_step::REQUEST_TEMP:
+      if (millis() >= this->next_step_time) { 
+        device_list[0].device.send_read_cmd();
+        this->next_step_time = millis() + reading_delay;
+        this->current_step = READ_TEMP_AND_REQUEST_DEVICES;
+      }
+      break;
+    case reading_step::READ_TEMP_AND_REQUEST_DEVICES:
+      if (millis() >= this->next_step_time) { 
+        receive_reading(device_list[0].device);
+        if (DroneSensor_debug) { print_error_type(RTD, "Reading Temp Success");} 
+        if ((RTD.get_error() == Ezo_board::SUCCESS) && (RTD.get_last_received_reading() > -1000.0))
+        {
+          temp =RTD.get_last_received_reading();
+          if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
+            _doc[RTD.get_name()] = String(temp, 1);    
+        } 
+        _doc[RTD.get_name()] = temp;
+        _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
+        for (int i = 1; i < device_list_len; i++ )
+        {
+          if(device_list[i]._status == EZOStatus::Connected){
+            //device_list[i].device.send_read_with_temp_comp(temp);
+            device_list[i].device.send_read_cmd();
+            if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
+          }
+        }
+        this->next_step_time = millis() + reading_delay;
+        this->current_step = READ_TEMP_AND_REQUEST_DEVICES;
+      }
+      break;
+    case Ezo_board::READ_RESPONSE:
+      if (millis() >= this->next_step_time) { 
+        for (int i = 1; i < device_list_len; i++ )
+        {
+          if(device_list[i]._status == EZOStatus::Connected){
+            receive_reading(device_list[i].device);
+            _doc[device_list[i].device.get_name()] = return_error_type(device_list[i].device, String(device_list[i].device.get_last_received_reading(), device_list[i]._precision));  
+          }
+        }
+        this->next_step_time = millis();
+        this->current_step = REQUEST_TEMP;
+      }
+      break;
+  }
+  return this->current_step;
+}
+   
 String DroneSensor::sensorPayload(String _EpochTime)
 {
   if (DroneSensor_debug) { Serial.println("DroneSensor::sensorPayload()"); Serial.println(""); }
