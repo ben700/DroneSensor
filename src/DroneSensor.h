@@ -111,6 +111,7 @@ class DroneSensor {
     String bootPayload(String _EpochTime);
     enum EZOReadingStep buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc);
     void debug();
+    bool hasDevice();
   private:
     String printEZOReadingStep(enum EZOReadingStep __currentStep);
     String lookupLedStatus(String LED);
