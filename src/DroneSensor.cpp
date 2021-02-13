@@ -29,6 +29,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
         Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
         Serial.print(address);
         Serial.println("  !"); 
+        this->current_step = EZOReadingStep::REQUEST_TEMP;
       }
     }
     else
@@ -271,6 +272,9 @@ enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_
   headerPayload(_doc);
   switch(this->current_step)
   {
+    case EZOReadingStep::NO_DEVICES:
+      _doc[Error] = NotConnected; 
+      break;      
     case EZOReadingStep::REQUEST_TEMP:
       if (millis() >= this->next_step_time) { 
         device_list[0].device.send_read_cmd();
