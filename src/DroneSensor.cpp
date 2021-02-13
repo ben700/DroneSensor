@@ -309,7 +309,7 @@ enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_
       break;
     case EZOReadingStep::READ_RESPONSE:
       if (millis() >= this->next_step_time) { 
-        for (int i = 1; i < device_list_len; i++ )
+        for (int i = 0; i < device_list_len; i++ )
         {
           if(device_list[i]._status == EZOStatus::Connected){
             receive_reading(device_list[i].device);
