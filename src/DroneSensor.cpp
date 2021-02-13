@@ -263,6 +263,8 @@ String DroneSensor::printEZOReadingStep(enum EZOReadingStep __currentStep){
       break;
     case EZOReadingStep::READ_RESPONSE:
       return "READ_RESPONSE";
+    case EZOReadingStep::NO_DEVICES:
+      return "NO_DEVICES";
   }
 }
 enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc){
