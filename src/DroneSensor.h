@@ -17,6 +17,7 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 
+enum reading_step {REQUEST_TEMP, READ_TEMP_AND_COMPENSATE, REQUEST_DEVICES, READ_RESPONSE };
 
 enum class LedStatus: int {
     On = 0,
@@ -118,6 +119,7 @@ class DroneSensor {
     String _deviceIP;
     String _deviceID;
     bool DroneSensor_debug=false;
+    enum reading_step current_step = REQUEST_TEMP;
 };
 
 
