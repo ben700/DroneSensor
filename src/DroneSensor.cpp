@@ -275,7 +275,7 @@ enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_
   switch(this->current_step)
   {
     case EZOReadingStep::NO_DEVICES:
-      _doc[Error] = NotConnected; 
+      _doc["Error"] = NotConnected; 
       break;      
     case EZOReadingStep::REQUEST_TEMP:
       if (millis() >= this->next_step_time) { 
