@@ -17,7 +17,7 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 
-enum EZOReadingStep {REQUEST_TEMP, READ_TEMP_AND_REQUEST_DEVICES, READ_RESPONSE };
+enum EZOReadingStep {REQUEST_TEMP, READ_TEMP_AND_REQUEST_DEVICES, READ_RESPONSE, NO_DEVICES };
 
 enum class LedStatus: int {
     On = 0,
@@ -121,7 +121,7 @@ class DroneSensor {
     String _deviceIP;
     String _deviceID;
     bool DroneSensor_debug=false;
-    enum EZOReadingStep current_step = REQUEST_TEMP;
+    enum EZOReadingStep current_step = NO_DEVICES;
     uint32_t next_step_time = 0;
 };
 
