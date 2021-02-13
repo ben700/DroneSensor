@@ -50,6 +50,13 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
 void DroneSensor::debug() {
   DroneSensor_debug=true;
 }
+bool DroneSensor::hasDevice(){
+ if (this->current_step == EZOReadingStep::NO_DEVICES){
+   return false;
+ }else{
+   return true;
+ }
+}
 // determines how long we wait depending on the command
 void DroneSensor::select_delay(String &str) {
   if (str.indexOf("CAL") != -1 || str.indexOf("R") != -1) {
