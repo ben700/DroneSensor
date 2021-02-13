@@ -237,7 +237,7 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   {
     temp =RTD.get_last_received_reading();
     if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
-    _doc[RTD.get_name()] = String(temp, 1);    
+    _doc[RTD.get_name()] = String(temp, device_list[0]._precision);    
   } 
   
   _doc[RTD.get_name()] = temp;
@@ -286,8 +286,12 @@ enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_
         {
           temp =RTD.get_last_received_reading();
           if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
-            _doc[RTD.get_name()] = String(temp, 1);    
+            _doc[RTD.get_name()] = String(temp, device_list[0]._precision);    
         } 
+        else
+        {
+          if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand Failed RTD.get_last_received_reading() using default "); Serial.println(temp);} 
+        }
         _doc[RTD.get_name()] = temp;
         _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
         for (int i = 1; i < device_list_len; i++ )
