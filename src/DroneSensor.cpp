@@ -398,7 +398,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
   }
   _doc[RTD.get_name()] = temp;
   _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
-  for (int i = 0; i < device_list_len; i++ )
+  for (int i = 1; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
       device_list[i].device.send_read_cmd();
@@ -406,7 +406,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
     }
   }
   delay(long_delay);
-  for (int i = 0; i < device_list_len; i++ )
+  for (int i = 1; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
       receive_reading(device_list[i].device);
