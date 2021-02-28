@@ -90,7 +90,8 @@ String DroneSensor::return_error_type(Ezo_board &Device, String success_string) 
 
 String DroneSensor::lookupRestartCodes(String restartCodes){
   if (restartCodes == "P"){
-    return "Powered Off";
+    //return "Powered Off";
+    return "Power";
   }else if (restartCodes == "S"){
     return "Software Reset";
   }else if (restartCodes == "B"){
