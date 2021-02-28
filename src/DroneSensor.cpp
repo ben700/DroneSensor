@@ -187,7 +187,7 @@ void DroneSensor::print_device_response(Ezo_board &Device) {
 
 void DroneSensor::turnParametersOn() {
   for (int i = 0; i < device_list_len; i++) {
-    switch (device_list[i].get_name()) 
+    switch (device_list[i].device.get_name()) 
     {
       case 'EC':
         Serial.println("EC");
