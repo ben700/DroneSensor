@@ -191,7 +191,7 @@ void DroneSensor::turnParametersOn() {
     Serial.println(device_list[i].device.get_name());
     if(device_list[i].device.get_name() == "EC"){
       Serial.print("Conductivity is ");
-      Serial.println(device_list[i]._status);
+     // Serial.println(device_list[i]._status);
       
       device_list[i].device.send_cmd("O,EC,1");
     }else if (device_list[i].device.get_name() == "DO"){
