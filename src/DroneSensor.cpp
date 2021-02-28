@@ -413,6 +413,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
       _doc[device_list[i].device.get_name()] = return_error_type(device_list[i].device, String(device_list[i].device.get_last_received_reading(), device_list[i]._precision));  
     }
   }
+  this->next_step_time = millis()+60000;
 }
 
 
