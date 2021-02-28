@@ -396,7 +396,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
   } else{
     if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand Failed RTD.get_last_received_reading() using default "); Serial.println(temp);} 
   }
-  _doc[RTD.get_name()] = temp;
+  _doc[RTD.get_name()] = String(temp, device_list[0]._precision);   
   _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
   for (int i = 1; i < device_list_len; i++ )
   {
