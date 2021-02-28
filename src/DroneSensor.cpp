@@ -43,7 +43,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
     }
   }
   
- // PH.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
+  PH.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
   EC.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
   DO.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
 }
@@ -183,6 +183,26 @@ void DroneSensor::print_device_response(Ezo_board &Device) {
   print_device_info(Device);                //print our boards name and address
   Serial.print(": ");
   Serial.println(receive_buffer);           //print the boards response
+}
+
+void DroneSensor::turnParametersOn() {
+  for (int i = 0; i < device_list_len; i++) {
+    switch (Device.get_name()) 
+    {
+      case "EC":
+        Serial.println("EC");
+        continue;
+      case "DO":
+        Serial.println("DO");
+        continue;
+      case "ORP":
+        Serial.println("ORP");
+        continue;
+
+     }
+
+
+  }
 }
 
 void DroneSensor::receive_reading(Ezo_board &Device) {              // function to decode the reading after the read command was issued
