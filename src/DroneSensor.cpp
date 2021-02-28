@@ -189,13 +189,13 @@ void DroneSensor::turnParametersOn() {
   for (int i = 0; i < device_list_len; i++) {
     switch (Device.get_name()) 
     {
-      case "EC":
+      case 'EC':
         Serial.println("EC");
         continue;
-      case "DO":
+      case 'DO':
         Serial.println("DO");
         continue;
-      case "ORP":
+      case 'ORP':
         Serial.println("ORP");
         continue;
 
