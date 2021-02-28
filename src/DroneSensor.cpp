@@ -191,15 +191,26 @@ void DroneSensor::turnParametersOn() {
     Serial.println(device_list[i].device.get_name());
     if(device_list[i].device.get_name() == "Conductivity" and device_list[i]._status == EZOStatus::Connected){
       Serial.print("Conductivity is ");
-      device_list[i].device.send_cmd("O,EC,1");
-      device_list[i].device.send_cmd("O,TDS,1");
-      device_list[i].device.send_cmd("O,S,1");
-      device_list[i].device.send_cmd("O,SG,1");
+      command = "O,EC,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,TDS,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,S,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,SG,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
       Serial.println("reconfigured!");
     }else if (device_list[i].device.get_name() == "Dissolved Oxygen" and device_list[i]._status == EZOStatus::Connected){
       Serial.print("Dissolved Oxygen is ");
-      device_list[i].device.send_cmd("O,mg,1");
-      device_list[i].device.send_cmd("O,%,1");
+      command = "O,mg,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,%,1";
+      device_list[i].device.send_cmd(command.c_str());
       Serial.println("reconfigured!");
     }
   }
@@ -405,7 +416,7 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
     String type = cmdReply.substring(cmdReply.indexOf(",")+1, cmdReply.indexOf(",",4));
     String firm = cmdReply.substring(cmdReply.indexOf(",",4)+1);
   
-    doc["DeviceName"] = Device.get_name();
+    doc["Name"] = Device.get_name();
     doc["Firmware"] = firm;
   
     command = "CAL,?";
@@ -416,7 +427,8 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
     }
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
-    doc["Calibration Points"] = calibrationPoints;
+  //  doc["Calibration Points"] = calibrationPoints;
+    doc["CP"] = calibrationPoints;
   
     
     command = "Status";
