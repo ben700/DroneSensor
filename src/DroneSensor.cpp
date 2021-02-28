@@ -189,14 +189,16 @@ void DroneSensor::turnParametersOn() {
   Serial.println("turnParametersOn");
   for (int i = 0; i < device_list_len; i++) {
     Serial.println(device_list[i].device.get_name());
-    if(device_list[i].device.get_name() == "EC"){
+    if(device_list[i].device.get_name() == "Conductivity"){
       Serial.print("Conductivity is ");
      // Serial.println(device_list[i]._status);
-      
       device_list[i].device.send_cmd("O,EC,1");
-    }else if (device_list[i].device.get_name() == "DO"){
+      device_list[i].device.send_cmd("O,TDS,1");
+      device_list[i].device.send_cmd("O,S,1");
+      device_list[i].device.send_cmd("O,SG,1");
+    }else if (device_list[i].device.get_name() == "Dissolved Oxygen"){
       Serial.println("Dissolved Oxygen");
-    }else if (device_list[i].device.get_name() == "ORP"){
+    }else if (device_list[i].device.get_name() == "Oxidation Reduction Potential"){
       Serial.println("Oxidation Reduction Potential");
     }
   }
