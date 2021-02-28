@@ -186,9 +186,12 @@ void DroneSensor::print_device_response(Ezo_board &Device) {
 }
 
 void DroneSensor::turnParametersOn() {
+  Serial.println("turnParametersOn");
   for (int i = 0; i < device_list_len; i++) {
+    Serial.println(device_list[i].device.get_name());
     if(device_list[i].device.get_name() == "EC"){
       Serial.println("EC");
+      device_list[i].device.send_cmd("O,EC,1");
     }else if (device_list[i].device.get_name() == "DO"){
       Serial.println("DO");
     }else if (device_list[i].device.get_name() == "ORP"){
