@@ -529,8 +529,8 @@ void DroneSensor::singleDeviceStatePayloadAsyc (EZODevice &droneDevice, StaticJs
     String type = cmdReply.substring(cmdReply.indexOf(",")+1, cmdReply.indexOf(",",4));
     String firm = cmdReply.substring(cmdReply.indexOf(",",4)+1);
   
-    doc["Name"] = droneDevice.displayName;
-    doc["Firmware"] = firm;
+    doc[Device.get_name()]["Name"] = droneDevice.displayName;
+    doc[Device.get_name()]["Firmware"] = firm;
   
     command = "CAL,?";
     Device.send_cmd(command.c_str());
@@ -540,7 +540,7 @@ void DroneSensor::singleDeviceStatePayloadAsyc (EZODevice &droneDevice, StaticJs
     }
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
-    doc["Calibration Points"] = calibrationPoints;
+    doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
   //  doc["CP"] = calibrationPoints;
   
     
@@ -553,8 +553,8 @@ void DroneSensor::singleDeviceStatePayloadAsyc (EZODevice &droneDevice, StaticJs
 
     String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",")+1,cmdReply.indexOf(",", cmdReply.indexOf(",")+1) );
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",")+1)+1); 
-    doc["Restart"] = lookupRestartCodes(reasonForRestart);
-    doc["Vcc"] = VoltageatVcc;
+    doc[Device.get_name()]["Restart"] = lookupRestartCodes(reasonForRestart);
+    doc[Device.get_name()]["Vcc"] = VoltageatVcc;
 
     
     command = "L,?";
@@ -565,14 +565,14 @@ void DroneSensor::singleDeviceStatePayloadAsyc (EZODevice &droneDevice, StaticJs
     }
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
-    doc["LED"] = lookupLedStatus(LED);
+    doc[Device.get_name()]["LED"] = lookupLedStatus(LED);
     
     command = "O,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
     if(Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
       cmdReply = String(receive_buffer);        //parse the reading into a float
-      doc["Parameter"] = cmdReply.substring(cmdReply.indexOf("O,")+2);
+      doc[Device.get_name()]["Parameter"] = cmdReply.substring(cmdReply.indexOf("O,")+2);
     }
   }
   
