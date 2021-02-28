@@ -31,6 +31,7 @@ enum class EZOStatus: int {
 
 typedef struct
 {
+  String displayName;
   Ezo_board device;
   EZOStatus _status;
   int _precision;
@@ -46,11 +47,11 @@ class DroneSensor {
     Ezo_board DO = Ezo_board(97, "DO");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board ORP = Ezo_board(98, "oxidationReductionPotential");    //create a DO circuit object who's address is 97 and name is "DO"
 
-    EZODevice RTDItem = {RTD, EZOStatus::Unconnected, 1};
-    EZODevice ECItem = {EC, EZOStatus::Unconnected, 0};
-    EZODevice PHItem = {PH, EZOStatus::Unconnected, 2};
-    EZODevice DOItem = {DO, EZOStatus::Unconnected, 1};
-    EZODevice ORPItem = {ORP, EZOStatus::Unconnected, 0};
+    EZODevice RTDItem = {"Temperature", RTD, EZOStatus::Unconnected, 1};
+    EZODevice ECItem = {"Conductivity", EC, EZOStatus::Unconnected, 0};
+    EZODevice PHItem = {"pH", PH, EZOStatus::Unconnected, 2};
+    EZODevice DOItem = {"Dissolved Oxygen", DO, EZOStatus::Unconnected, 1};
+    EZODevice ORPItem = {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, 0};
   
     //array of ezo boards, add any new boards in here for the commands to work with them
     EZODevice device_list[5] = {
