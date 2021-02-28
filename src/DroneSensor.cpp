@@ -605,6 +605,8 @@ void DroneSensor::deviceStatePayloadAsyc (StaticJsonDocument<DOC_SIZE>& _doc){
   {
     if(device_list[i]._status == EZOStatus::Connected){
       singleDeviceStatePayloadAsyc(device_list[i], _doc);
+      Serial.println(device_list[i].device.get_name());
+      serializeJsonPretty(_doc, Serial)
     }
   }  
 }
