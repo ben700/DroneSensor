@@ -510,8 +510,9 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
   serializeJson(doc, output);
   return output; 
 }
-void DroneSensor::singleDeviceStatePayloadAsyc (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc){
+void DroneSensor::singleDeviceStatePayloadAsyc (EZODevice &droneDevice, StaticJsonDocument<DOC_SIZE>& doc){
 
+  Ezo_board Device =  droneDevice.device;
   String command = "I";
   String cmdReply;
   char receive_buffer[32];
@@ -528,7 +529,7 @@ void DroneSensor::singleDeviceStatePayloadAsyc (Ezo_board &Device, StaticJsonDoc
     String type = cmdReply.substring(cmdReply.indexOf(",")+1, cmdReply.indexOf(",",4));
     String firm = cmdReply.substring(cmdReply.indexOf(",",4)+1);
   
-    doc["Name"] = Device.get_name();
+    doc["Name"] = droneDevice.displayName;
     doc["Firmware"] = firm;
   
     command = "CAL,?";
@@ -539,8 +540,8 @@ void DroneSensor::singleDeviceStatePayloadAsyc (Ezo_board &Device, StaticJsonDoc
     }
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
-  //  doc["Calibration Points"] = calibrationPoints;
-    doc["CP"] = calibrationPoints;
+    doc["Calibration Points"] = calibrationPoints;
+  //  doc["CP"] = calibrationPoints;
   
     
     command = "Status";
@@ -565,6 +566,14 @@ void DroneSensor::singleDeviceStatePayloadAsyc (Ezo_board &Device, StaticJsonDoc
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
     doc["LED"] = lookupLedStatus(LED);
+    
+    command = "O,?";
+    Device.send_cmd(command.c_str());
+    select_delay(command);
+    if(Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
+      cmdReply = String(receive_buffer);        //parse the reading into a float
+      doc["Parameter"] = cmdReply.substring(cmdReply.indexOf("O,")+2);
+    }
   }
   
   if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
@@ -595,7 +604,7 @@ void DroneSensor::deviceStatePayloadAsyc (StaticJsonDocument<DOC_SIZE>& _doc){
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
-      singleDeviceStatePayloadAsyc(device_list[i].device, _doc);
+      singleDeviceStatePayloadAsyc(device_list[i], _doc);
     }
   }  
 }
