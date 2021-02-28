@@ -541,7 +541,7 @@ void DroneSensor::singleDeviceStatePayloadAsyc (EZODevice &droneDevice, StaticJs
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
    // doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
-    doc[Device.get_name()][CP"] = calibrationPoints;
+    doc[Device.get_name()]["CP"] = calibrationPoints;
   
     
     command = "Status";
