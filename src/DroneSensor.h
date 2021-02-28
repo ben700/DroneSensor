@@ -83,7 +83,7 @@ class DroneSensor {
 
 
   public:
-    DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false);
+    DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
     void select_delay(String &str);
     void print_error_type(Ezo_board &Device, const char* success_string);
