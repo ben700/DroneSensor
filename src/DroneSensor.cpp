@@ -1,8 +1,8 @@
 #include "DroneSensor.h"
 
-DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID)
+DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
-  
+  DroneSensor_debug = _DroneSensor_debug;
   this->_deviceMAC = __deviceMAC;
   this->_deviceIP = __deviceIP;
   this->_deviceID = __deviceID;
