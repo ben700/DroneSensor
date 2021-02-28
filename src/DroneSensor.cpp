@@ -374,7 +374,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
   if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload next_step_time =  "); Serial.println(String(next_step_time));}
   if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload millis =  "); Serial.println(String(millis()));}
   
-  doc["deviceTime"] = _EpochTime;
+  _doc["deviceTime"] = _EpochTime;
 
   headerPayload(doc);
   if (this->current_step == EZOReadingStep::NO_DEVICES)
@@ -384,7 +384,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
   }
   
   device_list[0].device.send_read_cmd();
-  select_delay("R");
+  sdelay(short_delay);
   receive_reading(device_list[0].device);
   if (DroneSensor_debug) { print_error_type(RTD, "Reading Temp Success");} 
   float temp = DroneSensor_FallbackTemp; 
@@ -405,7 +405,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
       if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
     }
   }
-  select_delay("R");
+  delay(short_delay);
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
