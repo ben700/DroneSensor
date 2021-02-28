@@ -98,7 +98,7 @@ class DroneSensor {
     String sensorPayload(String _EpochTime);
     void sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SIZE>& _doc);
     String singleDeviceStatePayload (Ezo_board &Device);
-    void singleDeviceStatePayloadAsyc (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& _doc);
+    void singleDeviceStatePayloadAsyc (EZODevice &Device, StaticJsonDocument<DOC_SIZE>& _doc);
     String deviceStatePayload ();
     void deviceStatePayloadAsyc (StaticJsonDocument<DOC_SIZE>& _doc);
     String calibrationCommands(String calibrationCommandError = "");
