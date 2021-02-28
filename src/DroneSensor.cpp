@@ -191,7 +191,7 @@ void DroneSensor::turnParametersOn() {
     Serial.println(device_list[i].device.get_name());
     if(device_list[i].device.get_name() == "Conductivity" and device_list[i]._status == EZOStatus::Connected){
       Serial.print("Conductivity is ");
-      command = "O,EC,1";
+      String command = "O,EC,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
       command = "O,TDS,1";
@@ -206,7 +206,7 @@ void DroneSensor::turnParametersOn() {
       Serial.println("reconfigured!");
     }else if (device_list[i].device.get_name() == "Dissolved Oxygen" and device_list[i]._status == EZOStatus::Connected){
       Serial.print("Dissolved Oxygen is ");
-      command = "O,mg,1";
+      String command = "O,mg,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
       command = "O,%,1";
