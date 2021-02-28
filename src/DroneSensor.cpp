@@ -405,7 +405,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
       if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
     }
   }
-  delay(short_delay);
+  delay(long_delay);
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
