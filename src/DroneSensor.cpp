@@ -369,11 +369,14 @@ enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_
   return this->current_step;
 }
    
-void DroneSensor::buildDeviceSensorPayloadAsyc(StaticJsonDocument<DOC_SIZE>& _doc){
+void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SIZE>& _doc){
   if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload current_step =  "); Serial.println(printEZOReadingStep(this->current_step));}
   if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload next_step_time =  "); Serial.println(String(next_step_time));}
   if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload millis =  "); Serial.println(String(millis()));}
-  headerPayload(_doc);
+  
+  doc["deviceTime"] = _EpochTime;
+
+  headerPayload(doc);
   if (this->current_step == EZOReadingStep::NO_DEVICES)
   {
       _doc["Error"] = NotConnected; 
@@ -506,7 +509,7 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
   serializeJson(doc, output);
   return output; 
 }
-void DroneSensor::singleDeviceStatePayloadAsyc (Ezo_board &Device, StaticJsonDocument<DOC_SIZE> doc){
+void DroneSensor::singleDeviceStatePayloadAsyc (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc){
 
   String command = "I";
   String cmdReply;
@@ -587,7 +590,7 @@ String DroneSensor::deviceStatePayload (){
   return payload;
 }
 
-String DroneSensor::deviceStatePayloadAsyc (StaticJsonDocument<DOC_SIZE>& _doc){
+void DroneSensor::deviceStatePayloadAsyc (StaticJsonDocument<DOC_SIZE>& _doc){
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
