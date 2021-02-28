@@ -376,7 +376,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
   
   _doc["deviceTime"] = _EpochTime;
 
-  headerPayload(doc);
+  headerPayload(_doc);
   if (this->current_step == EZOReadingStep::NO_DEVICES)
   {
       _doc["Error"] = NotConnected; 
@@ -384,7 +384,7 @@ void DroneSensor::sensorPayloadAsyc(String _EpochTime, StaticJsonDocument<DOC_SI
   }
   
   device_list[0].device.send_read_cmd();
-  sdelay(short_delay);
+  delay(short_delay);
   receive_reading(device_list[0].device);
   if (DroneSensor_debug) { print_error_type(RTD, "Reading Temp Success");} 
   float temp = DroneSensor_FallbackTemp; 
