@@ -195,10 +195,12 @@ void DroneSensor::turnParametersOn() {
       device_list[i].device.send_cmd("O,TDS,1");
       device_list[i].device.send_cmd("O,S,1");
       device_list[i].device.send_cmd("O,SG,1");
+      Serial.println("reconfigured!");
     }else if (device_list[i].device.get_name() == "Dissolved Oxygen" and device_list[i]._status == EZOStatus::Connected){
-      Serial.println("Dissolved Oxygen");
+      Serial.print("Dissolved Oxygen is ");
       device_list[i].device.send_cmd("O,mg,1");
       device_list[i].device.send_cmd("O,%,1");
+      Serial.println("reconfigured!");
     }
   }
 }
