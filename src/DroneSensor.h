@@ -101,7 +101,9 @@ class DroneSensor {
       ECItem,
       PHItem,
       DOItem,
-      ORPItem
+      ORPItem,
+      CO2Item,
+      HUMItem  
     };
 
 
