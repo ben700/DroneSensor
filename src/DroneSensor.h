@@ -42,7 +42,7 @@ typedef struct
   Ezo_board device;
   EZOStatus _status;
   int _precision;
-  EZOParameter   _parameterList[];
+  EZOParameter   _parameterList[4];
 }  EZODevice;
 
 
@@ -58,32 +58,32 @@ class DroneSensor {
     Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
 
     EZOParameter t_RTD = {"Temperature", "temperature", 1};
-   // EZOParameter *rtd_parameterList[1] = {t_RTD};
+   // EZOParameter rtd_parameterList[1] = {t_RTD};
  
     EZOParameter ph_PH = {"pH", "PH", 2};
-    EZOParameter *ph_parameterList[1] = {ph_PH};
+    EZOParameter ph_parameterList[1] = {ph_PH};
                                          
     EZOParameter ec_EC = {"Conductivity", "conductivity", 0};
     EZOParameter tds_EC = {"Total Dissolved Solids", "totalDissolvedSolids", 0};
     EZOParameter sal_EC = {"Salinity", "salinity", 0};
     EZOParameter sg_EC = {"Specific Gravity", "specificGravity", 0};
-    EZOParameter *ec_parameterList[4] = {ec_EC, tds_EC, sal_EC, sg_EC};
+    EZOParameter ec_parameterList[4] = {ec_EC, tds_EC, sal_EC, sg_EC};
 
     EZOParameter do_DO = {"Dissolved Oxygen", "DO", 0};
     EZOParameter sat_DO = {"Saturation", "saturation", 0};
-    EZOParameter *do_parameterList[2] = {do_DO, sat_DO};
+    EZOParameter do_parameterList[2] = {do_DO, sat_DO};
 
     EZOParameter orp_ORP = {"Oxidation Reduction Potential", "oxidationReductionPotential", 0};
-    EZOParameter *orp_parameterList[1] = {orp_ORP};
+    EZOParameter orp_parameterList[1] = {orp_ORP};
 
     EZOParameter co2_CO2 = {"CO2", "CO2", 0};
     EZOParameter tem_CO2= {"Temperature", "temperature", 1};
-    EZOParameter *co2_parameterList[2] = {co2_CO2, tem_CO2};
+    EZOParameter co2_parameterList[2] = {co2_CO2, tem_CO2};
 
     EZOParameter hum_HUM= {"Humitity", "humidity", 0};
     EZOParameter tem_HUM= {"Temperature", "temperature", 0};
     EZOParameter dew_HUM= {"Dew Point", "dewPoint", 0};                       
-    EZOParameter *hum_parameterList[3] = {hum_HUM, tem_HUM, dew_HUM};
+    EZOParameter hum_parameterList[3] = {hum_HUM, tem_HUM, dew_HUM};
 
                                          
             
