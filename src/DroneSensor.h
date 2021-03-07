@@ -42,7 +42,7 @@ typedef struct
   Ezo_board device;
   EZOStatus _status;
   int _precision;
-  EZOParameter   *_parameterList[];
+  EZOParameter   _parameterList[];
 }  EZODevice;
 
 
@@ -58,7 +58,7 @@ class DroneSensor {
     Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
 
     EZOParameter *t_RTD = {"Temperature", "temperature", 1};
-    EZOParameter *rtd_parameterList[1] = {t_RTD};
+   // EZOParameter *rtd_parameterList[1] = {t_RTD};
  
     EZOParameter ph_PH = {"pH", "PH", 2};
     EZOParameter *ph_parameterList[1] = {ph_PH};
@@ -87,7 +87,7 @@ class DroneSensor {
 
                                          
             
-    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, 1, rtd_parameterList};
+    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, 1, {t_RTD}};
     EZODevice ECItem = (EZODevice) {"Conductivity", EC, EZOStatus::Unconnected, 0, ec_parameterList};
     EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, 2, ph_parameterList};
     EZODevice DOItem = (EZODevice) {"Dissolved Oxygen", DO, EZOStatus::Unconnected, 1, do_parameterList};
