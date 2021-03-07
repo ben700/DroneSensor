@@ -42,7 +42,7 @@ typedef struct
   Ezo_board device;
   EZOStatus _status;
   int _precision;
-  EZOParameter   *_parameterList[];
+  EZOParameter   _parameterList[];
 }  EZODevice;
 
 
