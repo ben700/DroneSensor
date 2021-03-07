@@ -29,12 +29,20 @@ enum class EZOStatus: int {
     Unconnected = 0
 };
 
+
+enum class EZOParameter: int {
+    String _displayName;
+    String _payloadName;
+    int _precision;
+};
+
 typedef struct
 {
   String displayName;
   Ezo_board device;
   EZOStatus _status;
   int _precision;
+  EZOParameter   _parameterList[];
 }  EZODevice;
 
 
@@ -46,12 +54,47 @@ class DroneSensor {
     Ezo_board EC = Ezo_board(100, "conductivity");      //create an EC circuit object who's address is 100 and name is "EC"
     Ezo_board DO = Ezo_board(97, "DO");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board ORP = Ezo_board(98, "oxidationReductionPotential");    //create a DO circuit object who's address is 97 and name is "DO"
+    Ezo_board CO2 = Ezo_board(105, "CO2");    //create a DO circuit object who's address is 97 and name is "DO"
+    Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
 
-    EZODevice RTDItem = {"Temperature", RTD, EZOStatus::Unconnected, 1};
-    EZODevice ECItem = {"Conductivity", EC, EZOStatus::Unconnected, 0};
-    EZODevice PHItem = {"pH", PH, EZOStatus::Unconnected, 2};
-    EZODevice DOItem = {"Dissolved Oxygen", DO, EZOStatus::Unconnected, 1};
-    EZODevice ORPItem = {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, 0};
+    EZOParameter t_RTD = EZOParameter("Temperature", "temperature", 1);
+    EZOParameter rtd_parameterList[1] = {t_RTD);
+ 
+    EZOParameter ph_PH = EZOParameter("pH", "PH", 2);
+    EZOParameter ph_parameterList[1] = {ph_PH);
+                                         
+    EZOParameter ec_EC = EZOParameter("Conductivity", "conductivity", 0);
+    EZOParameter tds_EC = EZOParameter("Total Dissolved Solids", "totalDissolvedSolids", 0);
+    EZOParameter sal_EC = EZOParameter("Salinity", "salinity", 0);
+    EZOParameter sg_EC = EZOParameter("Specific Gravity", "specificGravity", 0);
+    EZOParameter ec_parameterList[4] = {ec_EC, tds_EC, sal_EC, sg_EC);
+
+    EZOParameter do_DO = EZOParameter("Dissolved Oxygen", "DO", 0);
+    EZOParameter sat_DO = EZOParameter("Saturation", "saturation", 0);
+    EZOParameter do_parameterList[2] = {do_DO, sat_DO);
+
+    EZOParameter orp_ORP = EZOParameter("Oxidation Reduction Potential", "oxidationReductionPotential", 0);
+    EZOParameter orp_parameterList[1] = {orp_ORP);
+
+    EZOParameter co2_CO2 = EZOParameter("CO2", "CO2", 0);
+    EZOParameter tem_CO2= EZOParameter("Temperature", "temperature", 1);
+    EZOParameter co2_parameterList[2] = {co2_CO2, tem_CO2);
+
+    EZOParameter hum_HUM= EZOParameter("Humitity", "humidity", 0);
+    EZOParameter tem_HUM= EZOParameter("Temperature", "temperature", 0);
+    EZOParameter dew_HUM= EZOParameter("Dew Point", "dewPoint", 0);
+                                         
+    EZOParameter hum_parameterList[3] = {hum_HUM, tem_HUM, dew_HUM);
+
+                                         
+            
+    EZODevice RTDItem = {"Temperature", RTD, EZOStatus::Unconnected, 1, rtd_parameterList};
+    EZODevice ECItem = {"Conductivity", EC, EZOStatus::Unconnected, 0, ec_parameterList};
+    EZODevice PHItem = {"pH", PH, EZOStatus::Unconnected, 2, ph_parameterList};
+    EZODevice DOItem = {"Dissolved Oxygen", DO, EZOStatus::Unconnected, 1, do_parameterList};
+    EZODevice ORPItem = {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, 0, orp_parameterList};
+    EZODevice CO2Item = {"Gaseous CO2", CO2, EZOStatus::Unconnected, 0, co2_parameterList};
+    EZODevice HUMItem = {"Humitity", HUM, EZOStatus::Unconnected, 0, hum_parameterList};
   
     //array of ezo boards, add any new boards in here for the commands to work with them
     EZODevice device_list[5] = {
