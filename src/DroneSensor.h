@@ -96,7 +96,7 @@ class DroneSensor {
     EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, 0, {hum_HUM, tem_HUM, dew_HUM}};
   
     //array of ezo boards, add any new boards in here for the commands to work with them
-    EZODevice device_list[5] = {
+    EZODevice device_list[7] = {
       RTDItem,
       ECItem,
       PHItem,
