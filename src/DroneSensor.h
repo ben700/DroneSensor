@@ -60,7 +60,7 @@ class DroneSensor {
     EZOParameter t_RTD = {"Temperature", "temperature", 1};
     EZOParameter rtd_parameterList[1] = {t_RTD};
  
-    EZOParameter ph_PH = EZOParameter("pH", "PH", 2);
+    EZOParameter ph_PH = {"pH", "PH", 2};
     EZOParameter ph_parameterList[1] = {ph_PH};
                                          
     EZOParameter ec_EC = {"Conductivity", "conductivity", 0};
