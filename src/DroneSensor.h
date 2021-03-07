@@ -42,7 +42,7 @@ typedef struct
   Ezo_board device;
   EZOStatus _status;
   int _precision;
-  EZOParameter   _parameterList[4];
+  EZOParameter   *_parameterList[];
 }  EZODevice;
 
 
@@ -88,13 +88,13 @@ class DroneSensor {
 
                                          
             
-    EZODevice RTDItem = {"Temperature", RTD, EZOStatus::Unconnected, 1, rtd_parameterList};
-    EZODevice ECItem = {"Conductivity", EC, EZOStatus::Unconnected, 0, ec_parameterList};
-    EZODevice PHItem = {"pH", PH, EZOStatus::Unconnected, 2, ph_parameterList};
-    EZODevice DOItem = {"Dissolved Oxygen", DO, EZOStatus::Unconnected, 1, do_parameterList};
-    EZODevice ORPItem = {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, 0, orp_parameterList};
-    EZODevice CO2Item = {"Gaseous CO2", CO2, EZOStatus::Unconnected, 0, co2_parameterList};
-    EZODevice HUMItem = {"Humitity", HUM, EZOStatus::Unconnected, 0, hum_parameterList};
+    EZODevice RTDItem = {"Temperature", RTD, EZOStatus::Unconnected, 1, &rtd_parameterList};
+    EZODevice ECItem = {"Conductivity", EC, EZOStatus::Unconnected, 0, &ec_parameterList};
+    EZODevice PHItem = {"pH", PH, EZOStatus::Unconnected, 2, &ph_parameterList};
+    EZODevice DOItem = {"Dissolved Oxygen", DO, EZOStatus::Unconnected, 1, &do_parameterList};
+    EZODevice ORPItem = {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, 0, &orp_parameterList};
+    EZODevice CO2Item = {"Gaseous CO2", CO2, EZOStatus::Unconnected, 0, &co2_parameterList};
+    EZODevice HUMItem = {"Humitity", HUM, EZOStatus::Unconnected, 0, &hum_parameterList};
   
     //array of ezo boards, add any new boards in here for the commands to work with them
     EZODevice device_list[5] = {
