@@ -80,7 +80,7 @@ class DroneSensor {
     EZOParameter tem_CO2= {"Temperature", "temperature", 1};
     EZOParameter co2_parameterList[2] = {co2_CO2, tem_CO2};
 
-    EZOParameter hum_HUM= {"Humitity", "humidity", 0);
+    EZOParameter hum_HUM= {"Humitity", "humidity", 0};
     EZOParameter tem_HUM= {"Temperature", "temperature", 0};
     EZOParameter dew_HUM= {"Dew Point", "dewPoint", 0};
                                          
