@@ -30,11 +30,11 @@ enum class EZOStatus: int {
 };
 
 
-enum class EZOParameter: int {
+typedef struct{
     String _displayName;
     String _payloadName;
     int _precision;
-};
+} EZOParameter;
 
 typedef struct
 {
