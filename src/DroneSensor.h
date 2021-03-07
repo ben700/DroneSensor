@@ -57,7 +57,7 @@ class DroneSensor {
     Ezo_board CO2 = Ezo_board(105, "CO2");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
 
-    EZOParameter *t_RTD = {"Temperature", "temperature", 1};
+    EZOParameter t_RTD = {"Temperature", "temperature", 1};
    // EZOParameter *rtd_parameterList[1] = {t_RTD};
  
     EZOParameter ph_PH = {"pH", "PH", 2};
