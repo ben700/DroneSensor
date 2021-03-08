@@ -450,12 +450,11 @@ String DroneSensor::sensorPayload(String _EpochTime)
       char receive_buffer[32];
       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
         for(int y=0; y < device_list[i]._countParameter; y++){
-          Serial.println("Size of parameted "+device_list[i]._parameterList[y]._displayName+" is " + String((device_list[i]._parameterList[y]._payloadName.length())) + " key is [" + String(device_list[i]._parameterList[y]._payloadName) + "]");
           char * pReading;
           pReading = strtok (receive_buffer,",");
           if(pReading != NULL){
             if(device_list[i]._parameterList[y]._payloadName != NULL and device_list[i]._parameterList[y]._payloadName.length() >0){
-              doc[device_list[i]._parameterList[y]._payloadName] = String(pReading);
+              doc[device_list[i].device.get_name()][device_list[i]._parameterList[y]._payloadName] = String(pReading);
             }
           }else{
               Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName);
