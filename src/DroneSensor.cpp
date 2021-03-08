@@ -500,9 +500,9 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
    
 bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   bool returnCode = true;
-  Serial.println("Fallback Temperature");
+  Serial.println("processConfig");
   if(_config["Fallback Temperature"] != NULL){
-    Serial.println("Fallback Temperature atof");
+    Serial.println("Processing Fallback Temperature");
     float __fallbackTemperature = atof(_config["Fallback Temperature"]);
     Serial.println("Setting Fallback Temperature to " + String(__fallbackTemperature));
     if(__fallbackTemperature > 0){
@@ -511,6 +511,7 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   }
 
   if(_config["Poll Delay"] != NULL){
+    Serial.println("Processing Poll Delay config ");
     int __pollDelay = atoi(_config["Poll Delay"]);
     Serial.println("Setting Poll Delay to " + String(__pollDelay));
     if(__pollDelay > 100){
@@ -519,12 +520,14 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   }  
 
   if(_config["Parameters"] != NULL){
-    Serial.println("Turning Parameters " + String(_config["Parameters"]));
+    Serial.println("Processing Parameters config ");
     if(_config["Parameters"] == "Off"){
+      Serial.println("Turning Parameters Off");
       turnParametersOff();
     }
     else
     {
+      Serial.println("Turning Parameters On");
       turnParametersOn();      
     }
   }  
