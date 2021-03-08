@@ -453,7 +453,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
           char * pReading;
           pReading = strtok (receive_buffer,",");
           Serial.println("Size of parameted "+device_list[i]._parameterList[y]._displayName+" is " + String((device_list[i]._parameterList[y]._payloadName.length())) + " key is [" + String(device_list[i]._parameterList[y]._payloadName) + "]");
-          if(device_list[i]._parameterList[y]._payloadName is not null and device_list[i]._parameterList[y]._payloadName.length() >0){
+          if(device_list[i]._parameterList[y]._payloadName != null and device_list[i]._parameterList[y]._payloadName.length() >0){
             if(pReading != NULL){
               doc[device_list[i]._parameterList[y]._payloadName] = String(pReading);
             }else{
