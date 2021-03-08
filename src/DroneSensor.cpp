@@ -267,7 +267,7 @@ void DroneSensor::turnParametersOff() {
       device_list[i].device.send_cmd(command.c_str());
       if (DroneSensor_debug) {Serial.println(F("reconfigured!"));}
     }else if (device_list[i].device.get_name() == "HUM" and device_list[i]._status == EZOStatus::Connected){
-      if (DroneSensor_debug) {Serial.print("F(Humitity is "));}
+      if (DroneSensor_debug) {Serial.print(F(Humitity is "));}
       String command = "O,HUM,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
