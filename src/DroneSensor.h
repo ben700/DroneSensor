@@ -164,7 +164,7 @@ class DroneSensor {
     String _deviceID;
     bool DroneSensor_debug=false;
     enum EZOReadingStep current_step = NO_DEVICES;
-    _FallbackTemp = 19.5;
+    float _FallbackTemp = 19.5;
 
 };
 
