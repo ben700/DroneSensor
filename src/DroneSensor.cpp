@@ -522,17 +522,19 @@ String DroneSensor::deviceStatePayload (){
 bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   for (int i = 0; i < device_list_len; i++ )
   {
-    if(_command[device_list[i].device.get_name()]["Command"].length > 0){
+    if(_command[device_list[i].device.get_name()] != NULL and _command[device_list[i].device.get_name()]["Command"] != NULL){
       if(device_list[i]._status == EZOStatus::Connected){
-         device_list[i].device.send_cmd(_command[device_list[i].device.get_name()]["Command"].c_str());
-         select_delay(_command[device_list[i].device.get_name()]["Command"]);
+        String __command = _command[device_list[i].device.get_name()]["Command"]
+         device_list[i].device.send_cmd(__command.c_str());
+         select_delay(__command);
          if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
+           Serial.println("Success : Processing Command " + String(_command[device_list[i].device.get_name()]["Command"]) +" for " + String(device_list[i].device.get_name()) );
            return true;
          }
       }
       else
       {
-        Serial.println("Failed : Processing Command " + _command[device_list[i].device.get_name()]["Command"] +" for " + String(device_list[i].device.get_name()) + " not connected");
+        Serial.println("Failed : Processing Command " + String(_command[device_list[i].device.get_name()]["Command"]) +" for " + String(device_list[i].device.get_name()) + " not connected");
       }
     }
   } 
