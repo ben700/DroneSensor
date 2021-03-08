@@ -447,9 +447,20 @@ String DroneSensor::sensorPayload(String _EpochTime)
   {
     Serial.println("Processing " + String(device_list[i].device.get_name()));
     if(device_list[i]._status == EZOStatus::Connected){
-      Serial.println("Connected " + String(device_list[i].device.get_name()));
-      receive_reading(device_list[i].device);
-      doc[device_list[i].device.get_name()] = return_error_type(device_list[i].device, String(device_list[i].device.get_last_received_reading(), device_list[i]._precision));  
+      
+      if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
+        cmdReply = String(receive_buffer);        //parse the reading into a float
+        for(int y=0; y < device_list[i]._countParameter; y++){
+          char * pReading;
+          pReading = strtok (receive_buffer,",");
+          if(sizeof(device_list[i]._parameterList[y]._payloadName) >0){
+            doc[device_list[i]._parameterList[y]._payloadName] = float(pReading);
+          }
+        }
+      }
+ //     Serial.println("Connected " + String(device_list[i].device.get_name()));
+ //     receive_reading(device_list[i].device);
+ //     doc[device_list[i].device.get_name()] = return_error_type(device_list[i].device, String(device_list[i].device.get_last_received_reading(), device_list[i]._precision));  
     }
   }
   
