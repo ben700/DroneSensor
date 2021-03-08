@@ -269,25 +269,35 @@ String DroneSensor::readORP() {              // function to decode the reading a
 void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand()");}
   float temp = DroneSensor_FallbackTemp;
-  RTD.send_read_cmd();
-  delay(reading_delay);
-  receive_reading(RTD);
-  if (DroneSensor_debug) { print_error_type(RTD, "Reading Temp Success");} 
-  if ((RTD.get_error() == Ezo_board::SUCCESS) && (RTD.get_last_received_reading() > -1000.0))
-  {
-    temp =RTD.get_last_received_reading();
-    if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
-    _doc[RTD.get_name()] = String(temp, device_list[0]._precision);    
-  } 
+  if(device_list[0]._status == EZOStatus::Connected){
+    device_list[0].device.send_read_cmd();
+    delay(reading_delay);
+    receive_reading(device_list[0].device);
+    if (DroneSensor_debug) { print_error_type(device_list[0].device, "Reading Temp Success");} 
+    if ((RTD.get_error() == Ezo_board::SUCCESS) && (device_list[0].device.get_last_received_reading() > -1000.0))
+    {
+      temp =device_list[0].device.get_last_received_reading();
+      if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
+      _doc[device_list[0].device.get_name()] = String(temp, device_list[0]._precision);    
+    } 
   
-  _doc[RTD.get_name()] = temp;
-  _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
-  for (int i = 1; i < device_list_len; i++ )
-  {
-    if(device_list[i]._status == EZOStatus::Connected){
-      //device_list[i].device.send_read_with_temp_comp(temp);
-      device_list[i].device.send_read_cmd();
-      if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
+    _doc[device_list[0].device.get_name()] = temp;
+    _doc[device_list[0].device.get_name()]["return_code"] = return_error_type(RTD, "Success");
+    for (int i = 1; i < device_list_len; i++ )
+    {
+      if(device_list[i]._status == EZOStatus::Connected){
+        device_list[i].device.send_read_with_temp_comp(temp);
+        //device_list[i].device.send_read_cmd();
+        if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
+      }
+    }
+  }else{
+    for (int i = 1; i < device_list_len; i++ )
+    {
+      if(device_list[i]._status == EZOStatus::Connected){
+        device_list[i].device.send_read_cmd();
+        if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
+      }
     }
   }
 }
