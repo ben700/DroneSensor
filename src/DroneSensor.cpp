@@ -410,8 +410,8 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
     
     Serial.print("Looking for command for " + String(device_list[i].device.get_name()));
     serializeJsonPretty(_command[device_list[i].device.get_name()], Serial);
-    Serial.println("Command found " + String(_command[device_list[i].device.get_name()]["Command"]));
-    
+    Serial.print("Command found ");
+    serializeJsonPretty(_command[device_list[i].device.get_name()]["Command"], Serial);
       
     if(_command[device_list[i].device.get_name()] != NULL and _command[device_list[i].device.get_name()]["Command"] != NULL){
       String __command = _command[device_list[i].device.get_name()]["Command"];
