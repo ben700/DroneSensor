@@ -349,14 +349,15 @@ String DroneSensor::sensorPayload(String _EpochTime)
 
   sendReadCommand(doc);
   delay(reading_delay);
-  Serial.println("Send read now do read");
   for (int i = 0; i < device_list_len; i++ )
   {
-    Serial.println("Processing " + String(device_list[i].device.get_name()));
     if(device_list[i]._status == EZOStatus::Connected){
       Serial.println("EZOStatus::Connected " + String(device_list[i].device.get_name()));
       char receive_buffer[32];
       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
+        Serial.println("Ezo_board::SUCCESS " + String(device_list[i].device.get_name()));
+        Serial.println("_payloadName " + device_list[i]._parameterList[0]._payloadName);
+        
         char * pReading;
         char delimiter[] = ",";
         pReading = strtok (receive_buffer,delimiter);
