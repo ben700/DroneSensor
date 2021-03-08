@@ -243,15 +243,12 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
     delay(reading_delay);
     receive_reading(device_list[0].device);
     if (DroneSensor_debug) { print_error_type(device_list[0].device, "Reading Temp Success");} 
-    if ((RTD.get_error() == Ezo_board::SUCCESS) && (device_list[0].device.get_last_received_reading() > -1000.0))
+    if ((device_list[0].device.get_error() == Ezo_board::SUCCESS) && (device_list[0].device.get_last_received_reading() > -1000.0))
     {
       temp =device_list[0].device.get_last_received_reading();
       if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
-      _doc[device_list[0].device.get_name()] = String(temp, device_list[0]._precision);    
     } 
   
-    _doc[device_list[0].device.get_name()] = temp;
-    _doc[device_list[0].device.get_name()]["return_code"] = return_error_type(RTD, "Success");
     for (int i = 1; i < device_list_len; i++ )
     {
       if(device_list[i]._status == EZOStatus::Connected){
@@ -312,7 +309,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
         for(int y=0; y < device_list[i]._countParameter; y++){
           if(pReading != NULL){
             if(device_list[i]._parameterList[y]._payloadName != NULL and device_list[i]._parameterList[y]._payloadName.length() >0){
-              doc[device_list[i]._parameterList[y]._payloadName] = String(pReading);
+              doc[device_list[i]._parameterList[y]._payloadName] = String(pReading, device_list[i]._parameterList[y]._precision);
             }
           }else{
               Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName + " for " + String(device_list[i].device.get_name()));
