@@ -638,7 +638,7 @@ void DroneSensor::test(){
        select_delay(command);       
        if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
          Serial.print(String(device_list[i].device.get_name()) + " parameters :- ");
-         Serial.println(String(receive_buffer));        //parse the reading into a float
+         Serial.println(cmdReply);        //parse the reading into a float
          
          Serial.print(String(device_list[i].device.get_name()) + " returned :- ");
          Serial.println(String(receive_buffer));        //parse the reading into a float
@@ -646,12 +646,13 @@ void DroneSensor::test(){
        else
        {
          Serial.print(String(device_list[i].device.get_name()) + " parameters :- ");
-         Serial.println(String(receive_buffer));        //parse the reading into a float
+         Serial.println(cmdReply);        //parse the reading into a float
          
          Serial.print(String(device_list[i].device.get_name()) + " returned :- ");
          Serial.println("Read sensors failed");        //parse the reading into a float
          
        }
+       cmdReply="";
      }
      else
      {
