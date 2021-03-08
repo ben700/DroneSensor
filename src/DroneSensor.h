@@ -152,6 +152,7 @@ class DroneSensor {
     uint32_t next_step_time = 0;
     void test();
     int pollDelay = 60000;
+    bool loggingData = true;
   private:
     String printEZOReadingStep(enum EZOReadingStep __currentStep);
     String lookupLedStatus(String LED);
