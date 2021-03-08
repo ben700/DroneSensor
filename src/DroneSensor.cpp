@@ -354,6 +354,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
   {
     Serial.println("Processing " + String(device_list[i].device.get_name()));
     if(device_list[i]._status == EZOStatus::Connected){
+      Serial.println("EZOStatus::Connected " + String(device_list[i].device.get_name()));
       char receive_buffer[32];
       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
         char * pReading;
