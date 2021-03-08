@@ -498,7 +498,7 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   return returnCode;
  }
    
-bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _config){
+bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   bool returnCode = true;
   if(_config["Fallback Temperature"] != NULL){
     float __fallbackTemperature = atof(_config["Fallback Temperature"]);
