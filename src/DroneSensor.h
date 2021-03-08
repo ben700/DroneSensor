@@ -157,6 +157,7 @@ class DroneSensor {
     bool hasDevice();
     void turnParametersOn();
     uint32_t next_step_time = 0;
+    void test();
   private:
     String printEZOReadingStep(enum EZOReadingStep __currentStep);
     String lookupLedStatus(String LED);
