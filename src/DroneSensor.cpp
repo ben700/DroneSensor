@@ -407,11 +407,9 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   bool returnCode = true;
   for (int i = 0; i < device_list_len; i++ ){
   
-    Serial.print("Command found ");
     String command = _command[device_list[i].device.get_name()]["Command"];
-    Serial.println(command);
     
-    if(command != NULL and command != "null"){
+    if(command != NULL){
       String __command = _command[device_list[i].device.get_name()]["Command"];
       Serial.println("Found command " + String(__command) + " for " + String(device_list[i].device.get_name()));
       if(device_list[i]._status == EZOStatus::Connected){
