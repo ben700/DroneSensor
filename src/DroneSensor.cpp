@@ -299,16 +299,19 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
       if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
     } 
   
-    for (int i = 1; i < device_list_len; i++ )
+    for (int i = 0; i < device_list_len; i++ )
     {
       if(device_list[i]._status == EZOStatus::Connected){
-        device_list[i].device.send_read_with_temp_comp(temp);
-        //device_list[i].device.send_read_cmd();
+        if(device_list[i].tempCompensation){
+          device_list[i].device.send_read_with_temp_comp(temp);
+        }else{
+          device_list[i].device.send_read_cmd();
+        }
         if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
       }
     }
   }else{
-    for (int i = 1; i < device_list_len; i++ )
+    for (int i = 0; i < device_list_len; i++ )
     {
       if(device_list[i]._status == EZOStatus::Connected){
         device_list[i].device.send_read_cmd();
@@ -347,7 +350,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
   sendReadCommand(doc);
   delay(reading_delay);
   Serial.println("Send read now do read");
-  for (int i = 1; i < device_list_len; i++ )
+  for (int i = 0; i < device_list_len; i++ )
   {
     Serial.println("Processing " + String(device_list[i].device.get_name()));
     if(device_list[i]._status == EZOStatus::Connected){
