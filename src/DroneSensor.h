@@ -28,7 +28,7 @@ enum class EZOStatus {
 typedef struct{
     String _displayName;
     String _payloadName;
-    int _precision;
+    uint32_t _precision;
 } EZOParameter;
 
 typedef struct
@@ -37,7 +37,7 @@ typedef struct
   Ezo_board device;
   EZOStatus _status;
   bool tempCompensation;
-  int   _countParameter;
+  uint32_t   _countParameter;
   EZOParameter   _parameterList[4];
 }  EZODevice;
 
@@ -89,15 +89,15 @@ class DroneSensor {
 
 
     //enable pins for each circuit
-    const int EN_PH = 14;
-    const int EN_EC = 12;
-    const int EN_RTD = 15;
-    const int EN_AUX = 13;
+    const uint32_t EN_PH = 14;
+    const uint32_t EN_EC = 12;
+    const uint32_t EN_RTD = 15;
+    const uint32_t EN_AUX = 13;
 
   
-    const unsigned long short_delay = 300;              //how long we wait for most commands and queries
-    const unsigned long long_delay = 1200;              //how long we wait for commands like cal and R (see datasheets for which commands have longer wait times)
-    const unsigned long reading_delay = 2000;
+    const uint32_t short_delay = 300;              //how long we wait for most commands and queries
+    const uint32_t long_delay = 1200;              //how long we wait for commands like cal and R (see datasheets for which commands have longer wait times)
+    const uint32_t reading_delay = 2000;
 
     float k_val = 0;                                    //holds the k value of the ec circuit
 
