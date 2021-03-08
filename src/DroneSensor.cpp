@@ -30,9 +30,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
         Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
         Serial.print(address);
         Serial.println("  !");
-        if(device_list[i].tempCompensation){
-          device_list[i].device.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
-        }
+        
       }
     }
     else
@@ -43,6 +41,17 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
         Serial.print(address);
         Serial.println("  !");       
       }
+    }
+  }
+  setFallbackTemp(this->_FallbackTemp);
+}
+
+void DroneSensor::setFallbackTemp(float __FallbackTemp){
+  this->_FallbackTemp = __FallbackTemp;
+  for (int i = 0; i < device_list_len; i++ )
+  {
+    if(device_list[i].tempCompensation){
+      device_list[i].device.send_cmd_with_num("T,", this->_FallbackTemp);
     }
   }
 }
@@ -374,11 +383,10 @@ String DroneSensor::sensorPayload(String _EpochTime)
   return output; 
 }
 
-String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
+void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc){
 
   String command = "I";
   String cmdReply;
-  StaticJsonDocument<DOC_SIZE> doc;
   char receive_buffer[32];
 
   Device.send_cmd(command.c_str());
@@ -393,8 +401,8 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
     String type = cmdReply.substring(cmdReply.indexOf(",")+1, cmdReply.indexOf(",",4));
     String firm = cmdReply.substring(cmdReply.indexOf(",",4)+1);
   
-    doc["Name"] = Device.get_name();
-    doc["Firmware"] = firm;
+    doc[Device.get_name()]["Name"] = Device.get_name();
+    doc[Device.get_name()]["Firmware"] = firm;
   
     command = "CAL,?";
     Device.send_cmd(command.c_str());
@@ -404,10 +412,9 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
     }
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
-  //  doc["Calibration Points"] = calibrationPoints;
-    doc["CP"] = calibrationPoints;
+    doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
+  //  doc[Device.get_name()]["CP"] = calibrationPoints;
   
-    
     command = "Status";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -417,8 +424,8 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
 
     String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",")+1,cmdReply.indexOf(",", cmdReply.indexOf(",")+1) );
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",")+1)+1); 
-    doc["Restart"] = lookupRestartCodes(reasonForRestart);
-    doc["Vcc"] = VoltageatVcc;
+    doc[Device.get_name()]["Restart"] = lookupRestartCodes(reasonForRestart);
+    doc[Device.get_name()]["Vcc"] = VoltageatVcc;
 
     
     command = "L,?";
@@ -429,26 +436,35 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
     }
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
-    doc["LED"] = lookupLedStatus(LED);
+    doc[Device.get_name()]["LED"] = lookupLedStatus(LED);
   }
-  
-  if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
-  
-  String output;
-  serializeJson(doc, output);
-  return output; 
+    
+  return;
 }
 
 
 String DroneSensor::deviceStatePayload (){
-  String payload = "";
+  StaticJsonDocument<DOC_SIZE> doc;
+  doc["Fallback Temperature"] = this->_FallbackTemp;
+  doc["Poll Delay"] = this->pollDelay;
+  this->parametersOn ? doc["Parameters"] = "On" : doc["Parameters"] = "Off" ;
+  
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
-      payload = payload + singleDeviceStatePayload(device_list[i].device);
+      if(device_list[i].device.get_name() == "conductivity")
+      {
+        get_ec_k_value();
+        doc[device_list[i].device.get_name()]["k Value"] = k_val;
+      }
+      doc[device_list[i].device.get_name()]["Temperature Compensation"] = device_list[i].tempCompensation;
+      singleDeviceStatePayload(device_list[i].device, doc);
     }
   }  
-  return payload;
+  if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
+  String output;
+  serializeJson(doc, output);
+  return output; 
 }
 
 bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
@@ -482,6 +498,33 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   return returnCode;
  }
    
+bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _config){
+  bool returnCode = true;
+  if(_config["Fallback Temperature"] != NULL){
+    float __fallbackTemperature = atof(_config["Fallback Temperature"]);
+    if(__fallbackTemperature > 0){
+      setFallbackTemp(__fallbackTemperature);
+    }
+  }
+
+  if(_config["Poll Delay"] != NULL){
+    int __pollDelay = atoi(_config["Poll Delay"]);
+    if(__pollDelay > 100){
+      this->pollDelay =__pollDelay;
+    }
+  }  
+
+  if(_config["Parameters"] != NULL){
+    if(_config["Parameters"] == "Off"){
+      turnParametersOff();
+    }
+    else
+    {
+      turnParametersOn();      
+    }
+  }  
+  return returnCode;
+}
 
 String DroneSensor::calibrationCommands(String calibrationCommandError){
     StaticJsonDocument<DOC_SIZE> doc;
