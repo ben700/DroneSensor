@@ -41,7 +41,6 @@ typedef struct
   String displayName;
   Ezo_board device;
   EZOStatus _status;
-  int _precision;
   bool tempCompensation;
   int   _countParameter;
   EZOParameter   _parameterList[4];
@@ -83,13 +82,13 @@ class DroneSensor {
 
                                          
             
-    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, 1, false, 1, {t_RTD}};
-    EZODevice ECItem = (EZODevice) {"Conductivity", EC, EZOStatus::Unconnected, 0, false, 4, {ec_EC, tds_EC, sal_EC, sg_EC}};
-    EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, 2, false, 1, {ph_PH}};
-    EZODevice DOItem = (EZODevice) {"Dissolved Oxygen", DO, EZOStatus::Unconnected, 1, false, 2, {do_DO, sat_DO}};
-    EZODevice ORPItem = (EZODevice) {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, 0, c1, {orp_ORP}};
-    EZODevice CO2Item = (EZODevice) {"Gaseous CO2", CO2, EZOStatus::Unconnected, 0, false, 2, {co2_CO2, tem_CO2}};
-    EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, 0, false, 4, {hum_HUM, tem_HUM, unk_HUM, dew_HUM}};
+    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, false, 1, {t_RTD}};
+    EZODevice ECItem = (EZODevice) {"Conductivity", EC, EZOStatus::Unconnected, true, 4, {ec_EC, tds_EC, sal_EC, sg_EC}};
+    EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, true, 1, {ph_PH}};
+    EZODevice DOItem = (EZODevice) {"Dissolved Oxygen", DO, EZOStatus::Unconnected, true, 2, {do_DO, sat_DO}};
+    EZODevice ORPItem = (EZODevice) {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, true, 0, {orp_ORP}};
+    EZODevice CO2Item = (EZODevice) {"Gaseous CO2", CO2, EZOStatus::Unconnected, false, 2, {co2_CO2, tem_CO2}};
+    EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, false, 4, {hum_HUM, tem_HUM, unk_HUM, dew_HUM}};
   
 
 
