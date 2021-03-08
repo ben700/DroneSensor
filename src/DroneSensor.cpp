@@ -103,8 +103,6 @@ String DroneSensor::lookupRestartCodes(String restartCodes){
   }else{
     return "Unknowner";
   }
-
-
 }
 
 String DroneSensor::lookupLedStatus(String LED){
@@ -133,13 +131,10 @@ void DroneSensor::list_devices() {
     print_device_info(device_list[i].device);                   //then print the boards info
     if(device_list[i]._status == EZOStatus::Unconnected)
     {
-       Serial.print(" Unconnected");
+       Serial.println(" Unconnected");
     }else{
-       Serial.print(" Connected");
-
-      
+       Serial.println(" Connected");
     }
-    Serial.println("");
   }
 }
 
@@ -190,7 +185,7 @@ void DroneSensor::turnParametersOn() {
   this->parametersOn = true;
   for (int i = 0; i < device_list_len; i++) {
     if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("Conductivity is ");
+      if (DroneSensor_debug) {Serial.print("Conductivity is ");}
       String command = "O,EC,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
@@ -203,22 +198,22 @@ void DroneSensor::turnParametersOn() {
       command = "O,SG,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }else if (device_list[i].device.get_name() == "DO" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("Dissolved Oxygen is ");
+      if (DroneSensor_debug) { Serial.print("Dissolved Oxygen is ");}
       String command = "O,mg,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
       command = "O,%,1";
       device_list[i].device.send_cmd(command.c_str());
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }else if (device_list[i].device.get_name() == "CO2" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("CO2 is ");
+      if (DroneSensor_debug) {Serial.print("CO2 is ");}
       String command = "O,t,1";
       device_list[i].device.send_cmd(command.c_str());
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }else if (device_list[i].device.get_name() == "HUM" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("Humitity is ");
+      if (DroneSensor_debug) {Serial.print("Humitity is ");}
       String command = "O,HUM,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
@@ -227,7 +222,7 @@ void DroneSensor::turnParametersOn() {
       select_delay(command);
       command = "O,Dew,1";
       device_list[i].device.send_cmd(command.c_str());
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }
   }
 }
@@ -235,7 +230,7 @@ void DroneSensor::turnParametersOff() {
   this->parametersOn = false;
   for (int i = 0; i < device_list_len; i++) {
     if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("Conductivity is ");
+      if (DroneSensor_debug) {Serial.print("Conductivity is ");}
       String command = "O,EC,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
@@ -248,22 +243,22 @@ void DroneSensor::turnParametersOff() {
       command = "O,SG,0";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }else if (device_list[i].device.get_name() == "DO" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("Dissolved Oxygen is ");
+      if (DroneSensor_debug) {Serial.print("Dissolved Oxygen is ");}
       String command = "O,mg,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
       command = "O,%,0";
       device_list[i].device.send_cmd(command.c_str());
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }else if (device_list[i].device.get_name() == "CO2" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("CO2 is ");
+      if (DroneSensor_debug) {Serial.print("CO2 is ");}
       String command = "O,t,0";
       device_list[i].device.send_cmd(command.c_str());
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }else if (device_list[i].device.get_name() == "HUM" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("Humitity is ");
+      if (DroneSensor_debug) {Serial.print("Humitity is ");}
       String command = "O,HUM,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
@@ -272,7 +267,7 @@ void DroneSensor::turnParametersOff() {
       select_delay(command);
       command = "O,Dew,0";
       device_list[i].device.send_cmd(command.c_str());
-      Serial.println("reconfigured!");
+      if (DroneSensor_debug) {Serial.println("reconfigured!");}
     }
   }
 }
@@ -352,12 +347,8 @@ String DroneSensor::sensorPayload(String _EpochTime)
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
-      Serial.println("EZOStatus::Connected " + String(device_list[i].device.get_name()));
       char receive_buffer[32];
       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
-        Serial.println("Ezo_board::SUCCESS " + String(device_list[i].device.get_name()));
-        Serial.println("_payloadName " + device_list[i]._parameterList[0]._payloadName);
-        
         char * pReading;
         char delimiter[] = ",";
         pReading = strtok (receive_buffer,delimiter);
@@ -369,7 +360,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
               doc[device_list[i]._parameterList[y]._payloadName] = String(atof(pReading), device_list[i]._parameterList[y]._precision);
             }
           }else{
-              Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName + " for " + String(device_list[i].device.get_name()));
+              if (DroneSensor_debug) {Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName + " for " + String(device_list[i].device.get_name()));}
           }          
           pReading = strtok (NULL,delimiter);
         }
@@ -468,23 +459,23 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
     
     if(command != NULL and command != "null" ){
       String __command = _command[device_list[i].device.get_name()]["Command"];
-      Serial.println("Found command " + String(__command) + " for " + String(device_list[i].device.get_name()));
+      if (DroneSensor_debug) {Serial.println("Found command " + String(__command) + " for " + String(device_list[i].device.get_name()));}
       if(device_list[i]._status == EZOStatus::Connected){
         device_list[i].device.send_cmd(__command.c_str());
         select_delay(__command);
         char receive_buffer[32];
         if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
-          Serial.println("Success : Processing Command " + String(__command) +" for " + String(device_list[i].device.get_name()) );
+          if (DroneSensor_debug) {Serial.println("Success : Processing Command " + String(__command) +" for " + String(device_list[i].device.get_name()) );}
         }
         else
         {
-          Serial.println("Failed : Processing Command " + String(__command) +" for " + String(device_list[i].device.get_name()) );          
+          if (DroneSensor_debug) {Serial.println("Failed : Processing Command " + String(__command) +" for " + String(device_list[i].device.get_name()) );}        
           returnCode = false;
         }
       }
       else
       {
-        Serial.println("Failed : Processing Command " + String(__command) +" for " + String(device_list[i].device.get_name()) + " not connected");
+        if (DroneSensor_debug) {Serial.println("Failed : Processing Command " + String(__command) +" for " + String(device_list[i].device.get_name()) + " not connected");}
       }
     }
   } 
