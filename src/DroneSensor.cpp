@@ -187,9 +187,7 @@ void DroneSensor::print_device_response(Ezo_board &Device) {
 }
 
 void DroneSensor::turnParametersOn() {
-  Serial.println("turnParametersOn");
   for (int i = 0; i < device_list_len; i++) {
-    Serial.println(device_list[i].device.get_name());
     if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
       Serial.print("Conductivity is ");
       String command = "O,EC,1";
@@ -218,7 +216,7 @@ void DroneSensor::turnParametersOn() {
       String command = "O,HUM,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
-      String command = "O,T,1";
+      command = "O,T,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
       command = "O,Dew,1";
