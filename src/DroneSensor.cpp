@@ -357,7 +357,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
         char delimiter[] = ",";
         pReading = strtok (receive_buffer,delimiter);
         int countParameter = 1;
-        this->parametersOn ? countParameter = device_list[i]._countParameter : countParameter = 1
+        if(this->parametersOn) { countParameter = device_list[i]._countParameter;}
         for(int y=0; y < countParameter; y++){
           if(pReading != NULL){
             if(device_list[i]._parameterList[y]._payloadName != NULL and device_list[i]._parameterList[y]._payloadName.length() >0){
