@@ -187,6 +187,7 @@ void DroneSensor::print_device_response(Ezo_board &Device) {
 }
 
 void DroneSensor::turnParametersOn() {
+  this->parametersOn = true;
   for (int i = 0; i < device_list_len; i++) {
     if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
       Serial.print("Conductivity is ");
@@ -231,6 +232,7 @@ void DroneSensor::turnParametersOn() {
   }
 }
 void DroneSensor::turnParametersOff() {
+  this->parametersOn = false;
   for (int i = 0; i < device_list_len; i++) {
     if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
       Serial.print("Conductivity is ");
@@ -354,7 +356,9 @@ String DroneSensor::sensorPayload(String _EpochTime)
         char * pReading;
         char delimiter[] = ",";
         pReading = strtok (receive_buffer,delimiter);
-        for(int y=0; y < device_list[i]._countParameter; y++){
+        int countParameter = 1;
+        this->parametersOn ? countParameter = device_list[i]._countParameter : countParameter = 1
+        for(int y=0; y < countParameter; y++){
           if(pReading != NULL){
             if(device_list[i]._parameterList[y]._payloadName != NULL and device_list[i]._parameterList[y]._payloadName.length() >0){
               doc[device_list[i]._parameterList[y]._payloadName] = String(atof(pReading), device_list[i]._parameterList[y]._precision);
