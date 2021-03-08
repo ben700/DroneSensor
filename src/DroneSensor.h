@@ -101,8 +101,6 @@ class DroneSensor {
 
     Ezo_board* default_board = &device_list[0].device; //used to store the board were talking to
 
-    //gets the length of the array automatically so we dont have to change the number every time we add new boards
-    const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
 
     const unsigned long short_delay = 300;              //how long we wait for most commands and queries
     const unsigned long long_delay = 1200;              //how long we wait for commands like cal and R (see datasheets for which commands have longer wait times)
@@ -124,7 +122,9 @@ class DroneSensor {
       CO2Item,
       HUMItem  
     };
-    
+    //gets the length of the array automatically so we dont have to change the number every time we add new boards
+    const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
+
     
     DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
