@@ -29,7 +29,10 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
       if (DroneSensor_debug) {
         Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
         Serial.print(address);
-        Serial.println("  !"); 
+        Serial.println("  !");
+        if(device_list[i].tempCompensation){
+          device_list[i].device.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
+        }
       }
     }
     else
@@ -42,11 +45,8 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
       }
     }
   }
-  
-  PH.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
-  EC.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
-  DO.send_cmd_with_num("T,", DroneSensor_FallbackTemp);
 }
+
 void DroneSensor::debug() {
   DroneSensor_debug=true;
 }
@@ -234,47 +234,7 @@ void DroneSensor::receive_reading(Ezo_board &Device) {              // function 
   if (DroneSensor_debug) {print_error_type(Device, String(Device.get_last_received_reading(), 2).c_str());}
 }
 
-String DroneSensor::readTemp() {              // function to decode the reading after the read command was issued
-  RTD.send_read_cmd();
-  delay(reading_delay);
-  receive_reading(RTD);
-  print_error_type(RTD, String(RTD.get_last_received_reading(), 1).c_str());  //print either the reading or an error message
-  return return_error_type(RTD, String(RTD.get_last_received_reading(), 1).c_str());
-}
 
-
-String DroneSensor::readEC() {              // function to decode the reading after the read command was issued
-  (RTD.get_error() == Ezo_board::SUCCESS) ? EC.send_read_with_temp_comp(RTD.get_last_received_reading()) : EC.send_read_with_temp_comp(DroneSensor_FallbackTemp);
-  delay(reading_delay);
-  receive_reading(EC);
-  print_error_type(EC, String(EC.get_last_received_reading(), 1).c_str());
-  return return_error_type(EC, String(EC.get_last_received_reading()).c_str());
-}
-
-String DroneSensor::readPH() {
-//  (RTD.get_error() == Ezo_board::SUCCESS) ? PH.send_read_with_temp_comp(RTD.get_last_received_reading()) : PH.send_read_with_temp_comp(DroneSensor_FallbackTemp);
-  PH.send_read_cmd();
-  //PH.send_read_with_temp_comp(19);
-  delay(reading_delay);
-  receive_reading(PH);
-  print_error_type(PH, String(PH.get_last_received_reading(), 1).c_str());
-  return return_error_type(PH, String(PH.get_last_received_reading()).c_str());
-}
-
-String DroneSensor::readDO() {              // function to decode the reading after the read command was issued
-  (RTD.get_error() == Ezo_board::SUCCESS) ? DO.send_read_with_temp_comp(RTD.get_last_received_reading()) : DO.send_read_with_temp_comp(DroneSensor_FallbackTemp);
-  delay(reading_delay);
-  receive_reading(DO);
-  print_error_type(DO, String(DO.get_last_received_reading(), 1).c_str());
-  return return_error_type(DO, String(DO.get_last_received_reading()).c_str());
-}
-
-String DroneSensor::readORP() {              // function to decode the reading after the read command was issued
-  (RTD.get_error() == Ezo_board::SUCCESS) ? ORP.send_read_with_temp_comp(RTD.get_last_received_reading()) : ORP.send_read_with_temp_comp(DroneSensor_FallbackTemp);
-  receive_reading(ORP);
-  print_error_type(ORP, String(ORP.get_last_received_reading(), 1).c_str());
-  return return_error_type(ORP, String(ORP.get_last_received_reading()).c_str());
-}
 void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand()");}
   float temp = DroneSensor_FallbackTemp;
@@ -325,69 +285,6 @@ String DroneSensor::printEZOReadingStep(enum EZOReadingStep __currentStep){
       return "NO_DEVICES";
   }
 }
-enum EZOReadingStep DroneSensor::buildDeviceStatePayload(StaticJsonDocument<DOC_SIZE>& _doc){
-  if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload current_step =  "); Serial.println(printEZOReadingStep(this->current_step));}
-  if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload next_step_time =  "); Serial.println(String(next_step_time));}
-  if (DroneSensor_debug) { Serial.print("DroneSensor::buildDeviceStatePayload millis =  "); Serial.println(String(millis()));}
-  headerPayload(_doc);
-  switch(this->current_step)
-  {
-    case EZOReadingStep::NO_DEVICES:
-      _doc["Error"] = NotConnected; 
-      break;      
-    case EZOReadingStep::REQUEST_TEMP:
-      if (millis() >= this->next_step_time) { 
-        device_list[0].device.send_read_cmd();
-        this->next_step_time = millis() + reading_delay;
-        this->current_step = EZOReadingStep::READ_TEMP_AND_REQUEST_DEVICES;
-      }
-      break;
-    case EZOReadingStep::READ_TEMP_AND_REQUEST_DEVICES:
-      if (millis() >= this->next_step_time) { 
-        receive_reading(device_list[0].device);
-        if (DroneSensor_debug) { print_error_type(RTD, "Reading Temp Success");} 
-        float temp = DroneSensor_FallbackTemp; 
-        if ((RTD.get_error() == Ezo_board::SUCCESS) && (RTD.get_last_received_reading() > -1000.0))
-        {
-          temp =RTD.get_last_received_reading();
-          if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand RTD.get_last_received_reading() "); Serial.println(temp);}
-            _doc[RTD.get_name()] = String(temp, device_list[0]._precision);    
-        } 
-        else
-        {
-          if (DroneSensor_debug) { Serial.print("DroneSensor::sendReadCommand Failed RTD.get_last_received_reading() using default "); Serial.println(temp);} 
-        }
-        _doc[RTD.get_name()] = temp;
-        _doc[RTD.get_name()]["return_code"] = return_error_type(RTD, "Success");
-        for (int i = 0; i < device_list_len; i++ )
-        {
-          if(device_list[i]._status == EZOStatus::Connected){
-            //device_list[i].device.send_read_with_temp_comp(temp);
-            device_list[i].device.send_read_cmd();
-            if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
-          }
-        }
-        this->next_step_time = millis() + reading_delay;
-        this->current_step = EZOReadingStep::READ_RESPONSE;
-      }
-      break;
-    case EZOReadingStep::READ_RESPONSE:
-      if (millis() >= this->next_step_time) { 
-        for (int i = 0; i < device_list_len; i++ )
-        {
-          if(device_list[i]._status == EZOStatus::Connected){
-            receive_reading(device_list[i].device);
-            _doc[device_list[i].device.get_name()] = return_error_type(device_list[i].device, String(device_list[i].device.get_last_received_reading(), device_list[i]._precision));  
-          }
-        }
-        this->next_step_time = millis();
-        this->current_step = EZOReadingStep::REQUEST_TEMP;
-      }
-      break;
-  }
-  return this->current_step;
-}
-   
 
 String DroneSensor::sensorPayload(String _EpochTime)
 {
@@ -397,11 +294,9 @@ String DroneSensor::sensorPayload(String _EpochTime)
   doc["deviceTime"] = _EpochTime;
 
   headerPayload(doc);
-
   
   if (DroneSensor_debug) { Serial.println("Header ----------"); serializeJsonPretty(doc, Serial); Serial.println(""); }
 
- 
   sendReadCommand(doc);
   delay(reading_delay);
   Serial.println("Send read now do read");
@@ -498,15 +393,7 @@ String DroneSensor::singleDeviceStatePayload (Ezo_board &Device){
   serializeJson(doc, output);
   return output; 
 }
-String DroneSensor::tempStatePayload (){
-  return singleDeviceStatePayload(RTD);
-}
-String DroneSensor::phStatePayload (){
-  return singleDeviceStatePayload(PH);
-}
-String DroneSensor::ecStatePayload (){
-  return singleDeviceStatePayload(EC);
-}
+
 
 String DroneSensor::deviceStatePayload (){
   String payload = "";
@@ -533,6 +420,7 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
         }
         else
         {
+          Serial.println("Failed : Processing Command " + String(__command) +" for " + String(device_list[i].device.get_name()) );          
           returnCode = false;
         }
       }
