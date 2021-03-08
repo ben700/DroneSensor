@@ -147,6 +147,7 @@ class DroneSensor {
     void debug();
     bool hasDevice();
     void turnParametersOn();
+    void turnParametersOff();
     uint32_t next_step_time = 0;
     void test();
   private:
