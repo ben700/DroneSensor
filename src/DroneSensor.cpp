@@ -449,15 +449,15 @@ String DroneSensor::sensorPayload(String _EpochTime)
     if(device_list[i]._status == EZOStatus::Connected){
       char receive_buffer[32];
       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
-        cmdReply = String(receive_buffer);        //parse the reading into a float
         for(int y=0; y < device_list[i]._countParameter; y++){
           char * pReading;
           pReading = strtok (receive_buffer,",");
           if(sizeof(device_list[i]._parameterList[y]._payloadName) >0){
             if(pReading != NULL){
-              doc[device_list[i]._parameterList[y]._payloadName] = float(pReading);
+              doc[device_list[i]._parameterList[y]._payloadName] = String(pReading);
             }else{
               Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName);
+            }
           }
         }
       }
