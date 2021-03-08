@@ -73,7 +73,7 @@ class DroneSensor {
     EZOParameter orp_ORP = {"Oxidation Reduction Potential", "oxidationReductionPotential", 0};
 
     EZOParameter co2_CO2 = {"CO2", "CO2", 0};
-    EZOParameter tem_CO2= {"Temperature", "temperature", 1};
+    EZOParameter tem_CO2= {"Temperature", "", 1};
 
     EZOParameter hum_HUM= {"Humitity", "humidity", 0};
     EZOParameter tem_HUM= {"Temperature", "temperature", 0};
