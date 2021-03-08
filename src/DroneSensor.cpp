@@ -618,7 +618,7 @@ String DroneSensor::bootPayload(String _EpochTime){
   serializeJson(doc, payload);
   return payload;
 }
-void test(){
+void DroneSensor::test(){
    for (int i = 0; i < device_list_len; i++ ){
      if(device_list[i]._status == EZOStatus::Connected){
        String command = "O,?";
@@ -631,7 +631,7 @@ void test(){
        }
        else
        {
-         cmdReply = "Read parameters failed"
+         cmdReply = "Read parameters failed";
        }
        command = "R";
        device_list[i].device.send_cmd(command.c_str());
