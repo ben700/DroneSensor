@@ -454,7 +454,10 @@ String DroneSensor::sensorPayload(String _EpochTime)
           char * pReading;
           pReading = strtok (receive_buffer,",");
           if(sizeof(device_list[i]._parameterList[y]._payloadName) >0){
-            doc[device_list[i]._parameterList[y]._payloadName] = float(pReading);
+            if(pReading != NULL){
+              doc[device_list[i]._parameterList[y]._payloadName] = float(pReading);
+            }else{
+              Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName);
           }
         }
       }
