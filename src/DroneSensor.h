@@ -137,7 +137,7 @@ class DroneSensor {
     void print_device_info(Ezo_board &Device);
     void print_device_response(Ezo_board &Device);
     void receive_reading(Ezo_board &Device);
-    void processCommand(StaticJsonDocument<DOC_SIZE>& _command);
+    bool processCommand(StaticJsonDocument<DOC_SIZE>& _command);
     String sensorPayload(String _EpochTime);
     String singleDeviceStatePayload (Ezo_board &Device);
     String deviceStatePayload ();
