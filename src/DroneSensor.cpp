@@ -618,3 +618,44 @@ String DroneSensor::bootPayload(String _EpochTime){
   serializeJson(doc, payload);
   return payload;
 }
+void test(){
+   for (int i = 0; i < device_list_len; i++ ){
+     if(device_list[i]._status == EZOStatus::Connected){
+       String command = "O,?";
+       char receive_buffer[32];
+       String cmdReply;
+       device_list[i].device.send_cmd(command.c_str());
+       select_delay(command);
+       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
+         cmdReply = String(receive_buffer);
+       }
+       else
+       {
+         cmdReply = "Read parameters failed"
+       }
+       command = "R";
+       device_list[i].device.send_cmd(command.c_str());
+       select_delay(command);       
+       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
+         Serial.print(String(device_list[i].device.get_name()) + " parameters :- ");
+         Serial.println(String(receive_buffer));        //parse the reading into a float
+         
+         Serial.print(String(device_list[i].device.get_name()) + " returned :- ");
+         Serial.println(String(receive_buffer));        //parse the reading into a float
+       }
+       else
+       {
+         Serial.print(String(device_list[i].device.get_name()) + " parameters :- ");
+         Serial.println(String(receive_buffer));        //parse the reading into a float
+         
+         Serial.print(String(device_list[i].device.get_name()) + " returned :- ");
+         Serial.println("Read sensors failed");        //parse the reading into a float
+         
+       }
+     }
+     else
+     {
+        Serial.print(String(device_list[i].device.get_name()) + " is not connected");
+     }
+   } 
+}
