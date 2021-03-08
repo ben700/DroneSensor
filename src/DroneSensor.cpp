@@ -406,8 +406,10 @@ String DroneSensor::deviceStatePayload (){
 bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   bool returnCode = true;
   for (int i = 0; i < device_list_len; i++ ){
+    Serial.println("Looking for command for " + String(device_list[i].device.get_name()));
     if(_command[device_list[i].device.get_name()] != NULL and _command[device_list[i].device.get_name()]["Command"] != NULL){
       String __command = _command[device_list[i].device.get_name()]["Command"];
+      Serial.println("Found command " + String(__command) + " for " + String(device_list[i].device.get_name()));
       if(device_list[i]._status == EZOStatus::Connected){
         device_list[i].device.send_cmd(__command.c_str());
         select_delay(__command);
