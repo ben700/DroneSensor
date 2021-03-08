@@ -135,17 +135,7 @@ String DroneSensor::return_error_type(Ezo_board &Device, const char* success_str
   return ("No Device");
 }
 
-void DroneSensor::list_devices() {
-  for (int i = 0; i < device_list_len; i++) {        //go thorugh the list of boards
-    print_device_info(device_list[i].device);                   //then print the boards info
-    if(device_list[i]._status == EZOStatus::Unconnected)
-    {
-       Serial.println(F(" Unconnected"));
-    }else{
-       Serial.println(F(" Connected"));
-    }
-  }
-}
+
 
 void DroneSensor::get_ec_k_value(){                                    //function to query the value of the ec circuit
   char rx_buf[10];                                        //buffer to hold the string we receive from the circuit
@@ -157,21 +147,6 @@ void DroneSensor::get_ec_k_value(){                                    //functio
 }
 
 
-void DroneSensor::print_help() {
-  get_ec_k_value();
-  Serial.println(F("Atlas Scientific I2C hydroponics kit                                       "));
-  if(k_val > 9){
-     Serial.println(F("For K10 probes, these are the recommended calibration values:            "));
-  }
-  else if(k_val > .9){
-     Serial.println(F("For K1 probes, these are the recommended calibration values:             "));
-  }
-  else if(k_val > .09){
-     Serial.println(F("For K0.1 probes, these are the recommended calibration values:           "));
-  }
-  
-}
-
 
 // prints the boards name and I2C address
 void DroneSensor::print_device_info(Ezo_board &Device) {
@@ -180,15 +155,6 @@ void DroneSensor::print_device_info(Ezo_board &Device) {
   Serial.print(Device.get_address());
 }
 
-void DroneSensor::print_device_response(Ezo_board &Device) {
-  char receive_buffer[32];                  //buffer used to hold each boards response
-  Device.receive_cmd(receive_buffer, 32);   //put the response into the buffer
-
-  print_error_type(Device, " - ");          //print if our response is an error or not
-  print_device_info(Device);                //print our boards name and address
-  Serial.print(": ");
-  Serial.println(receive_buffer);           //print the boards response
-}
 
 void DroneSensor::turnParametersOn() {
   this->parametersOn = true;
@@ -540,63 +506,7 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   return returnCode;
 }
 
-String DroneSensor::calibrationCommands(String calibrationCommandError){
-    StaticJsonDocument<DOC_SIZE> doc;
-     
-    if(calibrationCommandError.length() > 0)  doc["Error"] = calibrationCommandError;
-    String _deviceName; 
-    int i =0;
-    if(device_list[i]._status == EZOStatus::Connected){
-      _deviceName = device_list[i++].device.get_name(); //get name then inc i.e. this will return zero then set i =1 for next command
-      doc["Calibration Commands"][_deviceName]["deviceID"] = 102;
-      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-      doc["Calibration Commands"][_deviceName]["Set to t"] = "Cal,t";
-    }
-    
-    if(device_list[i]._status == EZOStatus::Connected){
-      _deviceName = device_list[i++].device.get_name();    
-      doc["Calibration Commands"][_deviceName]["deviceID"] = 100;
-      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-      doc["Calibration Commands"][_deviceName]["Atmospheric"] = "Cal,dry";
-      doc["Calibration Commands"][_deviceName]["Single Point"] = "Cal,n";
-      doc["Calibration Commands"][_deviceName]["Low"] = "Cal,low,n";
-      doc["Calibration Commands"][_deviceName]["High"] = "Cal,high,n";
-      doc["Calibration Commands"][_deviceName]["probe Type"] = "K,n";
-    }
 
-    if(device_list[i]._status == EZOStatus::Connected){
-      _deviceName = device_list[i++].device.get_name();    
-      doc["Calibration Commands"][_deviceName]["deviceID"] = 99;
-      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-      doc["Calibration Commands"][_deviceName]["Mid"] = "Cal,mid,7";
-      doc["Calibration Commands"][_deviceName]["Low"] = "Cal,low,4";
-      doc["Calibration Commands"][_deviceName]["High"] = "Cal,high,10";
-    }
-    
-    if(device_list[i]._status == EZOStatus::Connected){
-      _deviceName = device_list[i++].device.get_name();    
-      doc["Calibration Commands"][_deviceName]["deviceID"] = 97;
-      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-      doc["Calibration Commands"][_deviceName]["Atmospheric"] = "Cal";
-      doc["Calibration Commands"][_deviceName]["Solution"] = "Cal,0";
-    }
-  
-    if(device_list[i]._status == EZOStatus::Connected){
-      _deviceName = device_list[i].device.get_name();
-      doc["Calibration Commands"][_deviceName]["deviceID"] = 98;
-      doc["Calibration Commands"][_deviceName]["Clear"] = "Cal,clear";
-      doc["Calibration Commands"][_deviceName]["Set to n"] = "Cal,n";
-    }
-
-     
-    if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
-    
-  
-    String payload;
-    serializeJson(doc, payload);
-  
-    return payload;
-}
 bool DroneSensor::headerPayload(StaticJsonDocument<DOC_SIZE>& _doc){
   _doc["deviceMAC"] = this->_deviceMAC;
   return true;
