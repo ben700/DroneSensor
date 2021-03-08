@@ -459,7 +459,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
           }else{
               Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName);
           }          
-          pReading = strtok (receive_buffer,",");
+          pReading = strtok (NULL,",");
         }
       }
  //     Serial.println("Connected " + String(device_list[i].device.get_name()));
