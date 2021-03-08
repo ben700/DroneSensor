@@ -458,7 +458,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
               doc[device_list[i]._parameterList[y]._payloadName] = String(pReading);
             }
           }else{
-              Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName);
+              Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName + " for " + String(device_list[i].device.get_name()));
           }          
           pReading = strtok (NULL,delimiter);
         }
