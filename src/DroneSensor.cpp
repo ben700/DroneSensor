@@ -291,7 +291,7 @@ void DroneSensor::receive_reading(Ezo_board &Device) {              // function 
 
 void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand()");}
-  float temp = DroneSensor_FallbackTemp;
+  float temp = this->_FallbackTemp;
   if(device_list[0]._status == EZOStatus::Connected){
     device_list[0].device.send_read_cmd();
     delay(reading_delay);
