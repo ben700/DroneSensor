@@ -503,7 +503,7 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   Serial.println("processConfig");
   if(_config["Fallback Temperature"] != NULL){
     Serial.println("Processing Fallback Temperature");
-    float __fallbackTemperature = _config["Fallback Temperature"].as<String>();
+    float __fallbackTemperature = _config["Fallback Temperature"].as<float>();
     Serial.println("Setting Fallback Temperature to " + String(__fallbackTemperature));
     if(__fallbackTemperature > 0){
       setFallbackTemp(__fallbackTemperature);
