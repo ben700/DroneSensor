@@ -156,6 +156,7 @@ class DroneSensor {
     String lookupRestartCodes(String restartCodes);
     void sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc);
     bool headerPayload(StaticJsonDocument<DOC_SIZE>& _doc);
+    bool parametersOn = false;
     String _deviceMAC;
     String _deviceIP;
     String _deviceID;
