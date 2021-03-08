@@ -445,9 +445,9 @@ String DroneSensor::sensorPayload(String _EpochTime)
   Serial.println("Send read now do read");
   for (int i = 1; i < device_list_len; i++ )
   {
-    Serial.println("Processing " + device_list[i].device.get_name())
+    Serial.println("Processing " + String(device_list[i].device.get_name()));
     if(device_list[i]._status == EZOStatus::Connected){
-      Serial.println("Connected " + device_list[i].device.get_name())
+      Serial.println("Connected " + String(device_list[i].device.get_name()));
       receive_reading(device_list[i].device);
       doc[device_list[i].device.get_name()] = return_error_type(device_list[i].device, String(device_list[i].device.get_last_received_reading(), device_list[i]._precision));  
     }
