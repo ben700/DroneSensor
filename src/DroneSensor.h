@@ -10,7 +10,6 @@
 #define NotConnected "Not Connected"
 
 
-#define DroneSensor_FallbackTemp 19.5
 #define DOC_SIZE 1000
 #include <stdint.h>
 #include <Ezo_i2c.h>
@@ -138,8 +137,9 @@ class DroneSensor {
     void print_device_response(Ezo_board &Device);
     void receive_reading(Ezo_board &Device);
     bool processCommand(StaticJsonDocument<DOC_SIZE>& _command);
+    bool processConfig(StaticJsonDocument<DOC_SIZE>& _config);
     String sensorPayload(String _EpochTime);
-    String singleDeviceStatePayload (Ezo_board &Device);
+    void singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc);
     String deviceStatePayload ();
     String calibrationCommands(String calibrationCommandError = "");
     void list_devices();
@@ -148,8 +148,10 @@ class DroneSensor {
     bool hasDevice();
     void turnParametersOn();
     void turnParametersOff();
+    void setFallbackTemp(float __FallbackTemp);
     uint32_t next_step_time = 0;
     void test();
+    int pollDelay = 60000;
   private:
     String printEZOReadingStep(enum EZOReadingStep __currentStep);
     String lookupLedStatus(String LED);
@@ -162,6 +164,8 @@ class DroneSensor {
     String _deviceID;
     bool DroneSensor_debug=false;
     enum EZOReadingStep current_step = NO_DEVICES;
+    _FallbackTemp = 19.5;
+
 };
 
 
