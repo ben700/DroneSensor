@@ -503,7 +503,7 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   Serial.println("processConfig");
   if(_config["Fallback Temperature"] != NULL){
     Serial.println("Processing Fallback Temperature");
-    float __fallbackTemperature = _config["Fallback Temperature"].as<String>;
+    float __fallbackTemperature = _config["Fallback Temperature"].as<String>();
     Serial.println("Setting Fallback Temperature to " + String(__fallbackTemperature));
     if(__fallbackTemperature > 0){
       setFallbackTemp(__fallbackTemperature);
@@ -512,7 +512,7 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
 
   if(_config["Poll Delay"] != NULL){
     Serial.println("Processing Poll Delay config ");
-    int __pollDelay = _config["Poll Delay"].as<int>;
+    int __pollDelay = _config["Poll Delay"].as<int>();
     Serial.println("Setting Poll Delay to " + String(__pollDelay));
     if(__pollDelay > 100){
       this->pollDelay =__pollDelay;
