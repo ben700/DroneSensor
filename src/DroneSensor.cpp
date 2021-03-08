@@ -309,7 +309,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
         for(int y=0; y < device_list[i]._countParameter; y++){
           if(pReading != NULL){
             if(device_list[i]._parameterList[y]._payloadName != NULL and device_list[i]._parameterList[y]._payloadName.length() >0){
-              doc[device_list[i]._parameterList[y]._payloadName] = String((float)pReading, device_list[i]._parameterList[y]._precision);
+              doc[device_list[i]._parameterList[y]._payloadName] = String(atof(pReading), device_list[i]._parameterList[y]._precision);
             }
           }else{
               Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName + " for " + String(device_list[i].device.get_name()));
