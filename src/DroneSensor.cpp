@@ -524,7 +524,7 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   {
     if(_command[device_list[i].device.get_name()] != NULL and _command[device_list[i].device.get_name()]["Command"] != NULL){
       if(device_list[i]._status == EZOStatus::Connected){
-        String __command = _command[device_list[i].device.get_name()]["Command"]
+        String __command = _command[device_list[i].device.get_name()]["Command"];
          device_list[i].device.send_cmd(__command.c_str());
          select_delay(__command);
          if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
