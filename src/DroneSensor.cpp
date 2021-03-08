@@ -531,10 +531,10 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   if(_config["logData"] != NULL){
     if(_config["logData"] == "No"){
       if (DroneSensor_debug) {Serial.println("Turning Off logging data");}
-      this.loggingData = false;
+      this->loggingData = false;
     }else{
       if (DroneSensor_debug) {Serial.println("Turning on logging data");}
-      this.loggingData = true;
+      this->loggingData = true;
     }
   }
   return returnCode;
