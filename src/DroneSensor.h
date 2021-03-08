@@ -18,14 +18,10 @@
 
 enum EZOReadingStep {REQUEST_TEMP, READ_TEMP_AND_REQUEST_DEVICES, READ_RESPONSE, NO_DEVICES };
 
-enum class LedStatus: int {
-    On = 0,
-    Off = 1
-};
 
-enum class EZOStatus: int {
-    Connected = 1,
-    Unconnected = 0
+enum class EZOStatus {
+    Connected,
+    Unconnected
 };
 
 
@@ -98,9 +94,7 @@ class DroneSensor {
     const int EN_RTD = 15;
     const int EN_AUX = 13;
 
-    Ezo_board* default_board = &device_list[0].device; //used to store the board were talking to
-
-
+  
     const unsigned long short_delay = 300;              //how long we wait for most commands and queries
     const unsigned long long_delay = 1200;              //how long we wait for commands like cal and R (see datasheets for which commands have longer wait times)
     const unsigned long reading_delay = 2000;
