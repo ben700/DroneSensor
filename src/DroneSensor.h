@@ -126,9 +126,7 @@ class DroneSensor {
     String return_error_type(Ezo_board &Device, const char* success_string);
     String return_error_type(Ezo_board &Device, String success_string);
     void get_ec_k_value();
-    void print_help();
     void print_device_info(Ezo_board &Device);
-    void print_device_response(Ezo_board &Device);
     void receive_reading(Ezo_board &Device);
     bool processCommand(StaticJsonDocument<DOC_SIZE>& _command);
     bool processConfig(StaticJsonDocument<DOC_SIZE>& _config);
