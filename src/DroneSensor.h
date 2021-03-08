@@ -95,16 +95,7 @@ class DroneSensor {
     EZODevice CO2Item = (EZODevice) {"Gaseous CO2", CO2, EZOStatus::Unconnected, 0, {co2_CO2, tem_CO2}};
     EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, 0, {hum_HUM, tem_HUM, dew_HUM}};
   
-    //array of ezo boards, add any new boards in here for the commands to work with them
-    EZODevice device_list[7] = {
-      RTDItem,
-      ECItem,
-      PHItem,
-      DOItem,
-      ORPItem,
-      CO2Item,
-      HUMItem  
-    };
+
 
 
     //enable pins for each circuit
@@ -128,6 +119,18 @@ class DroneSensor {
 
 
   public:
+    //array of ezo boards, add any new boards in here for the commands to work with them
+    EZODevice device_list[7] = {
+      RTDItem,
+      ECItem,
+      PHItem,
+      DOItem,
+      ORPItem,
+      CO2Item,
+      HUMItem  
+    };
+    
+    
     DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
     void select_delay(String &str);
