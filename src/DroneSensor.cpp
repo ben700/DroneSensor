@@ -211,8 +211,13 @@ void DroneSensor::turnParametersOn() {
       command = "O,%,1";
       device_list[i].device.send_cmd(command.c_str());
       Serial.println("reconfigured!");
+    }else if (device_list[i].device.get_name() == "CO2" and device_list[i]._status == EZOStatus::Connected){
+      Serial.print("CO2 is ");
+      String command = "O,t,1";
+      device_list[i].device.send_cmd(command.c_str());
+      Serial.println("reconfigured!");
     }else if (device_list[i].device.get_name() == "HUM" and device_list[i]._status == EZOStatus::Connected){
-      Serial.print("Dissolved Oxygen is ");
+      Serial.print("Humitity is ");
       String command = "O,HUM,1";
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
@@ -225,7 +230,50 @@ void DroneSensor::turnParametersOn() {
     }
   }
 }
-
+void DroneSensor::turnParametersOff() {
+  for (int i = 0; i < device_list_len; i++) {
+    if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
+      Serial.print("Conductivity is ");
+      String command = "O,EC,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,TDS,0";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,S,0";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,SG,0";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      Serial.println("reconfigured!");
+    }else if (device_list[i].device.get_name() == "DO" and device_list[i]._status == EZOStatus::Connected){
+      Serial.print("Dissolved Oxygen is ");
+      String command = "O,mg,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,%,0";
+      device_list[i].device.send_cmd(command.c_str());
+      Serial.println("reconfigured!");
+    }else if (device_list[i].device.get_name() == "CO2" and device_list[i]._status == EZOStatus::Connected){
+      Serial.print("CO2 is ");
+      String command = "O,t,0";
+      device_list[i].device.send_cmd(command.c_str());
+      Serial.println("reconfigured!");
+    }else if (device_list[i].device.get_name() == "HUM" and device_list[i]._status == EZOStatus::Connected){
+      Serial.print("Humitity is ");
+      String command = "O,HUM,1";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,T,0";
+      device_list[i].device.send_cmd(command.c_str());
+      select_delay(command);
+      command = "O,Dew,0";
+      device_list[i].device.send_cmd(command.c_str());
+      Serial.println("reconfigured!");
+    }
+  }
+}
 void DroneSensor::receive_reading(Ezo_board &Device) {              // function to decode the reading after the read command was issued
 
   if (DroneSensor_debug) {Serial.print(Device.get_name()); Serial.print(": ");}
