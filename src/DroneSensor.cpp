@@ -1,20 +1,5 @@
 #include "DroneSensor.h"
 
-
-DroneParameter::DroneParameter(char* __displayName, char*  __payloadName, int __precision) {
-  this->_displayName = new char[strlen(__displayName)];
-  memcpy (this->_displayName, __displayName, strlen(__displayName));  // copy into allocated memory
-  this->_payloadName = new char[strlen(__payloadName)];
-  memcpy (this->_payloadName, __payloadName, strlen(__payloadName));  // copy into allocated memory
-  this->_precision =  __precision;
-}  
-
-DroneParameter::~DroneParameter(){
-  delete [] this->_displayName;
-  delete [] this->_payloadName;
-} 
-
-
 DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
   //DroneParameter* test = new DroneParameter("Temperature", "temperature", 1);
