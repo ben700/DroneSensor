@@ -109,7 +109,7 @@ void DroneSensor::get_ec_k_value(){                                    //functio
 }
 
 
-void DroneSensor::turnParametersOn(int onOrOff) {
+void DroneSensor::turnParametersOn() {
   this->parametersOn = true;
   for (int i = 0; i < device_list_len; i++) {
     if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
@@ -207,7 +207,6 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
     device_list[0].device.send_read_cmd();
     delay(reading_delay);
     device_list[0].device.receive_read_cmd();
-    if (DroneSensor_debug) { print_error_type(device_list[0].device, "Reading Temp Success");} 
     if ((device_list[0].device.get_error() == Ezo_board::SUCCESS) && (device_list[0].device.get_last_received_reading() > -1000.0))
     {
       temp =device_list[0].device.get_last_received_reading();
