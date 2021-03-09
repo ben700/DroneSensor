@@ -123,19 +123,12 @@ class DroneSensor {
     DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
     void select_delay(String &str);
-    void print_error_type(Ezo_board &Device, const char* success_string);
-    String return_error_type(Ezo_board &Device, const char* success_string);
-    String return_error_type(Ezo_board &Device, String success_string);
     void get_ec_k_value();
-    void print_device_info(Ezo_board &Device);
-    void receive_reading(Ezo_board &Device);
     bool processCommand(StaticJsonDocument<DOC_SIZE>& _command);
     bool processConfig(StaticJsonDocument<DOC_SIZE>& _config);
     String sensorPayload(String _EpochTime);
     void singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc);
     String deviceStatePayload ();
-    String calibrationCommands(String calibrationCommandError = "");
-    void list_devices();
     String bootPayload(String _EpochTime);
     void debug();
     bool hasDevice();
@@ -143,12 +136,11 @@ class DroneSensor {
     void turnParametersOff();
     void setFallbackTemp(float __FallbackTemp);
     uint32_t next_step_time = 0;
-    void test();
+
     int pollDelay = 60000;
     bool loggingData = true;
   private:
-    String printEZOReadingStep(enum EZOReadingStep __currentStep);
-    String lookupLedStatus(String LED);
+     String lookupLedStatus(String LED);
     String lookupRestartCodes(String restartCodes);
     void sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc);
     bool headerPayload(StaticJsonDocument<DOC_SIZE>& _doc);
