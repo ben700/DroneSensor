@@ -31,7 +31,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
     }
   }
   
-  byte address = PH.get_address();
+  address = PH.get_address();
   Wire.beginTransmission(address);
   if (!Wire.endTransmission()){
     this->current_step = EZOReadingStep::REQUEST_TEMP;
@@ -43,7 +43,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
     }
   }
   
-  byte address = EC.get_address();
+  address = EC.get_address();
   Wire.beginTransmission(address);
   if (!Wire.endTransmission()){
     this->current_step = EZOReadingStep::REQUEST_TEMP;
@@ -58,7 +58,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
     }
   }
   
-  byte address = DO.get_address();
+  address = DO.get_address();
   Wire.beginTransmission(address);
   if (!Wire.endTransmission()){
     this->current_step = EZOReadingStep::REQUEST_TEMP;
@@ -71,7 +71,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
     }
   }
   
-  byte address = ORP.get_address();
+  address = ORP.get_address();
   Wire.beginTransmission(address);
   if (!Wire.endTransmission()){
     this->current_step = EZOReadingStep::REQUEST_TEMP;
@@ -84,7 +84,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
   }
   
   
-  byte address = CO2.get_address();
+  address = CO2.get_address();
   Wire.beginTransmission(address);
   if (!Wire.endTransmission()){
     this->current_step = EZOReadingStep::REQUEST_TEMP;
@@ -98,7 +98,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
   }
   
   
-  byte address = HUM.get_address();
+  address = HUM.get_address();
   Wire.beginTransmission(address);
   if (!Wire.endTransmission()){
     this->current_step = EZOReadingStep::REQUEST_TEMP;
