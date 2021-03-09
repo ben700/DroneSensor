@@ -33,7 +33,7 @@ class DroneParameter {
     ~DroneParameter();
     
     char* _displayName;
-    char*  _payloadName;, 
+    char*  _payloadName;
     uint8_t _precision; 
     
 };
