@@ -1,7 +1,7 @@
 #include "DroneSensor.h"
 
 
-DroneParameter::DroneParameter(char* __displayName, char*  __payloadName, uint8_t __precision) {
+DroneParameter::DroneParameter(char* __displayName, char*  __payloadName, int __precision) {
   this->_displayName = new char[strlen(__displayName)];
   memcpy (this->_displayName, __displayName, strlen(__displayName));  // copy into allocated memory
   this->_payloadName = new char[strlen(__payloadName)];
