@@ -334,8 +334,9 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
     doc[Device.get_name()]["LED"] = lookupLedStatus(LED);
+  
+  */
   }
-  */  
   return;
 }
 
