@@ -262,6 +262,9 @@ String DroneSensor::sensorPayload(String _EpochTime)
         for(int y=0; y < countParameter; y++){
           if(pReading != NULL){
             if(device_list[i]._parameterList[y]._payloadName != NULL and device_list[i]._parameterList[y]._payloadName.length() >0){
+              Serial.print("pReading = ");
+              
+              Serial.println(pReading);
               doc[device_list[i]._parameterList[y]._payloadName] = String(atof(pReading), device_list[i]._parameterList[y]._precision);
             }
           }else{
