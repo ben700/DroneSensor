@@ -17,7 +17,7 @@ DroneParameter::~DroneParameter(){
 
 DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
-  DroneParameter* test = new DroneParameter('Temperature', 'temperature', 1);
+  DroneParameter* test = new DroneParameter("Temperature", "temperature", 1);
   DroneSensor_debug = _DroneSensor_debug;
   this->_deviceMAC = __deviceMAC;
   this->_deviceIP = __deviceIP;
