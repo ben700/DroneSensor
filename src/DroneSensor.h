@@ -69,7 +69,7 @@ class DroneSensor {
     //array of ezo boards, add any new boards in here for the commands to work with them
     EZODevice device_list[4];
     //gets the length of the array automatically so we dont have to change the number every time we add new boards
-    const uint8_t device_list_len;
+    int device_list_len;
 
     
     DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
