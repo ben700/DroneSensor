@@ -289,7 +289,6 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
   select_delay(command);
 
   if(Device.receive_cmd(receive_buffer, 32) != Ezo_board::SUCCESS){   //if the reading is successful
-    print_error_type(Device, "success_string"); 
     doc[Device.get_name()] = NotConnected;
   }else{
     cmdReply = String(receive_buffer);        //parse the reading into a float
