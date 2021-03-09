@@ -29,12 +29,12 @@ enum class EZOStatus {
 class DroneParameter {
   
     public:
-    DroneParameter(char* __displayName, char*  __payloadName, uint8_t __precision);
+    DroneParameter(char* __displayName, char*  __payloadName, int __precision);
     ~DroneParameter();
     
     char* _displayName;
     char*  _payloadName;
-    uint8_t _precision; 
+    int _precision; 
     
 };
 
