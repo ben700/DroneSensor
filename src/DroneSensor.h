@@ -78,6 +78,7 @@ class DroneSensor {
     Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
 
     EZOParameter t_RTD = {"Temperature", "temperature", 1};
+    EZO_Parameter parameter_rtd[1] = {t_RTD}; 
     
     EZOParameter ph_PH = {"pH", "PH", 2};
                                          
@@ -101,7 +102,7 @@ class DroneSensor {
 
                                          
             
-    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, false, 1, {t_RTD}};
+    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, false, 1, parameter_rtd};
     EZODevice ECItem = (EZODevice) {"Conductivity", EC, EZOStatus::Unconnected, true, 4, {ec_EC, tds_EC, sal_EC, sg_EC}};
     EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, false, 1, {ph_PH}};
     EZODevice DOItem = (EZODevice) {"Dissolved Oxygen", DO, EZOStatus::Unconnected, true, 2, {do_DO, sat_DO}};
