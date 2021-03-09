@@ -38,6 +38,17 @@ class DroneParameter {
     
 };
 
+class DroneDevice {
+    public:
+    
+    char* displayName;
+    Ezo_board* device;
+    EZOStatus _status;
+    bool tempCompensation;
+    int   _countParameter;
+    DroneParameter*   _parameterList[];
+    
+};
 typedef struct{
     String _displayName;
     String _payloadName;
@@ -51,7 +62,7 @@ typedef struct
   EZOStatus _status;
   bool tempCompensation;
   uint32_t   _countParameter;
-  EZOParameter   _parameterList[4];
+  EZOParameter   _parameterList[];
 }  EZODevice;
 
 
