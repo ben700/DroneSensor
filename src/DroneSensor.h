@@ -50,8 +50,8 @@ class DroneSensor {
     Ezo_board EC = Ezo_board(100, "conductivity");      //create an EC circuit object who's address is 100 and name is "EC"
     Ezo_board DO = Ezo_board(97, "DO");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board ORP = Ezo_board(98, "oxidationReductionPotential");    //create a DO circuit object who's address is 97 and name is "DO"
-    Ezo_board CO2 = Ezo_board(105, "CO2");    //create a DO circuit object who's address is 97 and name is "DO"
-    Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
+ //   Ezo_board CO2 = Ezo_board(105, "CO2");    //create a DO circuit object who's address is 97 and name is "DO"
+ //   Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
 
     EZOParameter t_RTD = {"Temperature", "temperature", 1};
     
@@ -66,7 +66,7 @@ class DroneSensor {
     EZOParameter sat_DO = {"Saturation", "saturation", 0};
 
     EZOParameter orp_ORP = {"Oxidation Reduction Potential", "oxidationReductionPotential", 0};
-
+/*
     EZOParameter co2_CO2 = {"CO2", "CO2", 0};
     EZOParameter tem_CO2= {"Temperature", "thermalEquilibriumTemperature", 1};
 
@@ -74,7 +74,7 @@ class DroneSensor {
     EZOParameter tem_HUM= {"Temperature", "temperature", 0};
     EZOParameter unk_HUM= {"Spacer", "", 0}; 
     EZOParameter dew_HUM= {"Dew Point", "dewPoint", 0};                       
-
+*/
                                          
             
     EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, false, 1, {t_RTD}};
@@ -82,8 +82,8 @@ class DroneSensor {
     EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, false, 1, {ph_PH}};
     EZODevice DOItem = (EZODevice) {"Dissolved Oxygen", DO, EZOStatus::Unconnected, true, 2, {do_DO, sat_DO}};
     EZODevice ORPItem = (EZODevice) {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, true, 0, {orp_ORP}};
-    EZODevice CO2Item = (EZODevice) {"Gaseous CO2", CO2, EZOStatus::Unconnected, false, 2, {co2_CO2, tem_CO2}};
-    EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, false, 4, {hum_HUM, tem_HUM, unk_HUM, dew_HUM}};
+  //  EZODevice CO2Item = (EZODevice) {"Gaseous CO2", CO2, EZOStatus::Unconnected, false, 2, {co2_CO2, tem_CO2}};
+  //  EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, false, 4, {hum_HUM, tem_HUM, unk_HUM, dew_HUM}};
   
 
 
@@ -106,14 +106,15 @@ class DroneSensor {
 
   public:
     //array of ezo boards, add any new boards in here for the commands to work with them
-    EZODevice device_list[7] = {
+    EZODevice device_list[5] = {
       RTDItem,
       ECItem,
       PHItem,
       DOItem,
-      ORPItem,
-      CO2Item,
-      HUMItem  
+      ORPItem
+          
+   //   CO2Item,
+   //   HUMItem  
     };
     //gets the length of the array automatically so we dont have to change the number every time we add new boards
     const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
