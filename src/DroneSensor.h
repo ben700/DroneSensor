@@ -24,6 +24,7 @@ enum class EZOStatus {
     Unconnected
 };
 
+
 typedef struct{
     String _displayName;
     String _payloadName;
@@ -51,7 +52,42 @@ class DroneSensor {
     Ezo_board ORP = Ezo_board(98, "oxidationReductionPotential");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board CO2 = Ezo_board(105, "CO2");    //create a DO circuit object who's address is 97 and name is "DO"
     Ezo_board HUM = Ezo_board(111, "humidity");    //create a DO circuit object who's address is 97 and name is "DO"
+
+    EZOParameter t_RTD = {"Temperature", "temperature", 1};
     
+    EZOParameter ph_PH = {"pH", "PH", 2};
+                                         
+    EZOParameter ec_EC = {"Conductivity", "conductivity", 0};
+    EZOParameter tds_EC = {"Total Dissolved Solids", "totalDissolvedSolids", 0};
+    EZOParameter sal_EC = {"Salinity", "salinity", 0};
+    EZOParameter sg_EC = {"Specific Gravity", "specificGravity", 0};
+
+    EZOParameter do_DO = {"Dissolved Oxygen", "DO", 0};
+    EZOParameter sat_DO = {"Saturation", "saturation", 0};
+
+    EZOParameter orp_ORP = {"Oxidation Reduction Potential", "oxidationReductionPotential", 0};
+
+    EZOParameter co2_CO2 = {"CO2", "CO2", 0};
+    EZOParameter tem_CO2= {"Temperature", "thermalEquilibriumTemperature", 1};
+
+    EZOParameter hum_HUM= {"Humitity", "humidity", 0};
+    EZOParameter tem_HUM= {"Temperature", "temperature", 0};
+    EZOParameter unk_HUM= {"Spacer", "", 0}; 
+    EZOParameter dew_HUM= {"Dew Point", "dewPoint", 0};                       
+
+                                         
+            
+    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, false, 1, {t_RTD}};
+    EZODevice ECItem = (EZODevice) {"Conductivity", EC, EZOStatus::Unconnected, true, 4, {ec_EC, tds_EC, sal_EC, sg_EC}};
+    EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, false, 1, {ph_PH}};
+    EZODevice DOItem = (EZODevice) {"Dissolved Oxygen", DO, EZOStatus::Unconnected, true, 2, {do_DO, sat_DO}};
+    EZODevice ORPItem = (EZODevice) {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, true, 0, {orp_ORP}};
+    EZODevice CO2Item = (EZODevice) {"Gaseous CO2", CO2, EZOStatus::Unconnected, false, 2, {co2_CO2, tem_CO2}};
+    EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, false, 4, {hum_HUM, tem_HUM, unk_HUM, dew_HUM}};
+  
+
+
+
     //enable pins for each circuit
     const uint32_t EN_PH = 14;
     const uint32_t EN_EC = 12;
@@ -65,11 +101,22 @@ class DroneSensor {
 
     float k_val = 0;                                    //holds the k value of the ec circuit
 
+
+
+
   public:
     //array of ezo boards, add any new boards in here for the commands to work with them
-    EZODevice device_list[4];
+    EZODevice device_list[7] = {
+      RTDItem,
+      ECItem,
+      PHItem,
+      DOItem,
+      ORPItem,
+      CO2Item,
+      HUMItem  
+    };
     //gets the length of the array automatically so we dont have to change the number every time we add new boards
-    int device_list_len;
+    const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
 
     
     DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
