@@ -103,6 +103,10 @@ class DroneSensor {
                                          
             
     EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, false, 1, {}};
+    delete [] RTDItem._parameterList;
+    RTDItem._parameterList = new EZOParameter[1];
+    RTDItem._parameterList = parameter_rtd ;
+    
     RTDItem._parameterList = parameter_rtd;
     EZODevice ECItem = (EZODevice) {"Conductivity", EC, EZOStatus::Unconnected, true, 4, {ec_EC, tds_EC, sal_EC, sg_EC}};
     EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, false, 1, {ph_PH}};
