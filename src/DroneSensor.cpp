@@ -18,32 +18,101 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
   digitalWrite(EN_AUX, LOW); 
   if (DroneSensor_debug) { Serial.println(F("DroneSensor::DroneSensor()"));}
   delay(long_delay);
-  
-  for (int i = 0; i < device_list_len; i++ )
-  {
-    byte address = device_list[i].device.get_address();
-    Wire.beginTransmission(address);
-    if (!Wire.endTransmission())
-    {
-      device_list[i]._status = EZOStatus::Connected;
-      this->current_step = EZOReadingStep::REQUEST_TEMP;
-      if (DroneSensor_debug) {
-        Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
-        Serial.print(address);
-        Serial.println(F("  !"));
-        
-      }
-    }
-    else
-    {
-      device_list[i]._status = EZOStatus::Unconnected;
-      if (DroneSensor_debug) {
-        Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " NOT found at address ");
-        Serial.print(address);
-        Serial.println("  !");       
-      }
+  int i = 0;
+  byte address = RTD.get_address();
+  Wire.beginTransmission(address);
+  if (!Wire.endTransmission()){
+    this->current_step = EZOReadingStep::REQUEST_TEMP;
+    EZOParameter t_RTD = {"Temperature", "temperature", 1};
+    EZODevice RTDItem =(EZODevice) {"Temperature", RTD, EZOStatus::Unconnected, false, 1, {t_RTD}};
+    EZODevice device_list[i++] = RTDItem;  
+    if (DroneSensor_debug) {
+        Serial.println(F("EZO Circuit Temperature found at address 102"));
     }
   }
+  
+  byte address = PH.get_address();
+  Wire.beginTransmission(address);
+  if (!Wire.endTransmission()){
+    this->current_step = EZOReadingStep::REQUEST_TEMP;
+    EZOParameter ph_PH = {"pH", "PH", 2};
+    EZODevice PHItem = (EZODevice) {"pH", PH, EZOStatus::Unconnected, false, 1, {ph_PH}};
+    EZODevice device_list[i++] = PHItem;  
+    if (DroneSensor_debug) {
+        Serial.println(F("EZO Circuit PH found at address 99"));
+    }
+  }
+  
+  byte address = EC.get_address();
+  Wire.beginTransmission(address);
+  if (!Wire.endTransmission()){
+    this->current_step = EZOReadingStep::REQUEST_TEMP;
+    EZOParameter ec_EC = {"Conductivity", "conductivity", 0};
+    EZOParameter tds_EC = {"Total Dissolved Solids", "totalDissolvedSolids", 0};
+    EZOParameter sal_EC = {"Salinity", "salinity", 0};
+    EZOParameter sg_EC = {"Specific Gravity", "specificGravity", 0};
+    EZODevice ECItem = (EZODevice) {"Conductivity", EC, EZOStatus::Unconnected, true, 4, {ec_EC, tds_EC, sal_EC, sg_EC}};
+    EZODevice device_list[i++] = ECItem;  
+    if (DroneSensor_debug) {
+        Serial.println(F("EZO Circuit EC found at address 100"));
+    }
+  }
+  
+  byte address = DO.get_address();
+  Wire.beginTransmission(address);
+  if (!Wire.endTransmission()){
+    this->current_step = EZOReadingStep::REQUEST_TEMP;
+    EZOParameter do_DO = {"Dissolved Oxygen", "DO", 0};
+    EZOParameter sat_DO = {"Saturation", "saturation", 0};
+    EZODevice DOItem = (EZODevice) {"Dissolved Oxygen", DO, EZOStatus::Unconnected, true, 2, {do_DO, sat_DO}};
+    EZODevice device_list[i++] = DOItem;  
+    if (DroneSensor_debug) {
+        Serial.println(F("EZO Circuit DO found at address 97"));
+    }
+  }
+  
+  byte address = ORP.get_address();
+  Wire.beginTransmission(address);
+  if (!Wire.endTransmission()){
+    this->current_step = EZOReadingStep::REQUEST_TEMP;
+    EZOParameter orp_ORP = {"Oxidation Reduction Potential", "oxidationReductionPotential", 0};
+    EZODevice ORPItem = (EZODevice) {"Oxidation Reduction Potential", ORP, EZOStatus::Unconnected, true, 0, {orp_ORP}};
+    EZODevice device_list[i++] = ORPItem;  
+    if (DroneSensor_debug) {
+        Serial.println(F("EZO Circuit ORP found at address 98"));
+    }
+  }
+  
+  
+  byte address = CO2.get_address();
+  Wire.beginTransmission(address);
+  if (!Wire.endTransmission()){
+    this->current_step = EZOReadingStep::REQUEST_TEMP;
+    EZOParameter co2_CO2 = {"CO2", "CO2", 0};
+    EZOParameter tem_CO2= {"Temperature", "thermalEquilibriumTemperature", 1};
+    EZODevice CO2Item = (EZODevice) {"Gaseous CO2", CO2, EZOStatus::Unconnected, false, 2, {co2_CO2, tem_CO2}};
+    EZODevice device_list[i++] = CO2Item;  
+    if (DroneSensor_debug) {
+        Serial.println(F("EZO Circuit CO2 found at address 105"));
+    }
+  }
+  
+  
+  byte address = HUM.get_address();
+  Wire.beginTransmission(address);
+  if (!Wire.endTransmission()){
+    this->current_step = EZOReadingStep::REQUEST_TEMP;
+    EZOParameter hum_HUM= {"Humitity", "humidity", 0};
+    EZOParameter tem_HUM= {"Temperature", "temperature", 0};
+    EZOParameter unk_HUM= {"Spacer", "", 0}; 
+    EZOParameter dew_HUM= {"Dew Point", "dewPoint", 0};                       
+    EZODevice HUMItem = (EZODevice) {"Humitity", HUM, EZOStatus::Unconnected, false, 4, {hum_HUM, tem_HUM, unk_HUM, dew_HUM}};
+    EZODevice device_list[i++] = HUMItem;  
+    if (DroneSensor_debug) {
+        Serial.println(F("EZO Circuit HUM found at address 111"));
+    }
+  }
+  this->device_list_len = i;
   setFallbackTemp(this->_FallbackTemp);
 }
 
