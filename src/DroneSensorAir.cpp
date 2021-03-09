@@ -35,7 +35,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
       }
     }
   }
-  setFallbackTemp(this->_FallbackTemp);
+
 }
 
 
