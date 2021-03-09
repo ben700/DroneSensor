@@ -309,8 +309,8 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     }
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
-    doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
-  //  doc[Device.get_name()]["CP"] = calibrationPoints;
+   // doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
+    doc[Device.get_name()]["CP"] = calibrationPoints;
   
     command = "Status";
     Device.send_cmd(command.c_str());
@@ -342,7 +342,8 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
 String DroneSensor::deviceStatePayload (){
   StaticJsonDocument<DOC_SIZE> doc;
-  doc["Fallback Temperature"] = this->_FallbackTemp;
+ // doc["Fallback Temperature"] = this->_FallbackTemp;
+  doc["Fallback Temp"] = this->_FallbackTemp;
   doc["Poll Delay"] = this->pollDelay;
   this->parametersOn ? doc["Parameters"] = "On" : doc["Parameters"] = "Off" ;
   
@@ -354,7 +355,8 @@ String DroneSensor::deviceStatePayload (){
         get_ec_k_value();
         doc[device_list[i].device.get_name()]["k Value"] = k_val;
       }
-      doc[device_list[i].device.get_name()]["Temperature Compensation"] = device_list[i].tempCompensation;
+    //  doc[device_list[i].device.get_name()]["Temperature Compensation"] = device_list[i].tempCompensation;
+      doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
       singleDeviceStatePayload(device_list[i].device, doc);
     }
   }  
