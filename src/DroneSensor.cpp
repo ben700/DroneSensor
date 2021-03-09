@@ -298,7 +298,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     String type = cmdReply.substring(cmdReply.indexOf(",")+1, cmdReply.indexOf(",",4));
     String firm = cmdReply.substring(cmdReply.indexOf(",",4)+1);
   
-    doc[Device.get_name()]["Name"] = Device.get_name();
+ //   doc[Device.get_name()]["Name"] = Device.get_name();
     doc[Device.get_name()]["Firmware"] = firm;
   
     command = "CAL,?";
@@ -311,7 +311,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
    // doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
     doc[Device.get_name()]["CP"] = calibrationPoints;
-  
+/*  
     command = "Status";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -335,7 +335,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
     doc[Device.get_name()]["LED"] = lookupLedStatus(LED);
   }
-    
+  */  
   return;
 }
 
