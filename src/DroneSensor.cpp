@@ -74,27 +74,7 @@ void DroneSensor::select_delay(String &str) {
     delay(short_delay);
   }
 }
-// used for printing either a success_string message if a command was successful or the error type if it wasnt
-void DroneSensor::print_error_type(Ezo_board &Device, const char* success_string) {
-      Serial.println(return_error_type(Device, success_string));   //the command was successful, print the success string
-}
 
-String DroneSensor::return_error_type(Ezo_board &Device, String success_string) {
-  switch (Device.get_error()) 
-  {
-    case Ezo_board::SUCCESS:
-      return (success_string);
-    case Ezo_board::FAIL:
-      return ("Failed");
-    case Ezo_board::NOT_READY:
-      return ("Pending");
-    case Ezo_board::NOT_READ_CMD:
-      return ("Not Read Command");
-    case Ezo_board::NO_DATA:
-      return ("No Data");
-  }
-  return ("No Device");
-}
 
 
 String DroneSensor::lookupRestartCodes(String restartCodes){
@@ -118,24 +98,6 @@ String DroneSensor::lookupLedStatus(String LED){
   if (LED == "1"){ return "On";}else{return "Off";}
 }
 
-String DroneSensor::return_error_type(Ezo_board &Device, const char* success_string) {
-  switch (Device.get_error()) 
-  {
-    case Ezo_board::SUCCESS:
-      return (success_string);
-    case Ezo_board::FAIL:
-      return ("Failed");
-    case Ezo_board::NOT_READY:
-      return ("Pending");
-    case Ezo_board::NOT_READ_CMD:
-      return ("Not Read Command");
-    case Ezo_board::NO_DATA:
-      return ("No Data");
-  }
-  return ("No Device");
-}
-
-
 
 void DroneSensor::get_ec_k_value(){                                    //function to query the value of the ec circuit
   char rx_buf[10];                                        //buffer to hold the string we receive from the circuit
@@ -147,16 +109,7 @@ void DroneSensor::get_ec_k_value(){                                    //functio
 }
 
 
-
-// prints the boards name and I2C address
-void DroneSensor::print_device_info(Ezo_board &Device) {
-  Serial.print(Device.get_name());
-  Serial.print(" ");
-  Serial.print(Device.get_address());
-}
-
-
-void DroneSensor::turnParametersOn() {
+void DroneSensor::turnParametersOn(int onOrOff) {
   this->parametersOn = true;
   for (int i = 0; i < device_list_len; i++) {
     if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
@@ -246,14 +199,6 @@ void DroneSensor::turnParametersOff() {
     }
   }
 }
-void DroneSensor::receive_reading(Ezo_board &Device) {              // function to decode the reading after the read command was issued
-
-  if (DroneSensor_debug) {Serial.print(Device.get_name()); Serial.print(F(": "));}
-  Device.receive_read_cmd();              //get the response data and put it into the [Device].reading variable if successful
-
-  if (DroneSensor_debug) {print_error_type(Device, String(Device.get_last_received_reading(), 2).c_str());}
-}
-
 
 void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   if (DroneSensor_debug) { Serial.println(F("DroneSensor::sendReadCommand()"));}
@@ -261,7 +206,7 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   if(device_list[0]._status == EZOStatus::Connected){
     device_list[0].device.send_read_cmd();
     delay(reading_delay);
-    receive_reading(device_list[0].device);
+    device_list[0].device.receive_read_cmd();
     if (DroneSensor_debug) { print_error_type(device_list[0].device, "Reading Temp Success");} 
     if ((device_list[0].device.get_error() == Ezo_board::SUCCESS) && (device_list[0].device.get_last_received_reading() > -1000.0))
     {
@@ -290,21 +235,7 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
     }
   }
 }
-String DroneSensor::printEZOReadingStep(enum EZOReadingStep __currentStep){
-  switch(__currentStep)
-  {
-    case EZOReadingStep::REQUEST_TEMP:
-      return "REQUEST_TEMP";
-      break;
-    case EZOReadingStep::READ_TEMP_AND_REQUEST_DEVICES:
-      return "READ_TEMP_AND_REQUEST_DEVICES";
-      break;
-    case EZOReadingStep::READ_RESPONSE:
-      return "READ_RESPONSE";
-    case EZOReadingStep::NO_DEVICES:
-      return "NO_DEVICES";
-  }
-}
+
 
 String DroneSensor::sensorPayload(String _EpochTime)
 {
@@ -525,46 +456,4 @@ String DroneSensor::bootPayload(String _EpochTime){
   String payload;
   serializeJson(doc, payload);
   return payload;
-}
-void DroneSensor::test(){
-   for (int i = 0; i < device_list_len; i++ ){
-     if(device_list[i]._status == EZOStatus::Connected){
-       String command = "O,?";
-       char receive_buffer[32];
-       String cmdReply;
-       device_list[i].device.send_cmd(command.c_str());
-       select_delay(command);
-       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
-         cmdReply = String(receive_buffer);
-       }
-       else
-       {
-         cmdReply = "Read parameters failed";
-       }
-       command = "R";
-       device_list[i].device.send_cmd(command.c_str());
-       select_delay(command);       
-       if(device_list[i].device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
-         Serial.print(String(device_list[i].device.get_name()) + " parameters :- ");
-         Serial.println(cmdReply);        //parse the reading into a float
-         
-         Serial.print(String(device_list[i].device.get_name()) + " returned :- ");
-         Serial.println(String(receive_buffer));        //parse the reading into a float
-       }
-       else
-       {
-         Serial.print(String(device_list[i].device.get_name()) + " parameters :- ");
-         Serial.println(cmdReply);        //parse the reading into a float
-         
-         Serial.print(String(device_list[i].device.get_name()) + " returned :- ");
-         Serial.println(F("Read sensors failed"));        //parse the reading into a float
-         
-       }
-       cmdReply="";
-     }
-     else
-     {
-        Serial.print(String(device_list[i].device.get_name()) + " is not connected");
-     }
-   } 
 }
