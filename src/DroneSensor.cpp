@@ -112,7 +112,7 @@ void DroneSensor::get_ec_k_value(){                                    //functio
 void DroneSensor::turnParametersOn() {
   this->parametersOn = true;
   for (int i = 0; i < device_list_len; i++) {
-    if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
+    if(device_list[i].device.get_name() == EC.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) {Serial.print(F("Conductivity is "));}
       String command = "O,EC,1";
       device_list[i].device.send_cmd(command.c_str());
@@ -127,7 +127,7 @@ void DroneSensor::turnParametersOn() {
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
       if (DroneSensor_debug) {Serial.println(F("reconfigured!"));}
-    }else if (device_list[i].device.get_name() == "DO" and device_list[i]._status == EZOStatus::Connected){
+    }else if (device_list[i].device.get_name() == DO.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) { Serial.print(F("Dissolved Oxygen is "));}
       String command = "O,mg,1";
       device_list[i].device.send_cmd(command.c_str());
@@ -141,7 +141,7 @@ void DroneSensor::turnParametersOn() {
 void DroneSensor::turnParametersOff() {
   this->parametersOn = false;
   for (int i = 0; i < device_list_len; i++) {
-    if(device_list[i].device.get_name() == "conductivity" and device_list[i]._status == EZOStatus::Connected){
+    if(device_list[i].device.get_name() == EC.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) {Serial.print(F("Conductivity is "));}
       String command = "O,EC,1";
       device_list[i].device.send_cmd(command.c_str());
@@ -156,7 +156,7 @@ void DroneSensor::turnParametersOff() {
       device_list[i].device.send_cmd(command.c_str());
       select_delay(command);
       if (DroneSensor_debug) {Serial.println(F("reconfigured!"));}
-    }else if (device_list[i].device.get_name() == "DO" and device_list[i]._status == EZOStatus::Connected){
+    }else if (device_list[i].device.get_name() == DO.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) {Serial.print(F("Dissolved Oxygen is "));}
       String command = "O,mg,1";
       device_list[i].device.send_cmd(command.c_str());
