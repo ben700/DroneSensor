@@ -319,7 +319,7 @@ String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
-      if(device_list[i].device.get_name() == "conductivity")
+      if(device_list[i].device.get_name() == EC.get_name())
       {
         get_ec_k_value();
         doc[device_list[i].device.get_name()]["k Value"] = k_val;
