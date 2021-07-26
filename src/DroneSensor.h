@@ -108,7 +108,7 @@ class DroneSensor {
     bool processConfig(StaticJsonDocument<DOC_SIZE>& _config);
     String sensorPayload(String _EpochTime);
     void singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc);
-    String deviceStatePayload ();
+    String deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc);
     String bootPayload(String _EpochTime);
     void debug();
     bool hasDevice();
