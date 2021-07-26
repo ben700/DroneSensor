@@ -85,12 +85,12 @@ String DroneSensor::lookupLedStatus(String LED){
 void DroneSensor::turnParametersOn() {
   this->parametersOn = true;
   for (int i = 0; i < device_list_len; i++) {
-  if (device_list[i].device.get_name() == "CO2" and device_list[i]._status == EZOStatus::Connected){
+  if (device_list[i].device.get_name() == CO2.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) {Serial.print(F("CO2 is "));}
       String command = "O,t,1";
       device_list[i].device.send_cmd(command.c_str());
       if (DroneSensor_debug) {Serial.println(F("reconfigured!"));}
-    }else if (device_list[i].device.get_name() == "HUM" and device_list[i]._status == EZOStatus::Connected){
+    }else if (device_list[i].device.get_name() == HUM.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) {Serial.print(F("Humitity is "));}
       String command = "O,HUM,1";
       device_list[i].device.send_cmd(command.c_str());
@@ -107,12 +107,12 @@ void DroneSensor::turnParametersOn() {
 void DroneSensor::turnParametersOff() {
   this->parametersOn = false;
   for (int i = 0; i < device_list_len; i++) {
-   if (device_list[i].device.get_name() == "CO2" and device_list[i]._status == EZOStatus::Connected){
+   if (device_list[i].device.get_name() == CO2.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) {Serial.print(F("CO2 is "));}
       String command = "O,t,0";
       device_list[i].device.send_cmd(command.c_str());
       if (DroneSensor_debug) {Serial.println(F("reconfigured!"));}
-    }else if (device_list[i].device.get_name() == "HUM" and device_list[i]._status == EZOStatus::Connected){
+    }else if (device_list[i].device.get_name() == HUM.get_name() and device_list[i]._status == EZOStatus::Connected){
       if (DroneSensor_debug) {Serial.print(F("Humitity is "));}
       String command = "O,HUM,1";
       device_list[i].device.send_cmd(command.c_str());
