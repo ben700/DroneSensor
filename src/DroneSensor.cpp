@@ -309,8 +309,8 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 }
 
 
-String DroneSensor::deviceStatePayload (){
-  StaticJsonDocument<DOC_SIZE> doc;
+String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
+
  // doc["Fallback Temperature"] = this->_FallbackTemp;
   doc["Fallback Temp"] = this->_FallbackTemp;
   doc["Poll Delay"] = this->pollDelay;
