@@ -28,6 +28,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
     if (!Wire.endTransmission())
     {
       device_list[i]._status = EZOStatus::Connected;
+      findDevice(device_list[i]);
       this->current_step = EZOReadingStep::REQUEST_TEMP;
       if (DroneSensor_debug) {
         Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
