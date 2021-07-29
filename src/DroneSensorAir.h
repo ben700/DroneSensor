@@ -76,6 +76,8 @@ class DroneSensor {
     DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
     void select_delay(String &str);
+    void findDevice(EZODevice device) { device.device.send_cmd("Find"); };
+    bool light(EZODevice device, bool status = NULL) { return true; };
     bool processCommand(StaticJsonDocument<DOC_SIZE>& _command);
     bool processConfig(StaticJsonDocument<DOC_SIZE>& _config);
     String sensorPayload(String _EpochTime);
