@@ -1,5 +1,16 @@
 #include "DroneSensor.h"
 
+double showDecimals(const double &x, const int &numDecimals)
+{
+  int y = x;
+  double z = x - y;
+  double m = pow(10, numDecimals);
+  double q = z * m;
+  double r = round(q);
+
+  return static_cast<double>(y) + (1.0 / m) * r;
+}
+
 DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
   DroneSensor_debug = _DroneSensor_debug;
