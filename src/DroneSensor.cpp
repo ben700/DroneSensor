@@ -242,7 +242,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
         for(int y=0; y < countParameter; y++){
           if(pReading != NULL){
             if(device_list[i]._parameterList[y]._payloadName != NULL and device_list[i]._parameterList[y]._payloadName.length() >0){
-              doc[device_list[i]._parameterList[y]._payloadName] = showDecimals(atof(pReading), device_list[i]._parameterList[y]._precision);
+              doc[device_list[i].device.get_name()][device_list[i]._parameterList[y]._payloadName] = showDecimals(atof(pReading), device_list[i]._parameterList[y]._precision);
             }
           }else{
               if (DroneSensor_debug) {Serial.println("Error: Null but expected to get " + device_list[i]._parameterList[y]._displayName + " for " + String(device_list[i].device.get_name()));}
@@ -422,19 +422,4 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
 bool DroneSensor::headerPayload(StaticJsonDocument<DOC_SIZE>& _doc){
   _doc["deviceMAC"] = this->_deviceMAC;
   return true;
-}
-String DroneSensor::bootPayload(String _EpochTime){
-  if (DroneSensor_debug) { Serial.println(F("DroneSensor::bootPayload()")); Serial.println(""); }
-  StaticJsonDocument<DOC_SIZE> doc;
-     
-  doc["bootTime"] = _EpochTime;
-  headerPayload(doc);
-  doc["deviceName"] = String(this->_deviceID);
-  doc["deviceIP"] = String(this->_deviceIP);
-
-  if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
-    
-  String payload;
-  serializeJson(doc, payload);
-  return payload;
 }
