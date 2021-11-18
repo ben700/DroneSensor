@@ -11,7 +11,7 @@ double showDecimals(const double &x, const int &numDecimals)
   return static_cast<double>(y) + (1.0 / m) * r;
 }
 
-DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
+DroneSensorAir::DroneSensorAir(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
   DroneSensor_debug = _DroneSensor_debug;
   this->_deviceMAC = __deviceMAC;
@@ -52,10 +52,10 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
 
 
 
-void DroneSensor::debug() {
+void DroneSensorAir::debug() {
   DroneSensor_debug=true;
 }
-bool DroneSensor::hasDevice(){
+bool DroneSensorAir::hasDevice(){
  if (this->current_step == EZOReadingStep::NO_DEVICES){
    return false;
  }else{
@@ -63,7 +63,7 @@ bool DroneSensor::hasDevice(){
  }
 }
 // determines how long we wait depending on the command
-void DroneSensor::select_delay(String &str) {
+void DroneSensorAir::select_delay(String &str) {
   if (str.indexOf("CAL") != -1 || str.indexOf("R") != -1) {
     delay(long_delay);
   } else {
@@ -73,7 +73,7 @@ void DroneSensor::select_delay(String &str) {
 
 
 
-String DroneSensor::lookupRestartCodes(String restartCodes){
+String DroneSensorAir::lookupRestartCodes(String restartCodes){
   if (restartCodes == "P"){
     //return "Powered Off";
     return "Power";
@@ -90,11 +90,11 @@ String DroneSensor::lookupRestartCodes(String restartCodes){
   }
 }
 
-String DroneSensor::lookupLedStatus(String LED){
+String DroneSensorAir::lookupLedStatus(String LED){
   if (LED == "1"){ return "On";}else{return "Off";}
 }
 
-void DroneSensor::turnParametersOn() {
+void DroneSensorAir::turnParametersOn() {
   this->parametersOn = true;
   for (int i = 0; i < device_list_len; i++) {
   if (device_list[i].device.get_name() == CO2.get_name() and device_list[i]._status == EZOStatus::Connected){
@@ -116,7 +116,7 @@ void DroneSensor::turnParametersOn() {
     }
   }
 }
-void DroneSensor::turnParametersOff() {
+void DroneSensorAir::turnParametersOff() {
   this->parametersOn = false;
   for (int i = 0; i < device_list_len; i++) {
    if (device_list[i].device.get_name() == CO2.get_name() and device_list[i]._status == EZOStatus::Connected){
@@ -139,22 +139,22 @@ void DroneSensor::turnParametersOff() {
   }
 }
 
-void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
+void DroneSensorAir::sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc) {
   if (DroneSensor_debug) { Serial.println(F("DroneSensor::sendReadCommand()"));}
 
     for (int i = 0; i < device_list_len; i++ )
     {
       if(device_list[i]._status == EZOStatus::Connected){
         device_list[i].device.send_read_cmd();
-        if (DroneSensor_debug) { Serial.println("DroneSensor::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
+        if (DroneSensor_debug) { Serial.println("DroneSensorAir::sendReadCommand() -> Sent read command to " + String(device_list[i].device.get_name())); }  
       }
     }
 }
 
 
-String DroneSensor::sensorPayload(String _EpochTime)
+String DroneSensorAir::sensorPayload(String _EpochTime)
 {
-  if (DroneSensor_debug) { Serial.println(F("DroneSensor::sensorPayload()"));  }
+  if (DroneSensor_debug) { Serial.println(F("DroneSensorAir::sensorPayload()"));  }
   StaticJsonDocument<DOC_SIZE> doc;
      
   doc["deviceTime"] = _EpochTime;
@@ -195,7 +195,7 @@ String DroneSensor::sensorPayload(String _EpochTime)
   return output; 
 }
 
-void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc){
+void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc){
 
   String command = "I";
   String cmdReply;
@@ -255,7 +255,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 }
 
 
-String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
+String DroneSensorAir::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
  
  // doc["Fallback Temperature"] = this->_FallbackTemp;
   doc["Fallback Temp"] = this->_FallbackTemp;
@@ -277,7 +277,7 @@ String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
   return output; 
 }
 
-bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
+bool DroneSensorAir::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   bool returnCode = true;
   for (int i = 0; i < device_list_len; i++ ){
   
@@ -308,7 +308,7 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   return returnCode;
  }
    
-bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
+bool DroneSensorAir::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   bool returnCode = true;
 
 
@@ -345,7 +345,7 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
 }
 
 
-bool DroneSensor::headerPayload(StaticJsonDocument<DOC_SIZE>& _doc){
+bool DroneSensorAir::headerPayload(StaticJsonDocument<DOC_SIZE>& _doc){
   _doc["deviceMAC"] = this->_deviceMAC;
   return true;
 }
