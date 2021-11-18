@@ -1,5 +1,5 @@
-#ifndef DroneSensor_h
-#define DroneSensor_h
+#ifndef DroneSensorAir_h
+#define DroneSensorAir_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -42,7 +42,7 @@ typedef struct
 }  EZODevice;
 
 
-class DroneSensor {
+class DroneSensorAir {
 
 
     Ezo_board CO2 = Ezo_board(105, "CO2");    //create a DO circuit object who's address is 97 and name is "DO"
@@ -73,7 +73,7 @@ class DroneSensor {
     const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
 
     
-    DroneSensor (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
+    DroneSensorAir (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
     void select_delay(String &str);
     void findDevice(EZODevice device) { device.device.send_cmd("Find"); };
