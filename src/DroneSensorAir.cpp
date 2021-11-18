@@ -18,7 +18,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
   this->_deviceIP = __deviceIP;
   this->_deviceID = __deviceID;
   Wire.begin(); 
-  if (DroneSensor_debug) { Serial.println(F("DroneSensor::DroneSensor()"));}
+  if (DroneSensor_debug) { Serial.println(F("DroneSensorAir::DroneSensor()"));}
   delay(long_delay);
   
   for (int i = 0; i < device_list_len; i++ )
