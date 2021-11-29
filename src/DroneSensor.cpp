@@ -107,7 +107,7 @@ String DroneSensor::lookupRestartCodes(String restartCodes){
 }
 
 String DroneSensor::lookupLedStatus(String LED){
-  if (LED == "1"){ return "On";}else{return "Off";}
+  if (LED == "1"){ return "on";}else{return "off";}
 }
 
 
@@ -323,7 +323,7 @@ String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
 
   doc["fallbackTemp"] = this->_FallbackTemp;
   doc["pollDelay"]= this->pollDelay;
-  this->parametersOn ? doc["parameters"] = "On" : doc["parameters"] = "Off" ;
+  this->parametersOn ? doc["parameters"] = "on" : doc["parameters"] = "off" ;
   
   for (int i = 0; i < device_list_len; i++ )
   {
