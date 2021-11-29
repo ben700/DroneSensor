@@ -106,8 +106,8 @@ String DroneSensor::lookupRestartCodes(String restartCodes){
   }
 }
 
-String DroneSensor::lookupLedStatus(String LED){
-  if (LED == "1"){ return "on";}else{return "off";}
+bool DroneSensor::lookupLedStatus(String LED){
+  if (LED == "1"){ return true;}else{return false;}
 }
 
 
@@ -288,8 +288,8 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
    // doc[Device.get_name()]["calibrationPoints"] = calibrationPoints;
-    doc[Device.get_name()]["cp"] = calibrationPoints;
-/*  
+    doc[Device.get_name()]["cp"] = calibrationPoints.toInt();
+
     command = "Status";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -299,7 +299,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
     String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",")+1,cmdReply.indexOf(",", cmdReply.indexOf(",")+1) );
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",")+1)+1); 
-    doc[Device.get_name()]["restart"] = lookupRestartCodes(reasonForRestart);
+    doc[Device.get_name()]["restart"] = reasonForRestart;
     doc[Device.get_name()]["vcc"] = VoltageatVcc;
 
     
@@ -313,7 +313,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
     doc[Device.get_name()]["led"] = lookupLedStatus(LED);
   
-  */
+  
   }
   return;
 }
@@ -321,9 +321,10 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
 String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
 
-  doc["fallbackTemp"] = this->_FallbackTemp;
-  doc["pollDelay"]= this->pollDelay;
-  this->parametersOn ? doc["parameters"] = "on" : doc["parameters"] = "off" ;
+  doc["fallback"] = this->_FallbackTemp;
+  doc["poll"]= this->pollDelay;
+  doc["parameters"] = this->parametersOn;
+//  this->parametersOn ? doc["parameters"] = "on" : doc["parameters"] = "off" ;
   
   for (int i = 0; i < device_list_len; i++ )
   {
