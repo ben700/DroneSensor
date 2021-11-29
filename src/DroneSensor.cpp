@@ -277,7 +277,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     String firm = cmdReply.substring(cmdReply.indexOf(",",4)+1);
   
  //   doc[Device.get_name()]["Name"] = Device.get_name();
-    doc[Device.get_name()]["Firmware"] = firm;
+    doc[Device.get_name()]["firmware"] = firm;
   
     command = "CAL,?";
     Device.send_cmd(command.c_str());
@@ -287,8 +287,8 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     }
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
-   // doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
-    doc[Device.get_name()]["CP"] = calibrationPoints;
+   // doc[Device.get_name()]["calibrationPoints"] = calibrationPoints;
+    doc[Device.get_name()]["cp"] = calibrationPoints;
 /*  
     command = "Status";
     Device.send_cmd(command.c_str());
@@ -299,8 +299,8 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
     String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",")+1,cmdReply.indexOf(",", cmdReply.indexOf(",")+1) );
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",")+1)+1); 
-    doc[Device.get_name()]["Restart"] = lookupRestartCodes(reasonForRestart);
-    doc[Device.get_name()]["Vcc"] = VoltageatVcc;
+    doc[Device.get_name()]["restart"] = lookupRestartCodes(reasonForRestart);
+    doc[Device.get_name()]["vcc"] = VoltageatVcc;
 
     
     command = "L,?";
@@ -311,7 +311,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     }
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
-    doc[Device.get_name()]["LED"] = lookupLedStatus(LED);
+    doc[Device.get_name()]["led"] = lookupLedStatus(LED);
   
   */
   }
