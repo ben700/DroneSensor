@@ -392,7 +392,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
     String firm = cmdReply.substring(cmdReply.indexOf(",", 4) + 1);
 
     //   doc[Device.get_name()]["Name"] = Device.get_name();
-    doc[Device.get_name()]["firmware"] = firm;
+    doc[Device.get_name()]["firm"] = firm;
 
     command = "CAL,?";
     Device.send_cmd(command.c_str());
