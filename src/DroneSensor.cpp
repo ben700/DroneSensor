@@ -321,10 +321,9 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
 String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
 
- // doc["Fallback Temperature"] = this->_FallbackTemp;
-  doc["Fallback Temp"] = this->_FallbackTemp;
-  doc["Poll Delay"] = this->pollDelay;
-  this->parametersOn ? doc["Parameters"] = "On" : doc["Parameters"] = "Off" ;
+  doc["fallbackTemp"] = this->_FallbackTemp;
+  doc["pollDelay"]= this->pollDelay;
+  this->parametersOn ? doc["parameters"] = "On" : doc["parameters"] = "Off" ;
   
   for (int i = 0; i < device_list_len; i++ )
   {
@@ -332,9 +331,8 @@ String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
       if(device_list[i].device.get_name() == EC.get_name())
       {
         get_ec_k_value();
-        doc[device_list[i].device.get_name()]["k Value"] = k_val;
+        doc[device_list[i].device.get_name()]["kValue"] = k_val;
       }
-    //  doc[device_list[i].device.get_name()]["Temperature Compensation"] = device_list[i].tempCompensation;
       doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
       singleDeviceStatePayload(device_list[i].device, doc);
     }
