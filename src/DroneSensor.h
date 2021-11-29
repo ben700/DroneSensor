@@ -45,11 +45,11 @@ typedef struct
 class DroneSensor {
 
 
-    Ezo_board RTD = Ezo_board(102, "temperature");    //create an RTD circuit object who's address is 102 and name is "RTD"
+    Ezo_board RTD = Ezo_board(102, "RTD");    //create an RTD circuit object who's address is 102 and name is "RTD"
     Ezo_board PH = Ezo_board(99, "PH");       //create a PH circuit object, who's address is 99 and name is "PH"
-    Ezo_board EC = Ezo_board(100, "conductivity");      //create an EC circuit object who's address is 100 and name is "EC"
+    Ezo_board EC = Ezo_board(100, "EC");      //create an EC circuit object who's address is 100 and name is "EC"
     Ezo_board DO = Ezo_board(97, "DO");    //create a DO circuit object who's address is 97 and name is "DO"
-    Ezo_board ORP = Ezo_board(98, "oxidationReductionPotential");    //create a DO circuit object who's address is 97 and name is "DO"
+    Ezo_board ORP = Ezo_board(98, "ORP");    //create a DO circuit object who's address is 97 and name is "DO"
 
     EZOParameter t_RTD = {"Temperature", "temperature", 1};
     
