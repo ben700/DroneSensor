@@ -90,8 +90,16 @@ String DroneSensor::lookupRestartCodes(String restartCodes){
   }
 }
 
-String DroneSensor::lookupLedStatus(String LED){
-  if (LED == "1"){ return "On";}else{return "Off";}
+bool DroneSensor::lookupLedStatus(String LED)
+{
+  if (LED == "1")
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 void DroneSensor::turnParametersOn() {
@@ -212,8 +220,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     String type = cmdReply.substring(cmdReply.indexOf(",")+1, cmdReply.indexOf(",",4));
     String firm = cmdReply.substring(cmdReply.indexOf(",",4)+1);
   
- //   doc[Device.get_name()]["Name"] = Device.get_name();
-    doc[Device.get_name()]["Firmware"] = firm;
+    doc[Device.get_name()]["firm"] = firm;
   
     command = "CAL,?";
     Device.send_cmd(command.c_str());
@@ -223,8 +230,9 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     }
   
     String calibrationPoints = cmdReply.substring(cmdReply.indexOf("CAL,")+4);
-   // doc[Device.get_name()]["Calibration Points"] = calibrationPoints;
-    doc[Device.get_name()]["CP"] = calibrationPoints;
+    // doc[Device.get_name()]["calibrationPoints"] = calibrationPoints;
+    doc[Device.get_name()]["cp"] = calibrationPoints.toInt();
+
 /*  
     command = "Status";
     Device.send_cmd(command.c_str());
@@ -235,9 +243,8 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
     String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",")+1,cmdReply.indexOf(",", cmdReply.indexOf(",")+1) );
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",")+1)+1); 
-    doc[Device.get_name()]["Restart"] = lookupRestartCodes(reasonForRestart);
-    doc[Device.get_name()]["Vcc"] = VoltageatVcc;
-
+    doc[Device.get_name()]["restart"] = reasonForRestart;
+    doc[Device.get_name()]["vcc"] = VoltageatVcc;
     
     command = "L,?";
     Device.send_cmd(command.c_str());
@@ -247,7 +254,7 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     }
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
-    doc[Device.get_name()]["LED"] = lookupLedStatus(LED);
+    ddoc[Device.get_name()]["led"] = lookupLedStatus(LED);
   
   */
   }
@@ -257,18 +264,16 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
 
 String DroneSensor::deviceStatePayload (StaticJsonDocument<DOC_SIZE> &doc){
  
- // doc["Fallback Temperature"] = this->_FallbackTemp;
-  doc["Fallback Temp"] = this->_FallbackTemp;
-  doc["Poll Delay"] = this->pollDelay;
-  this->parametersOn ? doc["Parameters"] = "On" : doc["Parameters"] = "Off" ;
+  doc["fallback"] = this->_FallbackTemp;
+  doc["poll"] = this->pollDelay;
+  doc["parameters"] = this->parametersOn;
   
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
      
-    //  doc[device_list[i].device.get_name()]["Temperature Compensation"] = device_list[i].tempCompensation;
-      doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
-      singleDeviceStatePayload(device_list[i].device, doc);
+     doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
+       singleDeviceStatePayload(device_list[i].device, doc);
     }
   }  
   if(DroneSensor_debug){serializeJsonPretty(doc, Serial);Serial.println("");}
@@ -312,8 +317,8 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   bool returnCode = true;
 
 
-  if(_config["Poll Delay"] != NULL){
-    int __pollDelay = _config["Poll Delay"].as<int>();
+  if(_config["poll"] != NULL){
+    int __pollDelay = _config["poll"].as<int>();
     if (DroneSensor_debug) {Serial.println("Setting Poll Delay to " + String(__pollDelay));}
     if(__pollDelay > 100){
       this->pollDelay =__pollDelay;
