@@ -304,7 +304,7 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE> &_doc)
   }
 }
 
-String DroneSensor::sensorPayload(String _EpochTime)
+String DroneSensor::sensorPayload(long _EpochTime)
 {
   if (DroneSensor_debug)
   {
@@ -433,14 +433,17 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
   return;
 }
 
-String DroneSensor::deviceStatePayload(StaticJsonDocument<DOC_SIZE> &doc)
+String DroneSensor::deviceStatePayload(long _EpochTime)
 {
+ StaticJsonDocument<DOC_SIZE> doc;
 
+  doc["deviceTime"] = _EpochTime;
+  doc["version"] = VERSION;
+  doc["deviceType"] = VARIANT;
   doc["fallback"] = this->_FallbackTemp;
   doc["poll"] = this->pollDelay;
   doc["parameters"] = this->parametersOn;
-  //  this->parametersOn ? doc["parameters"] = "on" : doc["parameters"] = "off" ;
-
+  
   for (int i = 0; i < device_list_len; i++)
   {
     if (device_list[i]._status == EZOStatus::Connected)
