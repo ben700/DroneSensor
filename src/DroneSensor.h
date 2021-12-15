@@ -10,6 +10,7 @@
 #define NotConnected "Not Connected"
 
 #define DOC_SIZE 1000
+#define VARIANT "droneMonitor"
 #include <stdint.h>
 #include <Ezo_i2c.h>
 #include <ArduinoJson.h>
