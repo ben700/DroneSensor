@@ -167,10 +167,6 @@ String DroneSensor::sensorPayload(long _EpochTime)
      
   doc["deviceTime"] = _EpochTime;
 
-  headerPayload(doc);
-  
-  if (DroneSensor_debug) { Serial.println(F("Header ----------")); serializeJsonPretty(doc, Serial); }
-
   sendReadCommand(doc);
   delay(reading_delay);
   for (int i = 0; i < device_list_len; i++ )
@@ -233,30 +229,29 @@ void DroneSensor::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocumen
     // doc[Device.get_name()]["calibrationPoints"] = calibrationPoints;
     doc[Device.get_name()]["cp"] = calibrationPoints.toInt();
 
-/*  
     command = "Status";
     Device.send_cmd(command.c_str());
     select_delay(command);
-    if(Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
-      cmdReply = String(receive_buffer);        //parse the reading into a float
+    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+    {                                    //if the reading is successful
+      cmdReply = String(receive_buffer); //parse the reading into a float
     }
 
-    String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",")+1,cmdReply.indexOf(",", cmdReply.indexOf(",")+1) );
-    String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",")+1)+1); 
+    String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",") + 1, cmdReply.indexOf(",", cmdReply.indexOf(",") + 1));
+    String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",") + 1) + 1);
     doc[Device.get_name()]["restart"] = reasonForRestart;
     doc[Device.get_name()]["vcc"] = VoltageatVcc;
-    
+
     command = "L,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
-    if(Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS){   //if the reading is successful
-      cmdReply = String(receive_buffer);        //parse the reading into a float
+    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+    {                                    //if the reading is successful
+      cmdReply = String(receive_buffer); //parse the reading into a float
     }
 
-    String LED = cmdReply.substring(cmdReply.indexOf("L,")+2);
-    ddoc[Device.get_name()]["led"] = lookupLedStatus(LED);
-  
-  */
+    String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
+    doc[Device.get_name()]["led"] = lookupLedStatus(LED);
   }
   return;
 }
@@ -291,10 +286,10 @@ bool DroneSensor::processCommand(StaticJsonDocument<DOC_SIZE>& _command){
   bool returnCode = true;
   for (int i = 0; i < device_list_len; i++ ){
   
-    String command = _command[device_list[i].device.get_name()]["Command"];
+    String command = _command[device_list[i].device.get_name()]["command"];
     
     if(command != NULL and command != "null" ){
-      String __command = _command[device_list[i].device.get_name()]["Command"];
+      String __command = _command[device_list[i].device.get_name()]["command"];
       if (DroneSensor_debug) {Serial.println("Found command " + String(__command) + " for " + String(device_list[i].device.get_name()));}
       if(device_list[i]._status == EZOStatus::Connected){
         device_list[i].device.send_cmd(__command.c_str());
@@ -330,8 +325,8 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
     }
   }  
 
-  if(_config["Parameters"] != NULL){
-    if(_config["Parameters"] == "Off"){
+  if(_config["parameters"] != NULL){
+    if(_config["parameters"] == false){
       if (DroneSensor_debug) {Serial.println(F("Turning Parameters Off"));}
       turnParametersOff();
     }
@@ -354,9 +349,4 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE>& _config){
   return returnCode;
 }
 
-
-bool DroneSensor::headerPayload(StaticJsonDocument<DOC_SIZE>& _doc){
-  _doc["deviceMAC"] = this->_deviceMAC;
-  return true;
-}
 
