@@ -314,14 +314,6 @@ String DroneSensor::sensorPayload(long _EpochTime)
 
   doc["deviceTime"] = _EpochTime;
 
-  headerPayload(doc);
-
-  if (DroneSensor_debug)
-  {
-    Serial.println(F("Header ----------"));
-    serializeJsonPretty(doc, Serial);
-  }
-
   sendReadCommand(doc);
   delay(reading_delay);
   for (int i = 0; i < device_list_len; i++)
@@ -586,8 +578,3 @@ bool DroneSensor::processConfig(StaticJsonDocument<DOC_SIZE> &_config)
   return returnCode;
 }
 
-bool DroneSensor::headerPayload(StaticJsonDocument<DOC_SIZE> &_doc)
-{
-  _doc["deviceMAC"] = this->_deviceMAC;
-  return true;
-}
