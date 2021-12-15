@@ -106,10 +106,9 @@ public:
   bool light(EZODevice device, bool status = NULL) { return true; };
   bool processCommand(StaticJsonDocument<DOC_SIZE> &_command);
   bool processConfig(StaticJsonDocument<DOC_SIZE> &_config);
-  String sensorPayload(String _EpochTime);
+  String sensorPayload(long _EpochTime);
   void singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument<DOC_SIZE> &doc);
-  String deviceStatePayload(StaticJsonDocument<DOC_SIZE> &doc);
-  String bootPayload(String _EpochTime);
+  String deviceStatePayload(long _EpochTime);
   void debug();
   bool hasDevice();
   void turnParametersOn();
