@@ -93,7 +93,7 @@ class DroneSensor {
     int pollDelay = 60000;
     bool loggingData = true;
   private:
-     String lookupLedStatus(String LED);
+     bool lookupLedStatus(String LED);
     String lookupRestartCodes(String restartCodes);
     void sendReadCommand(StaticJsonDocument<DOC_SIZE>& _doc);
     bool headerPayload(StaticJsonDocument<DOC_SIZE>& _doc);
