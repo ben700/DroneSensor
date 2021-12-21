@@ -413,7 +413,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",") + 1) + 1);
     doc[Device.get_name()]["restart"] = reasonForRestart;
     doc[Device.get_name()]["vcc"] = VoltageatVcc;
-return;
+
     command = "L,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -423,7 +423,8 @@ return;
     }
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
-    doc[Device.get_name()]["led"] = lookupLedStatus(LED);
+    doc[Device.get_name()]["led"] = LED;
+    //doc[Device.get_name()]["led"] = lookupLedStatus(LED);
   }
   return;
 }
