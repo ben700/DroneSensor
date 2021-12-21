@@ -362,7 +362,7 @@ String DroneSensor::sensorPayload(long _EpochTime)
   return output;
 }
 
-void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument<DOC_SIZE> &doc)
+void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc)
 {
 
   String command = "I";
@@ -372,6 +372,9 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
   Device.send_cmd(command.c_str());
   select_delay(command);
 
+  doc[Device.get_name()]["Name"] = Device.get_name();
+return;
+  
   if (Device.receive_cmd(receive_buffer, 32) != Ezo_board::SUCCESS)
   { //if the reading is successful
     doc[Device.get_name()] = NotConnected;
