@@ -103,7 +103,6 @@ public:
 
   void select_delay(String &str);
   void get_ec_k_value();
-  c
   void findDevice(EZODevice device) { device.device.send_cmd("Find"); };
   bool light(EZODevice device, bool status = NULL) { return true; };
   bool processCommand(StaticJsonDocument<DOC_SIZE> &_command);
