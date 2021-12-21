@@ -385,7 +385,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
 
     //   doc[Device.get_name()]["Name"] = Device.get_name();
     doc[Device.get_name()]["firm"] = firm;
-
+return;
     command = "CAL,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -435,10 +435,7 @@ String DroneSensor::deviceStatePayload(long _EpochTime)
   doc["fallback"] = this->_FallbackTemp;
   doc["poll"] = this->pollDelay;
   doc["parameters"] = this->parametersOn;
-  
-  String outputt;
-  serializeJson(doc, outputt);
-  return outputt;
+ 
   
   for (int i = 0; i < device_list_len; i++)
   {
