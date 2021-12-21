@@ -436,6 +436,10 @@ String DroneSensor::deviceStatePayload(long _EpochTime)
   doc["poll"] = this->pollDelay;
   doc["parameters"] = this->parametersOn;
   
+  String outputt;
+  serializeJson(doc, outputt);
+  return outputt;
+  
   for (int i = 0; i < device_list_len; i++)
   {
     if (device_list[i]._status == EZOStatus::Connected)
