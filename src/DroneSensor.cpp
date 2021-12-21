@@ -364,6 +364,8 @@ String DroneSensor::sensorPayload(long _EpochTime)
 
 void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc)
 {
+doc[Device.get_name()]["Name"] = Device.get_name();
+return;
 
   String command = "I";
   String cmdReply;
@@ -372,8 +374,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
   Device.send_cmd(command.c_str());
   select_delay(command);
 
-  doc[Device.get_name()]["Name"] = Device.get_name();
-return;
+
   
   if (Device.receive_cmd(receive_buffer, 32) != Ezo_board::SUCCESS)
   { //if the reading is successful
@@ -444,20 +445,20 @@ String DroneSensor::deviceStatePayload(long _EpochTime)
   {
     if (device_list[i]._status == EZOStatus::Connected)
     {
-      if (device_list[i].device.get_name() == EC.get_name())
-      {
-        get_ec_k_value();
-        doc[device_list[i].device.get_name()]["kValue"] = k_val;
-      }
-      doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
+  //    if (device_list[i].device.get_name() == EC.get_name())
+  //    {
+ //       get_ec_k_value();
+ //       doc[device_list[i].device.get_name()]["kValue"] = k_val;
+ //     }
+ //     doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
       singleDeviceStatePayload(device_list[i].device, doc);
     }
   }
-  if (DroneSensor_debug)
-  {
-    serializeJsonPretty(doc, Serial);
-    Serial.println("");
-  }
+//  if (DroneSensor_debug)
+//  {
+//    serializeJsonPretty(doc, Serial);
+//    Serial.println("");
+//  }
   String output;
   serializeJson(doc, output);
   return output;
