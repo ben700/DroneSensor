@@ -364,8 +364,7 @@ String DroneSensor::sensorPayload(long _EpochTime)
 
 void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument<DOC_SIZE>& doc)
 {
-doc[Device.get_name()]["Name"] = Device.get_name();
-return;
+
 
   String command = "I";
   String cmdReply;
@@ -389,7 +388,7 @@ return;
 
     //   doc[Device.get_name()]["Name"] = Device.get_name();
     doc[Device.get_name()]["firm"] = firm;
-return;
+
     command = "CAL,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -414,7 +413,7 @@ return;
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",") + 1) + 1);
     doc[Device.get_name()]["restart"] = reasonForRestart;
     doc[Device.get_name()]["vcc"] = VoltageatVcc;
-
+return;
     command = "L,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
