@@ -249,6 +249,7 @@ void DroneSensor::turnParametersOff()
 
 void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE> &_doc)
 {
+    float temp;
     if (DroneSensor_debug)
     {
         Serial.println(F("DroneSensor::sendReadCommand()"));
@@ -411,7 +412,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
         doc[Device.get_name()]["restart"] = reasonForRestart;
         doc[Device.get_name()]["vcc"] = VoltageatVcc.toFloat();
 
-        if (Device.get_name() == "EC" || Device.get_name() == "PH" || Device.get_name() == "DO")
+        if (Device.get_name() == EC.get_name() || Device.get_name() == PH.get_name() || Device.get_name() == DO.get_name())
         {
 
             command = "T,?";
@@ -426,7 +427,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             doc[Device.get_name()]["fallback"] = fallback.toFloat();
         }
 
-        if (Device.get_name() == "EC")
+        if (Device.get_name() == EC.get_name())
         {
             get_ec_k_value();
             doc[Device.get_name()]["kValue"] = k_val;
