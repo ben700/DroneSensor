@@ -242,17 +242,6 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
     doc[Device.get_name()]["restart"] = reasonForRestart;
     doc[Device.get_name()]["vcc"] = VoltageatVcc;
     
-    
-    command = "T,?";
-    Device.send_cmd(command.c_str());
-    select_delay(command);
-    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-    {                                    //if the reading is successful
-      cmdReply = String(receive_buffer); //parse the reading into a float
-    }
-
-    String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 3);
-    doc[Device.get_name()]["fallback"] = fallback;
 
     command = "L,?";
     Device.send_cmd(command.c_str());
