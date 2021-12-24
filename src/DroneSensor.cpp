@@ -414,6 +414,8 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
     doc[Device.get_name()]["restart"] = reasonForRestart;
     doc[Device.get_name()]["vcc"] = VoltageatVcc;
 
+    if(Device.get_name() == "EC"){
+      
     command = "T,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -425,7 +427,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
     String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
     doc[Device.get_name()]["fallback"] = fallback;
     
-    if(Device.get_name() == "EC"){
+    
     command = "K,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
@@ -448,6 +450,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
     doc[Device.get_name()]["led"] = lookupLedStatus(LED);
+  
   }
   return;
 }
