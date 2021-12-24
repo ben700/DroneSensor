@@ -58,6 +58,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
                 Serial.println("  !");
             }
         }
+        setFallbackTemp(25);
     }
 
 }
