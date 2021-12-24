@@ -256,7 +256,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
     
     if( Device.get_name() == CO2.get_name()){
 
-      command = "O,0";
+      command = "O,1";
       Device.send_cmd(command.c_str());
       select_delay(command);
       
@@ -312,7 +312,6 @@ String DroneSensorAir::deviceStatePayload(long _EpochTime)
   doc["deviceTime"] = _EpochTime;
   doc["version"] = VERSION;
   doc["deviceType"] = VARIANT;
-  doc["fallback"] = this->_FallbackTemp;
   doc["poll"] = this->pollDelay;
   doc["parameters"] = this->parametersOn;
   
