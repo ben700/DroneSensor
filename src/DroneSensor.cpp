@@ -410,92 +410,14 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
         doc[Device.get_name()]["restart"] = reasonForRestart;
         doc[Device.get_name()]["vcc"] = VoltageatVcc.toFloat();
 
-        if (Device.get_name() == EC.get_name() || Device.get_name() == PH.get_name() || Device.get_name() == DO.get_name())
-        {
-
-            command = "T,?";
-            Device.send_cmd(command.c_str());
-            select_delay(command);
-            if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-            {                                      // if the reading is successful
-                cmdReply = String(receive_buffer); // parse the reading into a float
-            }
-
-            String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
-            doc[Device.get_name()]["fallback"] = fallback.toFloat();
-        }
+      
 
         if (Device.get_name() == EC.get_name())
         {
             get_ec_k_value();
             doc[Device.get_name()]["kValue"] = k_val;
         }
-        if (Device.get_name() == DO.get_name() || Device.get_name() == EC.get_name())
-        {
-            command = "O,?";
-            Device.send_cmd(command.c_str());
-            select_delay(command);
-            if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-            {                                      // if the reading is successful
-                cmdReply = String(receive_buffer); // parse the reading into a float
-            }
-
-            if (Device.get_name() == EC.get_name())
-            {
-                if (cmdReply.indexOf(",EC") != -1)
-                {
-                    doc[Device.get_name()]["conductivity"] = true;
-                }
-                else
-                {
-                    doc[Device.get_name()]["conductivity"] = false;
-                }
-                if (cmdReply.indexOf(",TDS") != -1)
-                {
-                    doc[Device.get_name()]["dissolvedSolids"] = true;
-                }
-                else
-                {
-                    doc[Device.get_name()]["dissolvedSolids"] = false;
-                }
-                if (cmdReply.indexOf(",S") != -1)
-                {
-                    doc[Device.get_name()]["salinity"] = true;
-                }
-                else
-                {
-                    doc[Device.get_name()]["salinity"] = false;
-                }
-            }
-            if (Device.get_name() == DO.get_name())
-            {
-
-                if (cmdReply.indexOf(",%,mg") != -1)
-                {
-                    doc[Device.get_name()]["mgL"] = true;
-                    doc[Device.get_name()]["saturation"] = true;
-                }
-                else
-                {
-                    if (cmdReply.indexOf(",%,1") != -1)
-                    {
-                        doc[Device.get_name()]["mgL"] = false;
-                        doc[Device.get_name()]["saturation"] = true;
-                    }
-                    else if (cmdReply.indexOf(",mg,1") != -1)
-                    {
-                        doc[Device.get_name()]["mgL"] = true;
-                        doc[Device.get_name()]["saturation"] = false;
-                    }
-                    else
-                    {
-                        doc[Device.get_name()]["mgL"] = false;
-                        doc[Device.get_name()]["saturation"] = false;
-                    }
-                }
-            }
-        }
-
+    
         command = "L,?";
         Device.send_cmd(command.c_str());
         select_delay(command);
