@@ -69,7 +69,7 @@ void DroneSensor::setFallbackTemp(float __FallbackTemp)
     for (int i = 0; i < device_list_len; i++)
     {
         
-            device_list[i].device.send_cmd_with_num("T,", this->_FallbackTemp);
+            device_list[i].device.send_cmd_with_num("T,", __FallbackTemp);
  
     }
 }
