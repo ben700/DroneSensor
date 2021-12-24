@@ -256,7 +256,20 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
     
     if( Device.get_name() == CO2.get_name()){
 
-               
+      command = "O,0";
+      Device.send_cmd(command.c_str());
+      select_delay(command);
+      
+      command = "O,?";
+      Device.send_cmd(command.c_str());
+      select_delay(command);
+      if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+      {                                    //if the reading is successful
+        cmdReply = String(receive_buffer); //parse the reading into a float
+      }
+      doc[Device.get_name()]["tempCompOff"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
+      
+      
       command = "O,1";
       Device.send_cmd(command.c_str());
       select_delay(command);
@@ -268,9 +281,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
       {                                    //if the reading is successful
         cmdReply = String(receive_buffer); //parse the reading into a float
       }
-
-      String internalTemp = cmdReply.substring(cmdReply.indexOf("O,PPM") + 2);
-      doc[Device.get_name()]["tempCompOn"] = internalTemp;
+      doc[Device.get_name()]["tempCompOn"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
       
       command = "O,0";
       Device.send_cmd(command.c_str());
@@ -284,8 +295,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
         cmdReply = String(receive_buffer); //parse the reading into a float
       }
 
-      internalTemp = cmdReply.substring(cmdReply.indexOf("O,PPM") + 2);
-      doc[Device.get_name()]["tempComp"] = internalTemp;
+      doc[Device.get_name()]["tempComp"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
       
     }
     
