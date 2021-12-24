@@ -255,27 +255,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
     doc[Device.get_name()]["led"] = lookupLedStatus(LED);
     
     if( Device.get_name() == CO2.get_name()){
-      
-            
-      command = "O,1";
-      Device.send_cmd(command.c_str());
-      select_delay(command);
-      
-      command = "O,?";
-      Device.send_cmd(command.c_str());
-      select_delay(command);
-      if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-      {                                    //if the reading is successful
-        cmdReply = String(receive_buffer); //parse the reading into a float
-      }
 
-      String internalTemp = cmdReply.substring(cmdReply.indexOf("O,PPM,T") + 7);
-      doc[Device.get_name()]["tempCompOn"] = internalTemp;
-      
-      command = "O,0";
-      Device.send_cmd(command.c_str());
-      select_delay(command);
-      
       command = "O,?";
       Device.send_cmd(command.c_str());
       select_delay(command);
