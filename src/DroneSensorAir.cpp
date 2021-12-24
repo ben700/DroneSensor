@@ -387,8 +387,7 @@ String DroneSensorAir::deviceStatePayload(long _EpochTime)
     doc["version"] = VERSION;
     doc["deviceType"] = VARIANT;
     doc["poll"] = this->pollDelay;
-    doc["parameters"] = this->parametersOn;
-
+ 
     for (int i = 0; i < device_list_len; i++)
     {
         if (device_list[i]._status == EZOStatus::Connected)
