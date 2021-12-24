@@ -14,7 +14,6 @@ double showDecimals(const double &x, const int &numDecimals)
 DroneSensorAir::DroneSensorAir(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
   DroneSensor_debug = _DroneSensor_debug;
-  this->_deviceMAC = __deviceMAC;
   this->_deviceIP = __deviceIP;
   this->_deviceID = __deviceID;
   Wire.begin(); 
@@ -256,7 +255,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
     
     if( Device.get_name() == CO2.get_name()){
 
-      command = "O,1";
+      command = "O,T,0";
       Device.send_cmd(command.c_str());
       select_delay(command);
       
@@ -270,7 +269,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
       doc[Device.get_name()]["tempCompOff"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
       
       
-      command = "O,1";
+      command = "O,T,1";
       Device.send_cmd(command.c_str());
       select_delay(command);
       
@@ -283,7 +282,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
       }
       doc[Device.get_name()]["tempCompOn"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
       
-      command = "O,0";
+      command = "O,T,0";
       Device.send_cmd(command.c_str());
       select_delay(command);
       
