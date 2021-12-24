@@ -347,6 +347,7 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
                 cmdReply = String(receive_buffer); // parse the reading into a float
             }
 
+         doc[Device.get_name()]["pRaw"] = cmdReply;
         
            if (Device.get_name() == CO2.get_name())
         {
