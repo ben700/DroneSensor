@@ -410,7 +410,20 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
         doc[Device.get_name()]["restart"] = reasonForRestart;
         doc[Device.get_name()]["vcc"] = VoltageatVcc.toFloat();
 
-      
+        if (Device.get_name() == EC.get_name() || Device.get_name() == PH.get_name() || Device.get_name() == DO.get_name())
+        {
+
+            command = "T,?";
+            Device.send_cmd(command.c_str());
+            select_delay(command);
+            if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+            {                                      // if the reading is successful
+                cmdReply = String(receive_buffer); // parse the reading into a float
+            }
+
+            String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
+            doc[Device.get_name()]["fallback"] = fallback.toFloat();
+        }
 
         if (Device.get_name() == EC.get_name())
         {
@@ -418,6 +431,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             doc[Device.get_name()]["kValue"] = k_val;
         }
     
+
         command = "L,?";
         Device.send_cmd(command.c_str());
         select_delay(command);
