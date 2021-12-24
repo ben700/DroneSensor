@@ -240,7 +240,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
     String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",") + 1, cmdReply.indexOf(",", cmdReply.indexOf(",") + 1));
     String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",") + 1) + 1);
     doc[Device.get_name()]["restart"] = reasonForRestart;
-    doc[Device.get_name()]["vcc"] = VoltageatVcc;
+    doc[Device.get_name()]["vcc"] = VoltageatVcc.toFloat();
     
 
     command = "L,?";
