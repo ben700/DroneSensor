@@ -42,9 +42,6 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
             findDevice(device_list[i]);
             this->current_step = EZOReadingStep::REQUEST_TEMP;
 
-            String command = "T,25";
-            device_list[i].device.send_cmd(command.c_str());
-
             if (DroneSensor_debug)
             {
                 Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
@@ -433,8 +430,9 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             get_ec_k_value();
             doc[Device.get_name()]["kValue"] = k_val;
         }
+        if (Device.get_name() == DO.get_name() || Device.get_name() == EC.get_name())
 
-        command = "O,?";
+            command = "O,?";
         Device.send_cmd(command.c_str());
         select_delay(command);
         if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
@@ -496,19 +494,20 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 }
             }
         }
-
-        command = "L,?";
-        Device.send_cmd(command.c_str());
-        select_delay(command);
-        if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-        {                                      // if the reading is successful
-            cmdReply = String(receive_buffer); // parse the reading into a float
-        }
-
-        String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
-        doc[Device.get_name()]["led"] = lookupLedStatus(LED);
     }
-    return;
+
+    command = "L,?";
+    Device.send_cmd(command.c_str());
+    select_delay(command);
+    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+    {                                      // if the reading is successful
+        cmdReply = String(receive_buffer); // parse the reading into a float
+    }
+
+    String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
+    doc[Device.get_name()]["led"] = lookupLedStatus(LED);
+}
+return;
 }
 
 String DroneSensor::deviceStatePayload(long _EpochTime)
