@@ -269,7 +269,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
         cmdReply = String(receive_buffer); //parse the reading into a float
       }
 
-      String internalTemp = cmdReply.substring(cmdReply.indexOf("O,PPM,T") + 7);
+      String internalTemp = cmdReply.substring(cmdReply.indexOf("O,PPM") + 2);
       doc[Device.get_name()]["tempCompOn"] = internalTemp;
       
       command = "O,0";
@@ -284,7 +284,7 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
         cmdReply = String(receive_buffer); //parse the reading into a float
       }
 
-      internalTemp = cmdReply.substring(cmdReply.indexOf("O,PPM,T") + 7);
+      internalTemp = cmdReply.substring(cmdReply.indexOf("O,PPM") + 2);
       doc[Device.get_name()]["tempComp"] = internalTemp;
       
     }
