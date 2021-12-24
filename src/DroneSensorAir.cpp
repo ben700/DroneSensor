@@ -337,8 +337,7 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
         String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
         doc[Device.get_name()]["led"] = lookupLedStatus(LED);
 
-        if (Device.get_name() == CO2.get_name())
-        {
+     
 
             command = "O,?";
             Device.send_cmd(command.c_str());
@@ -348,6 +347,9 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
                 cmdReply = String(receive_buffer); // parse the reading into a float
             }
 
+        
+           if (Device.get_name() == CO2.get_name())
+        {
             if (cmdReply.substring(cmdReply.indexOf("O,") + 6) == "T")
             {
                 doc[Device.get_name()]["tempComp"] = true;
@@ -357,6 +359,41 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
                 doc[Device.get_name()]["tempComp"] = false;
             }
         }
+        
+                   if (Device.get_name() == HUM.get_name())
+        {
+            if (cmdReply.find("T")!=std::string::npos)
+            {
+                doc[Device.get_name()]["temperature"] = true;
+            }
+            else
+            {
+                doc[Device.get_name()]["temperature"] = false;
+            }
+                          if (cmdReply.find("dew")!=std::string::npos)
+            {
+                doc[Device.get_name()]["dew"] = true;
+            }
+            else
+            {
+                doc[Device.get_name()]["humidity"] = false;
+            }
+                       
+                          if (cmdReply.find("T")!=std::string::npos)
+            {
+                doc[Device.get_name()]["humidity"] = true;
+            }
+            else
+            {
+                doc[Device.get_name()]["humidity"] = false;
+            }
+                       
+                       
+                       
+                       
+        }
+        
+        
     }
     return;
 }
