@@ -253,6 +253,22 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
 
     String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
     doc[Device.get_name()]["led"] = lookupLedStatus(LED);
+    
+    if( Device.get_name() == CO2.get_name()){
+      command = "O,?";
+      Device.send_cmd(command.c_str());
+      select_delay(command);
+      if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+      {                                    //if the reading is successful
+        cmdReply = String(receive_buffer); //parse the reading into a float
+      }
+
+      String internalTemp = cmdReply.substring(cmdReply.indexOf("L,") + 2);
+      doc[Device.get_name()]["tempComp"] = internalTemp;
+      
+    }
+    
+    
   }
   return;
 }
@@ -272,8 +288,7 @@ String DroneSensorAir::deviceStatePayload(long _EpochTime)
   for (int i = 0; i < device_list_len; i++ )
   {
     if(device_list[i]._status == EZOStatus::Connected){
-     
-     doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
+   
        singleDeviceStatePayload(device_list[i].device, doc);
     }
   }  
