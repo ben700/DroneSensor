@@ -337,44 +337,27 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
         String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
         doc[Device.get_name()]["led"] = lookupLedStatus(LED);
 
-     
-
-            command = "O,?";
-            Device.send_cmd(command.c_str());
-            select_delay(command);
-            if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-            {                                      // if the reading is successful
-                cmdReply = String(receive_buffer); // parse the reading into a float
-            }
-
-         doc[Device.get_name()]["pRaw"] = cmdReply;
-        
-           if (Device.get_name() == CO2.get_name())
-        {
-            if (cmdReply.substring(cmdReply.indexOf("O,") + 6) == "T")
-            {
-                doc[Device.get_name()]["tempComp"] = true;
-            }
-            else
-            {
-                doc[Device.get_name()]["tempComp"] = false;
-            }
+        command = "O,?";
+        Device.send_cmd(command.c_str());
+        select_delay(command);
+        if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+        {                                      // if the reading is successful
+            cmdReply = String(receive_buffer); // parse the reading into a float
         }
-        
-                   if (Device.get_name() == HUM.get_name())
+
+        if (cmdReply.indexOf(",T") != -1)
         {
-                       
-                       doc[Device.get_name()]["tempCount"] = cmdReply.indexOf(",T");
-            if (cmdReply.indexOf(",T")!= -1)
-            {
-                doc[Device.get_name()]["temperature"] = true;
-            }
-            else
-            {
-                doc[Device.get_name()]["temperature"] = false;
-            }
-                       doc[Device.get_name()]["dewCount"] = cmdReply.indexOf("DEW");
-                          if (cmdReply.indexOf("DEW")!=-1)
+            doc[Device.get_name()]["temperature"] = true;
+        }
+        else
+        {
+            doc[Device.get_name()]["temperature"] = false;
+        }
+
+        if (Device.get_name() == HUM.get_name())
+        {
+
+            if (cmdReply.indexOf("DEW") != -1)
             {
                 doc[Device.get_name()]["dew"] = true;
             }
@@ -382,9 +365,8 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
             {
                 doc[Device.get_name()]["dew"] = false;
             }
-                       
-                       doc[Device.get_name()]["humCount"] = cmdReply.indexOf("HUM");
-                          if (cmdReply.indexOf("HUM")!=-1)
+
+            if (cmdReply.indexOf("HUM") != -1)
             {
                 doc[Device.get_name()]["humidity"] = true;
             }
@@ -392,13 +374,7 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
             {
                 doc[Device.get_name()]["humidity"] = false;
             }
-                       
-                       
-                       
-                       
         }
-        
-        
     }
     return;
 }
