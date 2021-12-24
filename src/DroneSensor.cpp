@@ -274,7 +274,7 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE> &_doc)
         {
             if (device_list[i]._status == EZOStatus::Connected)
             {
-                if (temp != null && temp >= 0)
+                if (temp != NULL && temp >= 0)
                 {
                     device_list[i].device.send_read_with_temp_comp(temp);
                 }
