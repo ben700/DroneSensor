@@ -363,7 +363,9 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
         
                    if (Device.get_name() == HUM.get_name())
         {
-            if (cmdReply.indexOf("T")!= -1)
+                       
+                       doc[Device.get_name()]["tempCount"] = cmdReply.indexOf(",T");
+            if (cmdReply.indexOf(",T")!= -1)
             {
                 doc[Device.get_name()]["temperature"] = true;
             }
@@ -371,7 +373,8 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
             {
                 doc[Device.get_name()]["temperature"] = false;
             }
-                          if (cmdReply.indexOf("dew")!=-1)
+                       doc[Device.get_name()]["dewCount"] = cmdReply.indexOf("DEW");
+                          if (cmdReply.indexOf("DEW")!=-1)
             {
                 doc[Device.get_name()]["dew"] = true;
             }
@@ -380,7 +383,8 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
                 doc[Device.get_name()]["dew"] = false;
             }
                        
-                          if (cmdReply.indexOf("humidity")!=-1)
+                       doc[Device.get_name()]["humCount"] = cmdReply.indexOf("HUM");
+                          if (cmdReply.indexOf("HUM")!=-1)
             {
                 doc[Device.get_name()]["humidity"] = true;
             }
