@@ -41,12 +41,10 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
             device_list[i]._status = EZOStatus::Connected;
             findDevice(device_list[i]);
             this->current_step = EZOReadingStep::REQUEST_TEMP;
-            
-            
+
             String command = "T,25";
             device_list[i].device.send_cmd(command.c_str());
-            
-            
+
             if (DroneSensor_debug)
             {
                 Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
@@ -64,19 +62,16 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
                 Serial.println("  !");
             }
         }
-     
     }
-
 }
 
 void DroneSensor::setFallbackTemp(float __FallbackTemp)
 {
-  
+
     for (int i = 0; i < device_list_len; i++)
     {
-        
-            device_list[i].device.send_cmd_with_num("T,", __FallbackTemp);
- 
+
+        device_list[i].device.send_cmd_with_num("T,", __FallbackTemp);
     }
 }
 
@@ -431,8 +426,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
 
             String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
             doc[Device.get_name()]["fallback"] = fallback.toFloat();
-            doc[Device.get_name()]["fRaw"] = cmdReply;
-            
+          
         }
 
         if (Device.get_name() == EC.get_name())
@@ -441,7 +435,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             doc[Device.get_name()]["kValue"] = k_val;
         }
 
-        command = "L,?";
+        command = "O,?";
         Device.send_cmd(command.c_str());
         select_delay(command);
         if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
@@ -449,10 +443,73 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             cmdReply = String(receive_buffer); // parse the reading into a float
         }
 
-        String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
-        doc[Device.get_name()]["led"] = lookupLedStatus(LED);
+        if (Device.get_name() == EC.get_name())
+
+            if (cmdReply.indexOf(",EC") != -1)
+            {
+                doc[Device.get_name()]["conductivity"] = true;
+            }
+            else
+            {
+                doc[Device.get_name()]["conductivity"] = false;
+            }
+        if (cmdReply.indexOf(",TDS") != -1)
+        {
+            doc[Device.get_name()]["dissolvedSolids"] = true;
+        }
+        else
+        {
+            doc[Device.get_name()]["dissolvedSolids"] = false;
+        }
+        if (cmdReply.indexOf(",S") != -1)
+        {
+            doc[Device.get_name()]["salinity"] = true;
+        }
+        else
+        {
+            doc[Device.get_name()]["salinity"] = false;
+        }
     }
-    return;
+    if (Device.get_name() == DO.get_name())
+    {
+
+        if (cmdReply.indexOf(",%,mg") != -1)
+        {
+            doc[Device.get_name()]["mgL"] = true;
+            doc[Device.get_name()]["saturation"] = true;
+        }
+        else
+        {
+            if (cmdReply.indexOf(",%,1") != -1)
+            {
+                doc[Device.get_name()]["mgL"] = false;
+                doc[Device.get_name()]["saturation"] = true;
+            }
+            else if(cmdReply.indexOf(",mg,1") != -1)
+            {
+                doc[Device.get_name()]["mgL"] = true;
+                doc[Device.get_name()]["saturation"] = false;
+            }
+            else
+            {
+                doc[Device.get_name()]["mgL"] = false;
+                doc[Device.get_name()]["saturation"] = false;
+            }
+        }
+    }
+
+    command = "L,?";
+    Device.send_cmd(command.c_str());
+    select_delay(command);
+    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+    {                                      // if the reading is successful
+        cmdReply = String(receive_buffer); // parse the reading into a float
+    }
+
+    String LED = cmdReply.substring(cmdReply.indexOf("L,") + 2);
+    doc[Device.get_name()]["led"] = lookupLedStatus(LED);
+}
+return;
 }
 
 String DroneSensor::deviceStatePayload(long _EpochTime)
@@ -463,7 +520,6 @@ String DroneSensor::deviceStatePayload(long _EpochTime)
     doc["version"] = VERSION;
     doc["deviceType"] = VARIANT;
     doc["poll"] = this->pollDelay;
-    doc["parameters"] = this->parametersOn;
 
     for (int i = 0; i < device_list_len; i++)
     {
