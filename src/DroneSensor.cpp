@@ -415,6 +415,11 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
     doc[Device.get_name()]["vcc"] = VoltageatVcc.toFloat();
 
     if(Device.get_name() == "EC" || Device.get_name() == "PH" || Device.get_name() == "DO" ){
+          
+      
+      command = "T,25";
+      Device.send_cmd(command.c_str());
+      select_delay(command);
       
       command = "T,?";
       Device.send_cmd(command.c_str());
