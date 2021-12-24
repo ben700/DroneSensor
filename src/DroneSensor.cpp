@@ -59,18 +59,17 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
             }
         }
     }
-    setFallbackTemp(this->_FallbackTemp);
+
 }
 
 void DroneSensor::setFallbackTemp(float __FallbackTemp)
 {
-    this->_FallbackTemp = __FallbackTemp;
+  
     for (int i = 0; i < device_list_len; i++)
     {
-        if (device_list[i].tempCompensation)
-        {
+        
             device_list[i].device.send_cmd_with_num("T,", this->_FallbackTemp);
-        }
+ 
     }
 }
 
@@ -253,7 +252,7 @@ void DroneSensor::sendReadCommand(StaticJsonDocument<DOC_SIZE> &_doc)
     {
         Serial.println(F("DroneSensor::sendReadCommand()"));
     }
-    float temp = this->_FallbackTemp;
+
     if (device_list[0]._status == EZOStatus::Connected)
     {
         device_list[0].device.send_read_cmd();
