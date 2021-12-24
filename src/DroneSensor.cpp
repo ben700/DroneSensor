@@ -425,6 +425,19 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
     String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 3);
     doc[Device.get_name()]["fallback"] = fallback;
     
+    if(Device.get_name() == "EC"){
+    command = "K,?";
+    Device.send_cmd(command.c_str());
+    select_delay(command);
+    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+    {                                    //if the reading is successful
+      cmdReply = String(receive_buffer); //parse the reading into a float
+    }
+
+    String kValue = cmdReply.substring(cmdReply.indexOf("K,") + 2);
+    doc[Device.get_name()]["k"] = kValue;
+    }
+    
     command = "L,?";
     Device.send_cmd(command.c_str());
     select_delay(command);
