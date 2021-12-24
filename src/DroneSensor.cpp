@@ -414,30 +414,34 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
     doc[Device.get_name()]["restart"] = reasonForRestart;
     doc[Device.get_name()]["vcc"] = VoltageatVcc;
 
-    if(Device.get_name() == "EC"){
+    if(Device.get_name() == "EC" || Device.get_name() == "PH" || Device.get_name() == "DO" ){
       
-    command = "T,?";
-    Device.send_cmd(command.c_str());
-    select_delay(command);
-    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-    {                                    //if the reading is successful
-      cmdReply = String(receive_buffer); //parse the reading into a float
-    }
+      command = "T,?";
+      Device.send_cmd(command.c_str());
+      select_delay(command);
+      if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+      {                                    //if the reading is successful
+        cmdReply = String(receive_buffer); //parse the reading into a float
+      }
 
-    String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
-    doc[Device.get_name()]["fallback"] = fallback;
-    
-    
-    command = "K,?";
-    Device.send_cmd(command.c_str());
-    select_delay(command);
-    if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
-    {                                    //if the reading is successful
-      cmdReply = String(receive_buffer); //parse the reading into a float
+      String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
+      doc[Device.get_name()]["fallback"] = fallback;
     }
+    
+    if(Device.get_name() == "EC"){
+      command = "K,?";
+      Device.send_cmd(command.c_str());
+      select_delay(command);
+      if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+      {                                    //if the reading is successful
+        cmdReply = String(receive_buffer); //parse the reading into a float
+      }
 
-    String kValue = cmdReply.substring(cmdReply.indexOf("K,") + 2);
-    doc[Device.get_name()]["k"] = kValue;
+      String kValue = cmdReply.substring(cmdReply.indexOf("K,") + 2);
+      doc[Device.get_name()]["k"] = kValue;
+      
+              get_ec_k_value();
+        doc[Device.get_name()]["kValue"] = k_val;
     }
     
     command = "L,?";
@@ -462,7 +466,6 @@ String DroneSensor::deviceStatePayload(long _EpochTime)
   doc["deviceTime"] = _EpochTime;
   doc["version"] = VERSION;
   doc["deviceType"] = VARIANT;
-  doc["fallback"] = this->_FallbackTemp;
   doc["poll"] = this->pollDelay;
   doc["parameters"] = this->parametersOn;
  
@@ -471,20 +474,9 @@ String DroneSensor::deviceStatePayload(long _EpochTime)
   {
     if (device_list[i]._status == EZOStatus::Connected)
     {
-      if (device_list[i].device.get_name() == EC.get_name())
-      {
-        get_ec_k_value();
-        doc[device_list[i].device.get_name()]["kValue"] = k_val;
-      }
-      doc[device_list[i].device.get_name()]["tempComp"] = device_list[i].tempCompensation;
-      singleDeviceStatePayload(device_list[i].device, doc);
+       singleDeviceStatePayload(device_list[i].device, doc);
     }
   }
-//  if (DroneSensor_debug)
-//  {
-//    serializeJsonPretty(doc, Serial);
-//    Serial.println("");
-//  }
   String output;
   serializeJson(doc, output);
   return output;
