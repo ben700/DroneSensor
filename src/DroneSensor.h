@@ -130,7 +130,6 @@ private:
   String _deviceID;
   bool DroneSensor_debug = false;
   enum EZOReadingStep current_step = NO_DEVICES;
-  float _FallbackTemp = 19.5;
 };
 
 #endif
