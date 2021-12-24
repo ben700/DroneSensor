@@ -41,6 +41,12 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
             device_list[i]._status = EZOStatus::Connected;
             findDevice(device_list[i]);
             this->current_step = EZOReadingStep::REQUEST_TEMP;
+            
+            
+            String command = "T,25";
+            device_list[i].device.send_cmd(command.c_str());
+            
+            
             if (DroneSensor_debug)
             {
                 Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " found at address ");
@@ -58,7 +64,7 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
                 Serial.println("  !");
             }
         }
-        setFallbackTemp(25);
+     
     }
 
 }
@@ -425,6 +431,8 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
 
             String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
             doc[Device.get_name()]["fallback"] = fallback.toFloat();
+            doc[Device.get_name()]["fRaw"] = cmdReply;
+            
         }
 
         if (Device.get_name() == EC.get_name())
