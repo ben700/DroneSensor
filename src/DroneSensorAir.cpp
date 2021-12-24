@@ -266,8 +266,12 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
       {                                    //if the reading is successful
         cmdReply = String(receive_buffer); //parse the reading into a float
       }
-      doc[Device.get_name()]["tempCompOff"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
-      
+      doc[Device.get_name()]["tempCompOff"] = cmdReply.substring(cmdReply.indexOf("O,") + 6);
+            if(cmdReply.substring(cmdReply.indexOf("O,") + 6) == "T"){
+  doc[Device.get_name()]["btempCompOff"] = true;
+}else{
+  doc[Device.get_name()]["btempCompOff"] = false;
+}
       
       command = "O,T,1";
       Device.send_cmd(command.c_str());
@@ -280,7 +284,14 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
       {                                    //if the reading is successful
         cmdReply = String(receive_buffer); //parse the reading into a float
       }
-      doc[Device.get_name()]["tempCompOn"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
+      doc[Device.get_name()]["tempCompOn"] = cmdReply.substring(cmdReply.indexOf("O,") + 6);
+      
+      if(cmdReply.substring(cmdReply.indexOf("O,") + 6) == "T"){
+  doc[Device.get_name()]["btempCompOn"] = true;
+}else{
+  doc[Device.get_name()]["btempCompOn"] = false;
+}
+      
       
       command = "O,T,0";
       Device.send_cmd(command.c_str());
@@ -293,8 +304,12 @@ void DroneSensorAir::singleDeviceStatePayload (Ezo_board &Device, StaticJsonDocu
       {                                    //if the reading is successful
         cmdReply = String(receive_buffer); //parse the reading into a float
       }
-
-      doc[Device.get_name()]["tempComp"] = cmdReply.substring(cmdReply.indexOf("O,") + 2);
+      
+if(cmdReply.substring(cmdReply.indexOf("O,") + 6) == "T"){
+  doc[Device.get_name()]["tempComp"] = true;
+}else{
+  doc[Device.get_name()]["tempComp"] = false;
+}
       
     }
     
