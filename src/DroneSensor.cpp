@@ -422,7 +422,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
       cmdReply = String(receive_buffer); //parse the reading into a float
     }
 
-    String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 3);
+    String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
     doc[Device.get_name()]["fallback"] = fallback;
     
     if(Device.get_name() == "EC"){
