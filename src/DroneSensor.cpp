@@ -430,7 +430,45 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             get_ec_k_value();
             doc[Device.get_name()]["kValue"] = k_val;
         }
-    
+        if (Device.get_name() == DO.get_name() || Device.get_name() == EC.get_name())
+        {
+            command = "O,?";
+            Device.send_cmd(command.c_str());
+            select_delay(command);
+            if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+            {                                      // if the reading is successful
+                cmdReply = String(receive_buffer); // parse the reading into a float
+            }
+
+            if (Device.get_name() == EC.get_name())
+            {
+                if (cmdReply.indexOf(",EC") != -1)
+                {
+                    doc[Device.get_name()]["conductivity"] = true;
+                }
+                else
+                {
+                    doc[Device.get_name()]["conductivity"] = false;
+                }
+                if (cmdReply.indexOf(",TDS") != -1)
+                {
+                    doc[Device.get_name()]["dissolvedSolids"] = true;
+                }
+                else
+                {
+                    doc[Device.get_name()]["dissolvedSolids"] = false;
+                }
+                if (cmdReply.indexOf(",S") != -1)
+                {
+                    doc[Device.get_name()]["salinity"] = true;
+                }
+                else
+                {
+                    doc[Device.get_name()]["salinity"] = false;
+                }
+            }
+          
+        }
 
         command = "L,?";
         Device.send_cmd(command.c_str());
