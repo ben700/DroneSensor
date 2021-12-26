@@ -444,12 +444,14 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             }
             
         }
-            
+         
+         if(1==0){
+         
             doc[Device.get_name()]["conductivity"] = true;
             doc[Device.get_name()]["dissolvedSolids"] = true;
             doc[Device.get_name()]["salinity"] = true;
             doc[Device.get_name()]["gravity"] = true;
-            
+        }   
             if(1==0){
                 cmdReply ="";
             
