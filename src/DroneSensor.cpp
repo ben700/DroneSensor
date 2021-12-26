@@ -432,7 +432,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             
            doc[Device.get_name()]["gravity"] = true;
    
-         if(1==0){
+      
          
             command = "O,?";
             Device.send_cmd(command.c_str());
@@ -442,14 +442,14 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
             {                                      // if the reading is successful
                 cmdReply = String(receive_buffer); // parse the reading into a float
-                 doc["EC"]["reply"] = "success";
+                 doc[Device.get_name()]["reply"] = "success";
                // doc[Device.get_name()]["cmdReply"] = cmdReply;
             }else{
-                doc["EC"]["reply"] = "failed";
+                doc[Device.get_name()]["reply"] = "failed";
             }
             
 
-           
+              if(1==0){
          
                    //doc["EC"]["conductivity"] = true; 
             doc["EC"]["solids"] = true; 
