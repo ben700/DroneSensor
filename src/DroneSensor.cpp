@@ -430,6 +430,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             get_ec_k_value();
             doc[Device.get_name()]["kValue"] = k_val; 
             
+            try{
             command = "O,?";
             Device.send_cmd(command.c_str());
             select_delay(command);
@@ -438,6 +439,8 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 cmdReply = String(receive_buffer); // parse the reading into a float
             }
             
+                doc[Device.get_name()]["raw"] = cmdReply;
+                
               if (cmdReply.indexOf(",ec") != -1)
             {
                 doc[Device.get_name()]["conductivity"] = true;
@@ -473,9 +476,19 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             {
                 doc[Device.get_name()]["gravity"] = false;
             }
-            
+ catch (const std::exception &e)
+  {
+    doc[Device.get_name()]["ecError"] = e.what();
+  }
+  catch (...)
+  {
+    doc[Device.get_name()]["ecError"] =  "Other exception thrown.";
+  
+  }
            
         }
+            
+            
         if (Device.get_name() == DO.get_name())
         {
             command = "O,?";
