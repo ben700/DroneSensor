@@ -476,7 +476,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             {
                 doc[Device.get_name()]["gravity"] = false;
             }
- catch (const std::exception &e)
+            }catch (const std::exception &e)
   {
     doc[Device.get_name()]["ecError"] = e.what();
   }
