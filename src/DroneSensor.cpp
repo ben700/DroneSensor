@@ -440,38 +440,38 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             
               if (cmdReply.indexOf(",ec") != -1)
             {
-                doc[Device.get_name()]["conductivity"] = true
+                doc[Device.get_name()]["conductivity"] = true;
             }
             else
             {
-                doc[Device.get_name()]["conductivity"] = false
+                doc[Device.get_name()]["conductivity"] = false;
             }
             
             if (cmdReply.indexOf(",tds") != -1)
             {
-                doc[Device.get_name()]["dissolvedSolids"] = true
+                doc[Device.get_name()]["dissolvedSolids"] = true;
             }
             else
             {
-                doc[Device.get_name()]["dissolvedSolids"] = false
+                doc[Device.get_name()]["dissolvedSolids"] = false;
             }
             
             if (cmdReply.indexOf(",s") != -1)
             {
-                doc[Device.get_name()]["salinity"] = true
+                doc[Device.get_name()]["salinity"] = true;
             }
             else
             {
-                doc[Device.get_name()]["salinity"] = false
+                doc[Device.get_name()]["salinity"] = false;
             }
             
             if (cmdReply.indexOf(",sg") != -1)
             {
-                doc[Device.get_name()]["gravity"] = true
+                doc[Device.get_name()]["gravity"] = true;
             }
             else
             {
-                doc[Device.get_name()]["gravity"] = false
+                doc[Device.get_name()]["gravity"] = false;
             }
             
            
