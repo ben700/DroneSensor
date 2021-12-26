@@ -430,15 +430,19 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             get_ec_k_value();
             doc[Device.get_name()]["kValue"] = k_val; 
             
-           }
+           
         
         if(1==0){
             command = "O,?";
             Device.send_cmd(command.c_str());
             select_delay(command);
+        }
+            
             if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
             {                                      // if the reading is successful
                 cmdReply = String(receive_buffer); // parse the reading into a float
+            }else{
+                cmdReply ="";
             }
             
                 doc[Device.get_name()]["ecraw"] = cmdReply;
@@ -480,7 +484,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 doc[Device.get_name()]["gravity"] = false;
             }
             
-           
+        
         }
             
             
