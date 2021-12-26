@@ -436,17 +436,17 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             command = "O,?";
             Device.send_cmd(command.c_str());
             select_delay(command);
-        }
+        
             
             if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
             {                                      // if the reading is successful
                 cmdReply = String(receive_buffer); // parse the reading into a float
-            }else{
-                cmdReply ="";
             }
             
-                doc[Device.get_name()]["ecraw"] = cmdReply;
-       
+        }
+                cmdReply ="";
+            
+            
                 
               if (cmdReply.indexOf(",ec") != -1)
             {
