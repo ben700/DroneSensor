@@ -430,9 +430,12 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             get_ec_k_value();
             doc[Device.get_name()]["kValue"] = k_val; 
             
-           doc[Device.get_name()]["gravity"] = true;
+            doc[Device.get_name()]["conductivity"] = true;
+            doc[Device.get_name()]["solids"] = true;
+            doc[Device.get_name()]["salinity"] = true;
+            doc[Device.get_name()]["gravity"] = true;
    
-      
+     
          
             command = "O,?";
             Device.send_cmd(command.c_str());
@@ -443,29 +446,12 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             {                                      // if the reading is successful
                 cmdReply = String(receive_buffer); // parse the reading into a float
                  doc[Device.get_name()]["reply"] = "success";
-               // doc[Device.get_name()]["cmdReply"] = cmdReply;
+                doc[Device.get_name()]["cmdReply"] = cmdReply;
             }else{
                 doc[Device.get_name()]["reply"] = "failed";
             }
             
-
               if(1==0){
-         
-                   //doc["EC"]["conductivity"] = true; 
-            doc["EC"]["solids"] = true; 
-            doc["EC"]["salinity"] = true; 
-            doc["EC"]["gravity"] = true;          
-            
-             
-            doc[Device.get_name()]["conductivity"] = true;
-            doc[Device.get_name()]["dissolvedSolids"] = true;
-            doc[Device.get_name()]["salinity"] = true;
-            doc[Device.get_name()]["gravity"] = true;
-        }   
-            if(1==0){
-                cmdReply ="";
-            
-            
                 
               if (cmdReply.indexOf(",ec") != -1)
             {
@@ -478,11 +464,11 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             
             if (cmdReply.indexOf(",tds") != -1)
             {
-                doc[Device.get_name()]["dissolvedSolids"] = true;
+                doc[Device.get_name()]["solids"] = true;
             }
             else
             {
-                doc[Device.get_name()]["dissolvedSolids"] = false;
+                doc[Device.get_name()]["solids"] = false;
             }
             
             if (cmdReply.indexOf(",s") != -1)
