@@ -446,7 +446,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             {                                      // if the reading is successful
                 cmdReply = String(receive_buffer); // parse the reading into a float
                  doc[Device.get_name()]["reply"] = "success";
-                doc[Device.get_name()]["cmdReply"] = cmdReply;
+             //   doc[Device.get_name()]["cmdReply"] = cmdReply;
             }else{
                 doc[Device.get_name()]["reply"] = "failed";
             }
