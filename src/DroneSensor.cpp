@@ -433,11 +433,11 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
 
             doc[Device.get_name()]["g"] = true;
    
-         
+         if(1==0){     
             doc[Device.get_name()]["c"] = true;
             doc[Device.get_name()]["s"] = true;
             doc[Device.get_name()]["sa"] = true;
-         if(1==0){    
+        
          
             command = "O,?";
             Device.send_cmd(command.c_str());
