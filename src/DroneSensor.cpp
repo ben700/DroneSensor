@@ -428,13 +428,9 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
         if (Device.get_name() == EC.get_name())
         {
             get_ec_k_value();
-            doc[Device.get_name()]["k"] = k_val; 
+            doc[Device.get_name()]["kValue"] = k_val; 
             
 
- //           doc[Device.get_name()]["g"] = true;
-   //         doc[Device.get_name()]["c"] = true;
-     //       doc[Device.get_name()]["s"] = true;
-       //     doc[Device.get_name()]["sa"] = true;
            
             command = "O,?";
             Device.send_cmd(command.c_str());
@@ -490,7 +486,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
         
         }
             
-       return;     
+     
         if (Device.get_name() == DO.get_name())
         {
             command = "O,?";
