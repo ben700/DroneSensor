@@ -422,10 +422,9 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             }
 
             String fallback = cmdReply.substring(cmdReply.indexOf("T,") + 2);
-            doc[Device.get_name()]["fallraw"] = cmdReply;
-            doc[Device.get_name()]["fallback"] = fallback.toFloat();
+            doc[Device.get_name()]["fall"] = fallback.toFloat();
         }
-return;
+
         if (Device.get_name() == EC.get_name())
         {
             get_ec_k_value();
@@ -433,13 +432,11 @@ return;
             
 
             doc[Device.get_name()]["g"] = true;
-   
-         if(1==0){     
             doc[Device.get_name()]["c"] = true;
             doc[Device.get_name()]["s"] = true;
             doc[Device.get_name()]["sa"] = true;
-        
-         
+     return;   
+if(1==0){           
             command = "O,?";
             Device.send_cmd(command.c_str());
             select_delay(command);
