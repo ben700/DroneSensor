@@ -11,10 +11,9 @@ double showDecimals(const double &x, const int &numDecimals)
     return static_cast<double>(y) + (1.0 / m) * r;
 }
 
-DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
+DroneSensor::DroneSensor(String exceptionText, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
     DroneSensor_debug = _DroneSensor_debug;
-    this->_deviceMAC = __deviceMAC;
     this->_deviceIP = __deviceIP;
     this->_deviceID = __deviceID;
     Wire.begin();
@@ -54,7 +53,9 @@ DroneSensor::DroneSensor(String __deviceMAC, String __deviceIP, String __deviceI
             device_list[i]._status = EZOStatus::Unconnected;
             if (DroneSensor_debug)
             {
+                exceptionText = "EZO Circuit " + String(device_list[i].device.get_name()) + " NOT found at address "; 
                 Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " NOT found at address ");
+                
                 Serial.print(address);
                 Serial.println("  !");
             }
