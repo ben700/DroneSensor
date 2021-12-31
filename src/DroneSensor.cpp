@@ -61,6 +61,7 @@ DroneSensor::DroneSensor(String exceptionText, String __deviceIP, String __devic
             }
         }
     }
+    setFallbackTemp(19.5);
 }
 
 void DroneSensor::setFallbackTemp(float __FallbackTemp)
