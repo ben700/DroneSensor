@@ -445,38 +445,38 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 
               if (cmdReply.indexOf(",EC") != -1)
             {
-                doc[Device.get_name()]["conductivity"] = true;
+                doc[Device.get_name()]["ec"] = true;
             }
             else
             {
-                doc[Device.get_name()]["conductivity"] = false;
+                doc[Device.get_name()]["ec"] = false;
             }
             
             if (cmdReply.indexOf(",TDS") != -1)
             {
-                doc[Device.get_name()]["solids"] = true;
+                doc[Device.get_name()]["tds"] = true;
             }
             else
             {
-                doc[Device.get_name()]["solids"] = false;
+                doc[Device.get_name()]["tds"] = false;
             }
             
             if (cmdReply.indexOf(",S") != -1)
             {
-                doc[Device.get_name()]["salinity"] = true;
+                doc[Device.get_name()]["s"] = true;
             }
             else
             {
-                doc[Device.get_name()]["salinity"] = false;
+                doc[Device.get_name()]["s"] = false;
             }
             
             if (cmdReply.indexOf(",SG") != -1)
             {
-                doc[Device.get_name()]["gravity"] = true;
+                doc[Device.get_name()]["sg"] = true;
             }
             else
             {
-                doc[Device.get_name()]["gravity"] = false;
+                doc[Device.get_name()]["sg"] = false;
             }
         
         
@@ -517,7 +517,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 }
             }
         }
-
+return;
         command = "L,?";
         Device.send_cmd(command.c_str());
         select_delay(command);
