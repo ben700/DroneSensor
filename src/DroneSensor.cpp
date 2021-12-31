@@ -407,7 +407,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
 
         String reasonForRestart = cmdReply.substring(cmdReply.indexOf(",") + 1, cmdReply.indexOf(",", cmdReply.indexOf(",") + 1));
         String VoltageatVcc = cmdReply.substring(cmdReply.indexOf(",", cmdReply.indexOf(",") + 1) + 1);
-        doc[Device.get_name()]["restart"] = reasonForRestart;
+        doc[Device.get_name()]["rfr"] = reasonForRestart;
         doc[Device.get_name()]["vcc"] = VoltageatVcc.toFloat();
 
         if (Device.get_name() == EC.get_name() || Device.get_name() == PH.get_name() || Device.get_name() == DO.get_name())
@@ -496,28 +496,28 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             if (cmdReply.indexOf(",%,mg") != -1)
             {
                 doc[Device.get_name()]["mgL"] = true;
-                doc[Device.get_name()]["saturation"] = true;
+                doc[Device.get_name()]["sat"] = true;
             }
             else
             {
                 if (cmdReply.indexOf(",%,1") != -1)
                 {
                     doc[Device.get_name()]["mgL"] = false;
-                    doc[Device.get_name()]["saturation"] = true;
+                    doc[Device.get_name()]["sat"] = true;
                 }
                 else if (cmdReply.indexOf(",mg,1") != -1)
                 {
                     doc[Device.get_name()]["mgL"] = true;
-                    doc[Device.get_name()]["saturation"] = false;
+                    doc[Device.get_name()]["sat"] = false;
                 }
                 else
                 {
                     doc[Device.get_name()]["mgL"] = false;
-                    doc[Device.get_name()]["saturation"] = false;
+                    doc[Device.get_name()]["sat"] = false;
                 }
             }
         }
-return;
+
         command = "L,?";
         Device.send_cmd(command.c_str());
         select_delay(command);
