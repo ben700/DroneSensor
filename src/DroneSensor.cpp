@@ -440,14 +440,10 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
             {                                      // if the reading is successful
                 cmdReply = String(receive_buffer); // parse the reading into a float
-                doc[Device.get_name()]["cmdReply"] = cmdReply;
-            }else{
-                doc[Device.get_name()]["reply"] = "failed";
             }
-            
           
                 
-              if (cmdReply.indexOf(",ec") != -1)
+              if (cmdReply.indexOf(",EC") != -1)
             {
                 doc[Device.get_name()]["conductivity"] = true;
             }
@@ -456,7 +452,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 doc[Device.get_name()]["conductivity"] = false;
             }
             
-            if (cmdReply.indexOf(",tds") != -1)
+            if (cmdReply.indexOf(",TDS") != -1)
             {
                 doc[Device.get_name()]["solids"] = true;
             }
@@ -465,7 +461,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 doc[Device.get_name()]["solids"] = false;
             }
             
-            if (cmdReply.indexOf(",s") != -1)
+            if (cmdReply.indexOf(",S") != -1)
             {
                 doc[Device.get_name()]["salinity"] = true;
             }
@@ -474,7 +470,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 doc[Device.get_name()]["salinity"] = false;
             }
             
-            if (cmdReply.indexOf(",sg") != -1)
+            if (cmdReply.indexOf(",SG") != -1)
             {
                 doc[Device.get_name()]["gravity"] = true;
             }
@@ -540,9 +536,9 @@ String DroneSensor::deviceStatePayload(long _EpochTime)
 {
     StaticJsonDocument<DOC_SIZE> doc;
 
-    doc["deviceTime"] = _EpochTime;
+    doc["time"] = _EpochTime;
     doc["version"] = VERSION;
-    doc["deviceType"] = VARIANT;
+    doc["device"] = VARIANT;
     doc["poll"] = this->pollDelay;
 
     for (int i = 0; i < device_list_len; i++)
