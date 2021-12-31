@@ -99,7 +99,7 @@ public:
   //gets the length of the array automatically so we dont have to change the number every time we add new boards
   const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
 
-  DroneSensor(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
+  DroneSensor(String exceptionText, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
   void select_delay(String &str);
   void get_ec_k_value();
