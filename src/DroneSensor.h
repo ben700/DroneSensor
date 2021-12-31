@@ -86,7 +86,7 @@ class DroneSensor
   const uint32_t long_delay = 1200; //how long we wait for commands like cal and R (see datasheets for which commands have longer wait times)
   const uint32_t reading_delay = 2000;
 
-  float k_val = 0; //holds the k value of the ec circuit
+  String k_val = ""; //holds the k value of the ec circuit
 
 public:
   //array of ezo boards, add any new boards in here for the commands to work with them
