@@ -425,7 +425,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             doc[Device.get_name()]["fallraw"] = cmdReply;
             doc[Device.get_name()]["fallback"] = fallback.toFloat();
         }
-
+return;
         if (Device.get_name() == EC.get_name())
         {
             get_ec_k_value();
