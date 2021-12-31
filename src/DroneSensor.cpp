@@ -427,6 +427,23 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             doc[Device.get_name()]["fall"] = fallback.toFloat();
         }
 
+        if (Device.get_name() == PH.get_name())
+        {
+            command = "pHext,?";
+            Device.send_cmd(command.c_str());
+            select_delay(command);
+        
+            
+            if (Device.receive_cmd(receive_buffer, 32) == Ezo_board::SUCCESS)
+            {                                      // if the reading is successful
+                cmdReply = String(receive_buffer); // parse the reading into a float
+            }
+          
+      
+            doc[Device.get_name()]["ext"] = cmdReply.substring(cmdReply.indexOf("pHext,") + 6);
+           
+        }
+        
         if (Device.get_name() == EC.get_name())
         {
             get_ec_k_value();
