@@ -149,7 +149,7 @@ void DroneSensor::get_ec_k_value()
     delay(300);
     if (EC.receive_cmd(rx_buf, 10) == Ezo_board::SUCCESS)
     {                                                  // if the reading is successful
-        k_val = String(rx_buf).substring(3).toFloat(); // parse the reading into a float
+        k_val = String(rx_buf).substring(3); // parse the reading into a float
     }
 }
 
