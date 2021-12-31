@@ -442,8 +442,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 cmdReply = String(receive_buffer); // parse the reading into a float
             }
           
-            
-            doc[Device.get_name()]["cmdReply"] = cmdReply;
+      
             doc[Device.get_name()]["factor"] = cmdReply.substring(cmdReply.indexOf("TDS,") + 4);
            
             command = "O,?";
