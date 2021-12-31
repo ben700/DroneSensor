@@ -440,7 +440,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             }
           
       
-            doc[Device.get_name()]["ext"] = cmdReply.substring(cmdReply.indexOf("pHext,") + 6);
+            doc[Device.get_name()]["ext"] = lookupLedStatus(cmdReply.substring(cmdReply.indexOf("pHext,") + 6));
            
         }
         
