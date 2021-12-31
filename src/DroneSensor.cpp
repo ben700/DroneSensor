@@ -493,7 +493,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
                 cmdReply = String(receive_buffer); // parse the reading into a float
             }
 
-            if (cmdReply.indexOf(",%,mg") != -1)
+            if (cmdReply.indexOf(",%,MG") != -1)
             {
                 doc[Device.get_name()]["mgL"] = true;
                 doc[Device.get_name()]["sat"] = true;
