@@ -443,7 +443,7 @@ void DroneSensor::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocument
             }
           
       
-            doc[Device.get_name()]["factor"] = cmdReply.substring(cmdReply.indexOf("TDS,") + 4);
+            doc[Device.get_name()]["factor"] = cmdReply.substring(cmdReply.indexOf("TDS,") + 4).toFloat();
            
             command = "O,?";
             Device.send_cmd(command.c_str());
