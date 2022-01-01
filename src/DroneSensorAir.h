@@ -74,7 +74,7 @@ class DroneSensorAir {
     const uint8_t device_list_len = sizeof(device_list) / sizeof(device_list[0]);
 
     
-    DroneSensorAir (String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
+    DroneSensorAir (String exceptionText, String __deviceIP, String __deviceID, bool _DroneSensor_debug);
 
     void select_delay(String &str);
     void findDevice(EZODevice device) { device.device.send_cmd("Find"); };
