@@ -11,7 +11,7 @@ double showDecimals(const double &x, const int &numDecimals)
     return static_cast<double>(y) + (1.0 / m) * r;
 }
 
-DroneSensorAir::DroneSensorAir(String __deviceMAC, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
+DroneSensorAir::DroneSensorAir(String exceptionText, String __deviceIP, String __deviceID, bool _DroneSensor_debug = false)
 {
     DroneSensor_debug = _DroneSensor_debug;
     this->_deviceIP = __deviceIP;
@@ -44,6 +44,7 @@ DroneSensorAir::DroneSensorAir(String __deviceMAC, String __deviceIP, String __d
             device_list[i]._status = EZOStatus::Unconnected;
             if (DroneSensor_debug)
             {
+                exceptionText = "EZO Circuit " + String(device_list[i].device.get_name()) + " NOT found at address ";
                 Serial.print("EZO Circuit " + String(device_list[i].device.get_name()) + " NOT found at address ");
                 Serial.print(address);
                 Serial.println("  !");
@@ -345,17 +346,23 @@ void DroneSensorAir::singleDeviceStatePayload(Ezo_board &Device, StaticJsonDocum
             cmdReply = String(receive_buffer); // parse the reading into a float
         }
 
-        if (cmdReply.indexOf(",T") != -1)
+        if (Device.get_name() == CO2.get_name())
         {
-            doc[Device.get_name()]["temperature"] = true;
-        }
-        else
-        {
-            doc[Device.get_name()]["temperature"] = false;
+
+            doc[Device.get_name()]["internal"] = lookupLedStatus(cmdReply.substring(cmdReply.indexOf("O,t,") + 4));
         }
 
         if (Device.get_name() == HUM.get_name())
         {
+
+            if (cmdReply.indexOf(",T") != -1)
+            {
+                doc[Device.get_name()]["temperature"] = true;
+            }
+            else
+            {
+                doc[Device.get_name()]["temperature"] = false;
+            }
 
             if (cmdReply.indexOf("DEW") != -1)
             {
@@ -383,11 +390,11 @@ String DroneSensorAir::deviceStatePayload(long _EpochTime)
 {
     StaticJsonDocument<DOC_SIZE> doc;
 
-    doc["deviceTime"] = _EpochTime;
+    doc["time"] = _EpochTime;
     doc["version"] = VERSION;
-    doc["deviceType"] = VARIANT;
+    doc["device"] = VARIANT;
     doc["poll"] = this->pollDelay;
- 
+
     for (int i = 0; i < device_list_len; i++)
     {
         if (device_list[i]._status == EZOStatus::Connected)
