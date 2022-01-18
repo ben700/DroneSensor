@@ -50,25 +50,25 @@ typedef struct
 class DroneSensor
 {
 
-  Ezo_board RTD = Ezo_board(102, "RTD"); //create an RTD circuit object who's address is 102 and name is "RTD"
-  Ezo_board PH = Ezo_board(99, "PH");    //create a PH circuit object, who's address is 99 and name is "PH"
-  Ezo_board EC = Ezo_board(100, "EC");   //create an EC circuit object who's address is 100 and name is "EC"
-  Ezo_board DO = Ezo_board(97, "DO");    //create a DO circuit object who's address is 97 and name is "DO"
-  Ezo_board ORP = Ezo_board(98, "ORP");  //create a DO circuit object who's address is 97 and name is "DO"
+  Ezo_board RTD = Ezo_board(102, "rtd"); //create an RTD circuit object who's address is 102 and name is "RTD"
+  Ezo_board PH = Ezo_board(99, "ph");    //create a PH circuit object, who's address is 99 and name is "PH"
+  Ezo_board EC = Ezo_board(100, "ec");   //create an EC circuit object who's address is 100 and name is "EC"
+  Ezo_board DO = Ezo_board(97, "dox");    //create a DO circuit object who's address is 97 and name is "DO"
+  Ezo_board ORP = Ezo_board(98, "orp");  //create a DO circuit object who's address is 97 and name is "DO"
 
   EZOParameter t_RTD = {"Temperature", "temperature", 1};
 
-  EZOParameter ph_PH = {"pH", "PH", 2};
+  EZOParameter ph_PH = {"pH", "pH", 2};
 
-  EZOParameter ec_EC = {"Conductivity", "conductivity", 0};
+  EZOParameter ec_EC = {"Conductivity", "ec", 0};
   EZOParameter tds_EC = {"Total Dissolved Solids", "totalDissolvedSolids", 0};
   EZOParameter sal_EC = {"Salinity", "salinity", 0};
   EZOParameter sg_EC = {"Specific Gravity", "specificGravity", 0};
 
-  EZOParameter do_DO = {"Dissolved Oxygen", "DO", 0};
+  EZOParameter do_DO = {"Dissolved Oxygen", "dox", 0};
   EZOParameter sat_DO = {"Saturation", "saturation", 0};
 
-  EZOParameter orp_ORP = {"Oxidation Reduction Potential", "oxidationReductionPotential", 0};
+  EZOParameter orp_ORP = {"Oxidation Reduction Potential", "orp", 0};
 
   EZODevice RTDItem = (EZODevice){"Temperature", RTD, EZOStatus::Unconnected, false, 1, {t_RTD}};
   EZODevice ECItem = (EZODevice){"Conductivity", EC, EZOStatus::Unconnected, true, 4, {ec_EC, tds_EC, sal_EC, sg_EC}};
