@@ -46,9 +46,9 @@ typedef struct
 class DroneSensorAir {
 
 
-    Ezo_board CO2 = Ezo_board(105, "CO2");    //create a DO circuit object who's address is 97 and name is "DO"
-    Ezo_board HUM = Ezo_board(111, "HUM");    //create a DO circuit object who's address is 97 and name is "DO"
-    EZOParameter co2_CO2 = {"CO2", "CO2", 0};
+    Ezo_board CO2 = Ezo_board(105, "co2");    //create a DO circuit object who's address is 97 and name is "DO"
+    Ezo_board HUM = Ezo_board(111, "hum");    //create a DO circuit object who's address is 97 and name is "DO"
+    EZOParameter co2_CO2 = {"CO2", "co2", 0};
     EZOParameter tem_CO2= {"Temperature", "thermalEquilibriumTemperature", 1};
 
     EZOParameter hum_HUM= {"Humitity", "humidity", 0};
