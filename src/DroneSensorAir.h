@@ -11,7 +11,6 @@
 
 
 #define DOC_SIZE 1000
-#define VARIANT "droneAirPro"
 #include <stdint.h>
 #include <Ezo_i2c.h>
 #include <ArduinoJson.h>
